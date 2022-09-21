@@ -27,7 +27,7 @@ public final class Part1Task2 {
     private static final String MESSAGE_BYE = "bye";
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        LinkedList<Integer> list = new LinkedList<>();
+        MyLinkedList list = new MyLinkedList();
         boolean isContinue = true;
 
         while (isContinue) {
@@ -69,6 +69,112 @@ public final class Part1Task2 {
                     System.exit(-1);
                     break;
             }
+        }
+    }
+
+    private static class MyLinkedList {
+
+        private static class Node {
+
+            int data;
+            Node prev;
+            Node next;
+
+            public Node(int data, Node prev, Node next) {
+                this.data = data;
+                this.prev = prev;
+                this.next = next;
+            }
+        }
+
+        private int size = 0;
+        private Node head = null;
+        private Node tail = null;
+
+        public int size() {
+            return size;
+        }
+
+        public boolean isEmpty() {
+            return size == 0;
+        }
+
+        public void addFirst(int data) {
+            if (size == 0) {
+                Node node = new Node(data, null, null);
+                head = node;
+                tail = node;
+            } else {
+                Node node = new Node(data, null, head);
+                head.prev = node;
+                head = node;
+            }
+            size++;
+        }
+
+        public void addLast(int data) {
+            if (size == 0) {
+                Node node = new Node(data, null, null);
+                head = node;
+                tail = node;
+            } else {
+                Node node = new Node(data, tail, null);
+                tail.next = node;
+                tail = node;
+            }
+            size++;
+        }
+
+        public void add(int data) {
+            addLast(data);
+        }
+
+        public int pollFirst() {
+            int result = head.data;
+            if (size == 1) {
+                head = null;
+                tail = null;
+            } else {
+                head = head.next;
+                head.prev = null;
+            }
+            size--;
+            return result;
+        }
+
+        public int pollLast() {
+            int result = tail.data;
+            if (size == 1) {
+                head = null;
+                tail = null;
+            } else {
+                tail = tail.prev;
+                tail.next = null;
+            }
+            size--;
+            return result;
+        }
+
+        public int poll() {
+            return pollFirst();
+        }
+
+        public int peekFirst() {
+            return head.data;
+        }
+
+        public int peekLast() {
+            return tail.data;
+        }
+
+        public int peek() {
+            return peekFirst();
+        }
+
+        public void clear() {
+            head = null;
+            tail = null;
+            size = 0;
         }
     }
 
