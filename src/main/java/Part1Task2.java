@@ -16,12 +16,9 @@ public final class Part1Task2 {
         // Should not be instantiated
     }
 
-    private static final String COMMAND_PUSH_FRONT = "push_front";
-    private static final String COMMAND_PUSH_BACK = "push_back";
-    private static final String COMMAND_POP_FRONT = "pop_front";
-    private static final String COMMAND_POP_BACK = "pop_back";
+    private static final String COMMAND_PUSH = "push";
+    private static final String COMMAND_POP = "pop";
     private static final String COMMAND_FRONT = "front";
-    private static final String COMMAND_BACK = "back";
     private static final String COMMAND_SIZE = "size";
     private static final String COMMAND_CLEAR = "clear";
     private static final String COMMAND_EXIT = "exit";
@@ -38,42 +35,23 @@ public final class Part1Task2 {
             int element = 0;
 
             switch (command) {
-                case COMMAND_PUSH_FRONT:
+                case COMMAND_PUSH:
                     element = in.nextInt();
-                    list.addFirst(element);
+                    list.add(element);
                     out.println(MESSAGE_OK);
                     break;
-                case COMMAND_PUSH_BACK:
-                    element = in.nextInt();
-                    list.addLast(element);
-                    out.println(MESSAGE_OK);
-                    break;
-                case COMMAND_POP_FRONT:
+                case COMMAND_POP:
                     if (list.isEmpty()) {
                         out.println(MESSAGE_ERROR);
                     } else {
-                        out.println(list.pollFirst());
-                    }
-                    break;
-                case COMMAND_POP_BACK:
-                    if (list.isEmpty()) {
-                        out.println(MESSAGE_ERROR);
-                    } else {
-                        out.println(list.pollLast());
+                        out.println(list.poll());
                     }
                     break;
                 case COMMAND_FRONT:
                     if (list.isEmpty()) {
                         out.println(MESSAGE_ERROR);
                     } else {
-                        out.println(list.peekFirst());
-                    }
-                    break;
-                case COMMAND_BACK:
-                    if (list.isEmpty()) {
-                        out.println(MESSAGE_ERROR);
-                    } else {
-                        out.println(list.peekLast());
+                        out.println(list.peek());
                     }
                     break;
                 case COMMAND_SIZE:
