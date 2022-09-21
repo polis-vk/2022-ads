@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 /**
@@ -16,7 +18,44 @@ public final class Part1Task4 {
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        // Write me
+        Deque<Character> stack = new LinkedList<>();
+        boolean isNo = false;
+        String sequence = in.next();
+        for (char ch : sequence.toCharArray()) {
+            if (isNo) {
+                break;
+            }
+            switch (ch) {
+                case '(':
+                case '[':
+                case '{':
+                    stack.push(ch);
+                    break;
+                case ')':
+                    if (stack.isEmpty() || stack.pop() != '(') {
+                        isNo = true;
+                    }
+                    break;
+                case ']':
+                    if (stack.isEmpty() || stack.pop() != '[') {
+                        isNo = true;
+                    }
+                    break;
+                case '}':
+                    if (stack.isEmpty() || stack.pop() != '{') {
+                        isNo = true;
+                    }
+                    break;
+                default:
+                    System.exit(-1);
+                    break;
+            }
+        }
+        if (isNo || !stack.isEmpty()) {
+            out.print("no");
+        } else {
+            out.print("yes");
+        }
     }
 
     private static final class FastScanner {
