@@ -18,7 +18,7 @@ public final class Part1Task3 {
 
     private static final String COMMAND_PUSH = "push";
     private static final String COMMAND_POP = "pop";
-    private static final String COMMAND_FRONT = "front";
+    private static final String COMMAND_BACK = "back";
     private static final String COMMAND_SIZE = "size";
     private static final String COMMAND_CLEAR = "clear";
     private static final String COMMAND_EXIT = "exit";
@@ -44,14 +44,14 @@ public final class Part1Task3 {
                     if (list.isEmpty()) {
                         out.println(MESSAGE_ERROR);
                     } else {
-                        out.println(list.poll());
+                        out.println(list.pollLast());
                     }
                     break;
-                case COMMAND_FRONT:
+                case COMMAND_BACK:
                     if (list.isEmpty()) {
                         out.println(MESSAGE_ERROR);
                     } else {
-                        out.println(list.peek());
+                        out.println(list.peekLast());
                     }
                     break;
                 case COMMAND_SIZE:
