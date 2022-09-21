@@ -3,6 +3,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 /**
@@ -16,7 +19,34 @@ public final class Part1Task5 {
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        // Write me
+        Scanner scanner = new Scanner(System.in);
+        Deque<Integer> stack = new LinkedList<>();
+        int a, b;
+        String equation = scanner.nextLine();
+        for (String part : equation.trim().split(" ")) {
+            switch (part) {
+                case "+":
+                    a = stack.pop();
+                    b = stack.pop();
+                    stack.push(b + a);
+                    break;
+                case "-":
+                    a = stack.pop();
+                    b = stack.pop();
+                    stack.push(b - a);
+                    break;
+                case "*":
+                    a = stack.pop();
+                    b = stack.pop();
+                    stack.push(b * a);
+                    break;
+                default:
+                    stack.push(Integer.valueOf(part));
+                    break;
+            }
+        }
+
+        out.println(stack.pop());
     }
 
     private static final class FastScanner {
