@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.StringTokenizer;
 
+
 /**
  * Problem solution template.
  *
@@ -18,10 +19,15 @@ public final class SolveTemplate {
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        // Write me
+        //Ex1.lastNum(in, out);
+        //Queue.queueManager(in, out);
+        //Stack.stackManager(in, out);
+        //BracketSequence.solveBracketSequence(in.next(), out);
+        //PostfixNotation.solvedPostfixNotation(out);
+        //Deque.stackManager(in, out);
     }
 
-    private static final class FastScanner {
+    public static final class FastScanner {
         private final BufferedReader reader;
         private StringTokenizer tokenizer;
 
