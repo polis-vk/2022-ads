@@ -1,4 +1,3 @@
-package com.company.solution;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,7 +19,7 @@ public final class Main {
     }
 
     public static boolean isValid(String s) {
-        LinkedList<Character> stack = new LinkedList<>();
+        Deque<Character> stack = new LinkedList<>();
         Map<Character, Character> map = Map.of(')', '(', ']', '[', '}', '{');
 
         char temp;
@@ -74,13 +73,9 @@ public final class Main {
 
     }
 
-    public static PrintWriter createPrintWriterForLocalTests() {
-        return new PrintWriter(System.out, true);
-    }
-
     public static void main(final String[] arg) {
         final FastScanner in = new FastScanner(System.in);
-        try (PrintWriter out = createPrintWriterForLocalTests()) {
+        try (PrintWriter out = new PrintWriter(System.out)) {
             solve(in, out);
         }
     }

@@ -18,7 +18,7 @@ public final class Main {
         private Node tail;
         private int size;
 
-        class Node {
+        private static class Node {
             int value;
             Node next;
 
@@ -72,6 +72,8 @@ public final class Main {
 
         void clear() {
             Node current = head;
+
+            // Delete all the links of each node
             while (current != null) {
                 Node next = current.next;
                 current.next = null;

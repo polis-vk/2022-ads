@@ -1,4 +1,3 @@
-package com.company.solution;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,8 +21,9 @@ public final class Main {
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        LinkedList<Integer> stack = new LinkedList<>();
+        Deque<Integer> stack = new LinkedList<>();
         Set<String> set = Set.of("+", "-", "*");
+
         Scanner scanner = new Scanner(System.in);
         String s;
         int a, b;
@@ -40,7 +40,7 @@ public final class Main {
             }
         }
 
-        out.println(stack.getLast());
+        System.out.println(stack.getLast());
     }
 
     private static class FastScanner {
@@ -68,13 +68,9 @@ public final class Main {
 
     }
 
-    public static PrintWriter createPrintWriterForLocalTests() {
-        return new PrintWriter(System.out, true);
-    }
-
     public static void main(final String[] arg) {
         final FastScanner in = new FastScanner(System.in);
-        try (PrintWriter out = createPrintWriterForLocalTests()) {
+        try (PrintWriter out = new PrintWriter(System.out, true)) {
             solve(in, out);
         }
     }

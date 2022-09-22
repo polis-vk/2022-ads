@@ -1,4 +1,3 @@
-package com.company.solution;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,7 +31,7 @@ public final class Main {
 
         void push(int n) {
             if (c == data.length) {
-                 expand();
+                expand();
             }
             data[c++] = n;
         }
@@ -69,30 +68,24 @@ public final class Main {
         while (!s.equals("exit")) {
             try {
                 switch (s) {
-                    case "push":
+                    case "push" -> {
                         stack.push(in.nextInt());
-                        System.out.println("ok");
-                        break;
-                    case "pop":
-                        System.out.println(stack.pop());
-                        break;
-                    case "back":
-                        System.out.println(stack.back());
-                        break;
-                    case "size":
-                        System.out.println(stack.size());
-                        break;
-                    case "clear":
+                        out.println("ok");
+                    }
+                    case "pop" -> out.println(stack.pop());
+                    case "back" -> out.println(stack.back());
+                    case "size" -> out.println(stack.size());
+                    case "clear" -> {
                         stack.clear();
-                        System.out.println("ok");
-                        break;
+                        out.println("ok");
+                    }
                 }
             } catch (StackException e) {
-                System.out.println("error");
+                out.println("error");
             }
             s = in.next();
         }
-        System.out.println("bye");
+        out.println("bye");
     }
 
     private static class FastScanner {
@@ -119,13 +112,9 @@ public final class Main {
         }
     }
 
-    public static PrintWriter createPrintWriterForLocalTests() {
-        return new PrintWriter(System.out, true);
-    }
-
     public static void main(final String[] arg) {
         final FastScanner in = new FastScanner(System.in);
-        try (PrintWriter out = createPrintWriterForLocalTests()) {
+        try (PrintWriter out = new PrintWriter(System.out)) {
             solve(in, out);
         }
     }

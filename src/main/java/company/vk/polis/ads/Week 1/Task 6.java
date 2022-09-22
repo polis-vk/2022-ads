@@ -1,4 +1,3 @@
-package com.company.solution;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,6 +9,9 @@ import java.util.*;
 public final class Main {
     private Main() {
         // Should not be instantiated
+    }
+
+    static class DequeException extends Exception {
     }
 
     static class Deque {
@@ -53,7 +55,11 @@ public final class Main {
             size++;
         }
 
-        public int popFront() {
+        public int popFront() throws DequeException {
+            if (size == 0) {
+                throw new DequeException();
+            }
+
             int n = head.value;
             Node temp = head.next;
 
@@ -69,7 +75,11 @@ public final class Main {
             return n;
         }
 
-        public int popBack() {
+        public int popBack() throws DequeException {
+            if (size == 0) {
+                throw new DequeException();
+            }
+
             int n = tail.value;
             Node temp = tail.prev;
 
@@ -85,11 +95,17 @@ public final class Main {
             return n;
         }
 
-        public int front() {
+        public int front() throws DequeException {
+            if (size == 0) {
+                throw new DequeException();
+            }
             return head.value;
         }
 
-        public int back() {
+        public int back() throws DequeException {
+            if (size == 0) {
+                throw new DequeException();
+            }
             return tail.value;
         }
 
@@ -109,48 +125,28 @@ public final class Main {
         String s = in.next();
 
         while (!s.equals("exit")) {
-            switch (s) {
-                case "push_front" -> {
-                    deque.pushFront(in.nextInt());
-                    out.println("ok");
-                }
-                case "push_back" -> {
-                    deque.pushBack(in.nextInt());
-                    out.println("ok");
-                }
-                case "pop_front" -> {
-                    if (deque.size == 0) {
-                        out.println("error");
-                    } else {
-                        out.println(deque.popFront());
+            try {
+                switch (s) {
+                    case "push_front" -> {
+                        deque.pushFront(in.nextInt());
+                        out.println("ok");
+                    }
+                    case "push_back" -> {
+                        deque.pushBack(in.nextInt());
+                        out.println("ok");
+                    }
+                    case "pop_front" -> out.println(deque.popFront());
+                    case "pop_back" -> out.println(deque.popBack());
+                    case "front" -> out.println(deque.front());
+                    case "back" -> out.println(deque.back());
+                    case "size" -> out.println(deque.size());
+                    case "clear" -> {
+                        deque.clear();
+                        out.println("ok");
                     }
                 }
-                case "pop_back" -> {
-                    if (deque.size == 0) {
-                        out.println("error");
-                    } else {
-                        out.println(deque.popBack());
-                    }
-                }
-                case "front" -> {
-                    if (deque.size == 0) {
-                        out.println("error");
-                    } else {
-                        out.println(deque.front());
-                    }
-                }
-                case "back" -> {
-                    if (deque.size == 0) {
-                        out.println("error");
-                    } else {
-                        out.println(deque.back());
-                    }
-                }
-                case "size" -> out.println(deque.size());
-                case "clear" -> {
-                    deque.clear();
-                    out.println("ok");
-                }
+            } catch (DequeException e) {
+                out.println("error");
             }
             s = in.next();
         }
