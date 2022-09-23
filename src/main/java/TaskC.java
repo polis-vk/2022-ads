@@ -12,6 +12,77 @@ public final class TaskC {
         // Should not be instantiated
     }
 
+    // My queue class
+    private static class MyStack {
+
+        // Inner node class
+        private class Node {
+            // Data
+            int data;
+            Node next;
+
+            // Constructor
+            Node(int num) {
+                data = num;
+            }
+        }
+
+        // data
+        private int size;
+        private Node head;
+
+        // Constructor
+        public MyStack() {
+            size = 0;
+            head = null;
+        }
+
+        // Add element to stack
+        public void push(int elem) {
+            Node newNode = new Node(elem);
+
+            if(size == 0) {
+                head = newNode;
+            }
+            else {
+                newNode.next = head;
+                head = newNode;
+            }
+            size++;
+        }
+
+        // Get and remove last element of the stack
+        public int pop() {
+            if(size == 0) {
+                throw new RuntimeException("Stack is empty");
+            }
+            int res = head.data;
+            head = head.next;
+            size--;
+            return res;
+        }
+
+        // Get last element of the stack
+        public int back() {
+            if(size == 0) {
+                throw new RuntimeException("Stack is empty");
+            }
+            return head.data;
+        }
+
+        // Get size of stack
+        public int size() {
+            return size;
+        }
+
+        // Delete all elements of stack
+        public void clear() {
+            head = null;
+            size = 0;
+        }
+
+    }
+
     // constants
     public static final String PUSH_MSG = "push";
     public static final String POP_MSG = "pop";
@@ -24,27 +95,29 @@ public final class TaskC {
     public static final String BYE_MSG = "bye";
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        LinkedList<Integer> stack = new LinkedList<>();
-        while(true){
+        MyStack stack = new MyStack();
+        while(true) {
             String command = in.next();
             switch (command){
                 case PUSH_MSG:
-                    stack.add(0, in.nextInt());
+                    stack.push(in.nextInt());
                     out.println(OK_MSG);
                     break;
                 case POP_MSG:
-                    if(stack.isEmpty())
+                    try {
+                        out.println(stack.pop());
+                    }
+                    catch (RuntimeException ex) {
                         out.println(ERROR_MSG);
-                    else{
-                        out.println(stack.get(0));
-                        stack.remove(0);
                     }
                     break;
                 case BACK_MSG:
-                    if (stack.isEmpty())
+                    try {
+                        out.println(stack.back());
+                    }
+                    catch (RuntimeException ex) {
                         out.println(ERROR_MSG);
-                    else
-                        out.println(stack.get(0));
+                    }
                     break;
                 case SIZE_MSG:
                     out.println(stack.size());

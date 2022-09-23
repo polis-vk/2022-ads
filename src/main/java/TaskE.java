@@ -21,7 +21,7 @@ public final class TaskE {
         }
     }
 
-    private static int compute(int num1, int num2, String op){
+    private static int compute(int num1, int num2, String op) {
         switch (op){
             case "+":
                 return num1 + num2;
@@ -39,13 +39,14 @@ public final class TaskE {
         do{
             String ch = in.next();
             Integer num = tryParse(ch);
-            if(num != null)
+            if(num != null) {
                 deque.push(num);
+            }
             else if (ch.equals("+") || ch.equals("-") || ch.equals("*")){
                 int res = compute(deque.pop(), deque.pop(), ch);
                 deque.push(res);
             }
-        }while(in.hasNext());
+        } while(in.hasNext());
         out.println(deque.pop());
 
     }

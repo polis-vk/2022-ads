@@ -12,6 +12,115 @@ public final class TaskF {
         // Should not be instantiated
     }
 
+    // My queue class
+    private static class MyDequeue {
+
+        // Inner node class
+        private class Node {
+            // Data
+            int data;
+            Node next;
+            Node prev;
+
+            // Constructor
+            Node(int num) {
+                data = num;
+            }
+        }
+
+        // data
+        private int size;
+        private Node head;
+        private Node tail;
+
+        // Constructor
+        public MyDequeue() {
+            size = 0;
+            head = null;
+            tail = null;
+        }
+
+        // Add element to begin of the dequeue
+        public void pushFront(int elem) {
+            Node newNode = new Node(elem);
+
+            if(size == 0) {
+                head = tail = newNode;
+            }
+            else {
+                newNode.next = head;
+                head.prev = newNode;
+                head = newNode;
+            }
+            size++;
+        }
+
+        // Add element to end of the dequeue
+        public void pushBack(int elem) {
+            Node newNode = new Node(elem);
+
+            if(size == 0) {
+                head = tail = newNode;
+            }
+            else {
+                newNode.prev = tail;
+                tail.next = newNode;
+                tail = tail.next;
+            }
+            size++;
+        }
+
+        // Get and remove first element of the dequeue
+        public int popFront() {
+            if(size == 0) {
+                throw new RuntimeException("Dequeue is empty");
+            }
+            int res = head.data;
+            head = head.next;
+            size--;
+            return res;
+        }
+
+        // Get and remove last element of the dequeue
+        public int popBack() {
+            if(size == 0) {
+                throw new RuntimeException("Dequeue is empty");
+            }
+            int res = tail.data;
+            tail = tail.prev;
+            size--;
+            return res;
+        }
+
+        // Get first element of the dequeue
+        public int front() {
+            if(size == 0) {
+                throw new RuntimeException("Dequeue is empty");
+            }
+            return head.data;
+        }
+
+        // Get last element of the dequeue
+        public int back() {
+            if(size == 0) {
+                throw new RuntimeException("Dequeue is empty");
+            }
+            return tail.data;
+        }
+
+        // Get size of queue
+        public int size() {
+            return size;
+        }
+
+        // Delete all elements of queue
+        public void clear() {
+            head = tail = null;
+            size = 0;
+        }
+
+    }
+
     // constants
     public static final String PUSHFRONT_MSG = "push_front";
     public static final String PUSHBACK_MSG = "push_back";
@@ -27,51 +136,55 @@ public final class TaskF {
     public static final String BYE_MSG = "bye";
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        LinkedList<Integer> deque = new LinkedList<>();
+        MyDequeue dequeue = new MyDequeue();
         while(true){
             String command = in.next();
             switch (command){
                 case PUSHFRONT_MSG:
-                    deque.add(0, in.nextInt());
+                    dequeue.pushFront(in.nextInt());
                     out.println(OK_MSG);
                     break;
                 case PUSHBACK_MSG:
-                    deque.add(in.nextInt());
+                    dequeue.pushBack(in.nextInt());
                     out.println(OK_MSG);
                     break;
                 case POPFRONT_MSG:
-                    if(deque.isEmpty())
+                    try {
+                        out.println(dequeue.popFront());
+                    }
+                    catch (RuntimeException ex) {
                         out.println(ERROR_MSG);
-                    else{
-                        out.println(deque.get(0));
-                        deque.remove(0);
                     }
                     break;
                 case POPBACK_MSG:
-                    if(deque.isEmpty())
+                    try {
+                        out.println(dequeue.popBack());
+                    }
+                    catch (RuntimeException ex) {
                         out.println(ERROR_MSG);
-                    else{
-                        out.println(deque.get(deque.size() - 1));
-                        deque.remove(deque.size() - 1);
                     }
                     break;
                 case FRONT_MSG:
-                    if (deque.isEmpty())
+                    try {
+                        out.println(dequeue.front());
+                    }
+                    catch (RuntimeException ex) {
                         out.println(ERROR_MSG);
-                    else
-                        out.println(deque.get(0));
+                    }
                     break;
                 case BACK_MSG:
-                    if (deque.isEmpty())
+                    try {
+                        out.println(dequeue.back());
+                    }
+                    catch (RuntimeException ex) {
                         out.println(ERROR_MSG);
-                    else
-                        out.println(deque.get(deque.size() - 1));
+                    }
                     break;
                 case SIZE_MSG:
-                    out.println(deque.size());
+                    out.println(dequeue.size());
                     break;
                 case CLEAR_MSG:
-                    deque.clear();
+                    dequeue.clear();
                     out.println(OK_MSG);
                     break;
                 case EXIT_MSG:

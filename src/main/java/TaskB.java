@@ -12,7 +12,80 @@ public final class TaskB {
         // Should not be instantiated
     }
 
-    // constants
+    // My queue class
+    private static class MyQueue {
+
+        // Inner node class
+        private class Node {
+            // Data
+            int data;
+            Node next;
+
+            // Constructor
+            Node(int num) {
+                data = num;
+            }
+        }
+
+        // data
+        private int size;
+        private Node head;
+        private Node tail;
+
+        // Constructor
+        public MyQueue() {
+            size = 0;
+            head = null;
+            tail = null;
+        }
+
+        // Add element to queue
+        public void push(int elem) {
+            Node newNode = new Node(elem);
+
+            if(size == 0) {
+                head = tail = newNode;
+            }
+            else {
+                tail.next = newNode;
+                tail = tail.next;
+            }
+            size++;
+        }
+
+        // Get and remove first element of the queue
+        public int pop() {
+            if(size == 0) {
+                throw new RuntimeException("Queue is empty");
+            }
+            int res = head.data;
+            head = head.next;
+            size--;
+            return res;
+        }
+
+        // Get first element of the queue
+        public int front() {
+            if(size == 0) {
+                throw new RuntimeException("Queue is empty");
+            }
+            return head.data;
+        }
+
+        // Get size of queue
+        public int size() {
+            return size;
+        }
+
+        // Delete all elements of queue
+        public void clear() {
+            head = tail = null;
+            size = 0;
+        }
+
+    }
+
+    // Constants
     public static final String PUSH_MSG = "push";
     public static final String POP_MSG = "pop";
     public static final String FRONT_MSG = "front";
@@ -24,27 +97,30 @@ public final class TaskB {
     public static final String BYE_MSG = "bye";
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        LinkedList<Integer> queue = new LinkedList<>();
+        MyQueue queue = new MyQueue();
         while(true){
             String command = in.next();
             switch (command){
                 case PUSH_MSG:
-                    queue.add(in.nextInt());
+                    queue.push(in.nextInt());
                     out.println(OK_MSG);
                     break;
                 case POP_MSG:
-                    if(queue.isEmpty())
+                    try {
+                        out.println(queue.pop());
+                    }
+                    catch (RuntimeException ex)
+                    {
                         out.println(ERROR_MSG);
-                    else{
-                        out.println(queue.get(0));
-                        queue.remove(0);
                     }
                     break;
                 case FRONT_MSG:
-                    if (queue.isEmpty())
+                    try {
+                        out.println(queue.front());
+                    }
+                    catch (RuntimeException ex) {
                         out.println(ERROR_MSG);
-                    else
-                        out.println(queue.get(0));
+                    }
                     break;
                 case SIZE_MSG:
                     out.println(queue.size());

@@ -21,7 +21,7 @@ public final class TaskD {
         String str = in.next();
         for(int i = 0; i < str.length(); i++){
             char ch = str.charAt(i);
-            switch(ch){
+            switch(ch) {
                 case '(':
                 case '{':
                 case '[':
@@ -30,16 +30,18 @@ public final class TaskD {
                 case ')':
                 case '}':
                 case ']':
-                    if(deque.isEmpty() || !deque.removeLast().equals(pairMap.get(ch))){
+                    if(deque.isEmpty() || !deque.removeLast().equals(pairMap.get(ch))) {
                         out.println("no");
                         return;
                     }
             }
         }
-        if (deque.isEmpty())
+        if (deque.isEmpty()) {
             out.println("yes");
-        else
+        }
+        else {
             out.println("no");
+        }
 
     }
 
