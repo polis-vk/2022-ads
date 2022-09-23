@@ -12,13 +12,13 @@ import java.util.StringTokenizer;
  *
  * @author Dmitry Schitinin
  */
-public final class SolveTemplate {
-    private SolveTemplate() {
+public final class LastDigit {
+    private LastDigit() {
         // Should not be instantiated
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        System.out.println("ew");
+        System.out.println(in.nextInt() % 10);
     }
 
     private static final class FastScanner {
