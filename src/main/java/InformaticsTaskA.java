@@ -16,8 +16,7 @@ public final class InformaticsTaskA {
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        String input = in.next();
-        out.print(input.substring(input.length() - 1));
+        out.print(in.nextInt() % 10);
     }
 
     private static final class FastScanner {
