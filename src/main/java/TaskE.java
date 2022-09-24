@@ -19,10 +19,10 @@ public final class TaskE {
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        String[] expr = new Scanner(System.in).nextLine().trim().split(" ");
+        String expression = new Scanner(System.in).nextLine().trim();
         Deque<Integer> deque = new LinkedList<>();
         int firstEl, secondEl;
-        for (String el : expr) {
+        for (String el : expression.split(" ")) {
             if (isOperator(el) && !deque.isEmpty()) {
                 firstEl = deque.pollLast();
                 secondEl = deque.pollLast();
@@ -42,8 +42,9 @@ public final class TaskE {
                 return secondEl - firstEl;
             case "*":
                 return secondEl * firstEl;
+            default:
+                return -1;
         }
-        return -1;
     }
 
     private static boolean isOperator(String el) {
