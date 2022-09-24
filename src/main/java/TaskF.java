@@ -17,25 +17,25 @@ public class TaskF {
             command = in.next();
             switch (command) {
                 case "push_front" -> {
-                    Deque.push_front(in.nextInt());
+                    Deque.pushFront(in.nextInt());
                     out.println("ok");
                 }
                 case "push_back" -> {
-                    Deque.push_back(in.nextInt());
+                    Deque.pushBack(in.nextInt());
                     out.println("ok");
                 }
                 case "pop_front" -> {
                     if (Deque.last == null) {
                         out.println("error");
                     } else {
-                        out.println(Deque.pop_front());
+                        out.println(Deque.popFront());
                     }
                 }
                 case "pop_back" -> {
                     if (Deque.last == null) {
                         out.println("error");
                     } else {
-                        out.println(Deque.pop_back());
+                        out.println(Deque.popBack());
                     }
                 }
                 case "front" -> {
@@ -72,7 +72,7 @@ public class TaskF {
         private static Node last;
         private static int size = 0;
 
-        public static void push_front(int value) {
+        public static void pushFront(int value) {
             size++;
             if (first == null) {
                 first = new Node(value);
@@ -86,7 +86,7 @@ public class TaskF {
 
         }
 
-        public static void push_back(int value) {
+        public static void pushBack(int value) {
             size++;
             if (first == null) {
                 first = new Node(value);
@@ -100,7 +100,7 @@ public class TaskF {
 
         }
 
-        public static int pop_front() {
+        public static int popFront() {
             size--;
             int value = first.value;
             if (size == 0) {
@@ -113,7 +113,7 @@ public class TaskF {
             return value;
         }
 
-        public static int pop_back() {
+        public static int popBack() {
             size--;
             int value = last.value;
             if (size == 0) {
