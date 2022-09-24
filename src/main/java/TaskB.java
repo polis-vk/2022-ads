@@ -52,7 +52,7 @@ public class TaskB {
     private static class Queue{
         private static Node first;
         private static Node last;
-        private static int size = 0;
+        private static int size;
 
         public static void push(int value){
             size++;

@@ -47,10 +47,8 @@ public class TaskE {
 
     private static class Stack {
         private static Node last;
-        private static int size = 0;
 
         public static void push(int value) {
-            size++;
             Node node = new Node(value);
             if (last != null) {
                 node.prev = last;
@@ -59,7 +57,6 @@ public class TaskE {
         }
 
         public static int pop() {
-            size--;
             int value = last.value;
             last = last.prev;
             return value;

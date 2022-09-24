@@ -51,7 +51,7 @@ public class TaskC {
 
     private static class Stack {
         private static Node last;
-        private static int size = 0;
+        private static int size;
 
         public static void push(int value) {
             size++;

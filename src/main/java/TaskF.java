@@ -70,7 +70,7 @@ public class TaskF {
     private static class Deque {
         private static Node first;
         private static Node last;
-        private static int size = 0;
+        private static int size;
 
         public static void pushFront(int value) {
             size++;
