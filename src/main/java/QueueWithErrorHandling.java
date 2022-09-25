@@ -1,52 +1,75 @@
 import java.io.*;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class QueueWithErrorHandling {
     private static final class IntQueue {
-        private int[] array;
-        private int size;
-        private int capacity;
-        private int index;
+        private static class Node {
+            Node prevNode;
+            Node nextNode;
+            int value;
+        }
+
+        Node frontNode;
+        Node backNode;
+        int size;
 
         public IntQueue() {
-            this.capacity = 1;
-            this.size = 0;
-            this.index = -1;
-            this.array = new int[this.capacity];
+            this.clear();
         }
 
         public int size() {
             return this.size;
         }
 
-        public String info() {
-            String infoStr = "";
-            infoStr += "array: " + Arrays.toString(this.array);
-            infoStr += " capacity: " + this.capacity;
-            infoStr += " size: " + this.size;
-            infoStr += " index: " + this.index;
-            return infoStr;
+        public void clear() {
+            this.frontNode = null;
+            this.backNode = null;
+            this.size = 0;
         }
 
-        public boolean push(int n) {
-            if (this.size == this.capacity) {
-                this.resize();
+        public Integer front() {
+            if (this.frontNode == null) {
+                return null;
             }
-
-            this.array[++this.index] = n;
-            this.size++;
-            return true;
+            return this.frontNode.value;
         }
 
-        private void resize() {
-            int[] oldArray = this.array;
-            this.capacity = (int) Math.ceil((double) this.capacity * 1.5);
-            this.array = new int[this.capacity];
-
-            for (int i = 0; i < this.size; i++) {
-                this.array[i] = oldArray[i];
+        public Integer pop() {
+            if (this.frontNode == null) {
+                return null;
             }
+
+            int value = this.frontNode.value;
+            size--;
+
+            Node nexFrontNode = frontNode.nextNode;
+            if (nexFrontNode == null) {
+                this.frontNode = null;
+                return value;
+            }
+
+            this.frontNode = nexFrontNode;
+            nexFrontNode.prevNode = null;
+            return value;
+        }
+
+        public void push(int n) {
+            if (this.frontNode == null) {
+                this.frontNode = new Node();
+                this.backNode = this.frontNode;
+            }
+            else if (this.frontNode == this.backNode) {
+                this.backNode = new Node();
+                this.frontNode.nextNode = this.backNode;
+                this.backNode.prevNode = this.frontNode;
+            } else {
+                Node prevBackNode = this.backNode;
+                this.backNode = new Node();
+                prevBackNode.nextNode = this.backNode;
+                this.backNode.prevNode = prevBackNode;
+            }
+            size++;
+            this.backNode.value = n;
         }
     }
 
@@ -66,18 +89,33 @@ public class QueueWithErrorHandling {
                 case "size":
                     message = Integer.toString(intQueue.size());
                     break;
+                case "front":
+                    Integer numFront = intQueue.front();
+                    if (numFront != null) {
+                        message = Integer.toString(numFront);
+                    }
+                    break;
+                case "pop":
+                    Integer numPop = intQueue.pop();
+                    if (numPop != null) {
+                        message = Integer.toString(numPop);
+                    }
+                    break;
                 case "push":
                     int n = in.nextInt();
-                    if (intQueue.push(n)) {
-                        message = "ok";
-                    }
+                    intQueue.push(n);
+                    message = "ok";
+                    break;
+                case "clear":
+                    intQueue.clear();
+                    message = "ok";
                     break;
                 case "exit":
                     isExit = true;
                     message = "bye";
                     break;
             }
-            out.println(intQueue.info());
+
             out.println(message);
         }
     }
