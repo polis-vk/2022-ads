@@ -1,12 +1,11 @@
 import java.io.*;
-import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class TaskE {
 
-    private static void solve(final FastScanner in, final PrintWriter out){
+    private static void solve(final FastScanner in, final PrintWriter out) throws IOException{
         Stack stack = new Stack();
-        String example = in.next().trim();
+        String example = in.reader.readLine().trim();
 
         for (int i = 0; i < example.length(); i += 2) {
             switch (example.charAt(i)) {
@@ -111,7 +110,7 @@ public class TaskE {
         }
     }
 
-    public static void main(final String[] arg) {
+    public static void main(final String[] arg) throws IOException {
         final FastScanner in = new FastScanner(System.in);
         try (PrintWriter out = new PrintWriter(System.out)) {
             solve(in, out);
