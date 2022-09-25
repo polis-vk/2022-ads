@@ -1,5 +1,5 @@
 import java.io.*;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -14,10 +14,10 @@ public final class InformaticsTaskB {
         // Should not be instantiated
     }
 
-    private static final List<Integer> linkedList = new LinkedList<>();
+    private static final List<Integer> arrList = new ArrayList<>();
 
     private static String push(int n) {
-        linkedList.add(n);
+        arrList.add(n);
         return "ok";
     }
 
@@ -25,22 +25,22 @@ public final class InformaticsTaskB {
         if (size() == 0)
             return "error";
         String firstElem = front();
-        linkedList.remove(0);
+        arrList.remove(0);
         return firstElem;
     }
 
     private static String front() {
         if (size() == 0)
             return "error";
-        return "" + linkedList.get(0);
+        return "" + arrList.get(0);
     }
 
     private static int size() {
-        return linkedList.size();
+        return arrList.size();
     }
 
     private static String clear() {
-        linkedList.clear();
+        arrList.clear();
         return "ok";
     }
 

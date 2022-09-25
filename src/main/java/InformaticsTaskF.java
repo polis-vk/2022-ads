@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -17,15 +17,15 @@ public final class InformaticsTaskF {
         // Should not be instantiated
     }
 
-    private static final List<Integer> linkedList = new LinkedList<>();
+    private static final List<Integer> arrList = new ArrayList<>();
 
     private static String pushFront(int n) {
-        linkedList.add(0, n);
+        arrList.add(0, n);
         return "ok";
     }
 
     private static String pushBack(int n) {
-        linkedList.add(n);
+        arrList.add(n);
         return "ok";
     }
 
@@ -33,7 +33,7 @@ public final class InformaticsTaskF {
         if (size() == 0)
             return "error";
         String firstElem = front();
-        linkedList.remove(0);
+        arrList.remove(0);
         return firstElem;
     }
 
@@ -41,24 +41,24 @@ public final class InformaticsTaskF {
         if (size() == 0)
             return "error";
         String lastElem = back();
-        linkedList.remove(size() - 1);
+        arrList.remove(size() - 1);
         return lastElem;
     }
 
     private static String front() {
-        return (size() == 0) ? "error" : "" + linkedList.get(0);
+        return (size() == 0) ? "error" : "" + arrList.get(0);
     }
 
     private static String back() {
-        return (size() == 0) ? "error" : "" + linkedList.get(size() - 1);
+        return (size() == 0) ? "error" : "" + arrList.get(size() - 1);
     }
 
     private static int size() {
-        return linkedList.size();
+        return arrList.size();
     }
 
     private static String clear() {
-        linkedList.clear();
+        arrList.clear();
         return "ok";
     }
 
