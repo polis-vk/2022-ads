@@ -1,3 +1,4 @@
+package company.vk.polis.ads.week1;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,46 +7,41 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.*;
-
-public final class Main {
-    private Main() {
+public final class Task5 {
+    private Task5() {
         // Should not be instantiated
     }
 
-    public static boolean isValid(String s) {
-        Deque<Character> stack = new LinkedList<>();
-        Map<Character, Character> map = Map.of(')', '(', ']', '[', '}', '{');
-
-        char temp;
-
-        for (char c : s.toCharArray()) {
-            if (stack.isEmpty()) {
-                temp = 0;
-            } else {
-                temp = stack.getLast();
-            }
-
-            if (c == '(' || c == '{' || c == '[') {
-                stack.addLast(c);
-            } else if (temp == map.get(c)) {
-                stack.removeLast();
-            } else {
-                return false;
-            }
-        }
-
-        return stack.size() == 0;
+    private static int calculate(char op, int a, int b) {
+        return switch (op) {
+            case '+' -> a + b;
+            case '-' -> a - b;
+            case '*' -> a * b;
+            default -> 0;
+        };
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        String s = in.next();
-        System.out.println(isValid(s) ? "yes" : "no");
+        Deque<Integer> stack = new LinkedList<>();
+        Set<String> set = Set.of("+", "-", "*");
+
+        Scanner scanner = new Scanner(System.in);
+        String s;
+        int a, b;
+
+        while (scanner.hasNext()) {
+            s = scanner.next();
+
+            if (set.contains(s)) {
+                b = stack.pop();
+                a = stack.pop();
+                stack.push(calculate(s.charAt(0), a, b));
+            } else {
+                stack.push(Integer.parseInt(s));
+            }
+        }
+
+        System.out.println(stack.getLast());
     }
 
     private static class FastScanner {
@@ -75,7 +71,7 @@ public final class Main {
 
     public static void main(final String[] arg) {
         final FastScanner in = new FastScanner(System.in);
-        try (PrintWriter out = new PrintWriter(System.out)) {
+        try (PrintWriter out = new PrintWriter(System.out, true)) {
             solve(in, out);
         }
     }

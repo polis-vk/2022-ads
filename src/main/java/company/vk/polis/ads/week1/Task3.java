@@ -1,3 +1,4 @@
+package company.vk.polis.ads.week1;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,15 +7,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.*;
-
-public final class Main {
-    private Main() {
+public final class Task3 {
+    private Task3() {
         // Should not be instantiated
     }
 
@@ -23,39 +17,39 @@ public final class Main {
 
     public static class Stack {
         private int[] data = new int[16];
-        int c;
+        int size;
 
         void expand() {
             data = Arrays.copyOf(data, data.length * 2);
         }
 
         void push(int n) {
-            if (c == data.length) {
+            if (size == data.length) {
                 expand();
             }
-            data[c++] = n;
+            data[size++] = n;
         }
 
         int pop() throws StackException {
-            if (c == 0) {
+            if (size == 0) {
                 throw new StackException();
             }
-            return data[--c];
+            return data[--size];
         }
 
         int back() throws StackException {
-            if (c == 0) {
+            if (size == 0) {
                 throw new StackException();
             }
-            return data[c - 1];
+            return data[size - 1];
         }
 
         int size() {
-            return c;
+            return size;
         }
 
         void clear() {
-            c = 0;
+            size = 0;
         }
     }
 
