@@ -75,9 +75,9 @@ public class StackWithErrorHandling {
                     message = Integer.toString(intQueue.size());
                     break;
                 case "back":
-                    Integer numFront = intQueue.front();
-                    if (numFront != null) {
-                        message = Integer.toString(numFront);
+                    Integer numBack = intQueue.front();
+                    if (numBack != null) {
+                        message = Integer.toString(numBack);
                     }
                     break;
                 case "pop":
