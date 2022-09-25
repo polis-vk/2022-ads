@@ -1,10 +1,7 @@
-package company.vk.polis.ads;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
+import java.util.Deque;
+import java.util.Scanner;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 /**
@@ -12,13 +9,39 @@ import java.util.StringTokenizer;
  *
  * @author Dmitry Schitinin
  */
-public final class SolveTemplate {
-    private SolveTemplate() {
+public final class TaskE {
+    private TaskE() {
         // Should not be instantiated
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
         // Write me
+
+        Scanner scanner = new Scanner(System.in);
+        Stack<Integer> stack = new Stack();
+        String line = scanner.nextLine();
+        Integer operationResult = 0;
+
+        for (String symbol : line.split(" ")) {
+            switch (symbol) {
+                case "+":
+                    operationResult = stack.pop() + stack.pop();
+                    stack.push(operationResult);
+                    break;
+                case "-":
+                    operationResult = -stack.pop() + stack.pop();
+                    stack.push(operationResult);
+                    break;
+                case "*":
+                    operationResult = stack.pop() * stack.pop();
+                    stack.push(operationResult);
+                    break;
+                default:
+                    stack.push(Integer.parseInt(symbol));
+                    break;
+            }
+        }
+        out.println(stack.pop());
     }
 
     private static final class FastScanner {
