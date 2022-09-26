@@ -4,9 +4,8 @@ import java.io.*;
 import java.util.StringTokenizer;
 
 public class LastDigit {//A task
-    private static void solve(final LastDigit.FastScanner in, final PrintWriter out) {
-        int num = in.nextInt();
-        out.print(num % 10);
+    private static void solve(final FastScanner in, final PrintWriter out) {
+        out.print(in.nextInt() % 10);
     }
 
     private static final class FastScanner {
@@ -34,7 +33,7 @@ public class LastDigit {//A task
     }
 
     public static void main(final String[] arg) {
-        final LastDigit.FastScanner in = new LastDigit.FastScanner(System.in);
+        final FastScanner in = new FastScanner(System.in);
         try (PrintWriter out = new PrintWriter(System.out)) {
             solve(in, out);
         }
