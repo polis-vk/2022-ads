@@ -18,7 +18,8 @@ public final class TaskE {
         // Write me
 
         Scanner scanner = new Scanner(System.in);
-        Stack<Integer> stack = new Stack();
+        MyStack stack = new MyStack();
+
         String line = scanner.nextLine();
         Integer operationResult = 0;
 
@@ -43,7 +44,51 @@ public final class TaskE {
         }
         out.println(stack.pop());
     }
+    private static class MyStack {
+        private Integer stack[];
+        private int index;
 
+        public MyStack() {
+            stack = new Integer[16];
+            index = -1;
+        }
+
+        public void clear() {
+            stack = new Integer[16];
+            index = -1;
+        }
+
+        public void push(Integer item) {
+            if (index == (stack.length - 1)) {
+                Integer temp[] = new Integer[stack.length * 2];
+                for (int i = 0; i < stack.length; i++) {
+                    temp[i] = stack[i];
+                }
+                temp[++index] = item;
+                stack = temp;
+            } else {
+                stack[++index] = item;
+            }
+        }
+
+        public boolean isEmpty() {
+            return (index == -1);
+        }
+
+        public Integer pop() {
+
+            return (index < 0) ? null : stack[index--];
+
+        }
+
+        public int size() {
+            return (index + 1);
+        }
+
+        public Integer peek() {
+            return (index == -1) ? null : stack[index];
+        }
+    }
     private static final class FastScanner {
         private final BufferedReader reader;
         private StringTokenizer tokenizer;
