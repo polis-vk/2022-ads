@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.StringTokenizer;
 
 public class LastDigit {//A task
+
     private static void solve(final FastScanner in, final PrintWriter out) {
         out.print(in.nextInt() % 10);
     }
