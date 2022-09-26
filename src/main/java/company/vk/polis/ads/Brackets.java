@@ -15,21 +15,22 @@ public final class Brackets {
     private static void solve(final FastScanner in, final PrintWriter out) {
         String input = in.next();
         Map<Character, Character> pairs = Map.of('(', ')', '[', ']', '{', '}');
-        Stack<Character> stack = new Stack<>();
+        Deque<Character> deque = new ArrayDeque<>();
         for (char bracket : input.toCharArray()) {
             if (bracket == '(' || bracket == '[' || bracket == '{') {
-                stack.add(bracket);
-            } else if (stack.isEmpty()) {
-                System.out.println("no");
-                return;
-            } else if (bracket != pairs.get(stack.peek())) {
+                deque.addLast(bracket);
+            } else if (deque.isEmpty()) {
                 System.out.println("no");
                 return;
             } else {
-                stack.pop();
+                char last = deque.pollLast();
+                if (bracket != pairs.get(last)) {
+                    System.out.println("no");
+                    return;
+                }
             }
         }
-        if (stack.isEmpty()) {
+        if (deque.isEmpty()) {
             System.out.println("yes");
         } else {
             System.out.println("no");
