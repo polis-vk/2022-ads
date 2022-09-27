@@ -41,7 +41,7 @@ public final class SolveTemplate {
         }
 
         int nextInt() {
-            return Integer.parseInt(next() );
+            return Integer.parseInt(next());
         }
     }
 
