@@ -1,12 +1,12 @@
-package company.vk.polis.ads;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Scanner;
-import java.util.Stack;
 
 public class PostfixRead {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        Stack<Integer> stack = new Stack<>();
+        Deque<Integer> stack = new ArrayDeque<>();
         String[] input = in.nextLine().split(" ");
         String element;
         char check;
@@ -15,36 +15,36 @@ public class PostfixRead {
             element = s;
             check = element.charAt(0);
             if (check >= '0' && check <= '9') {
-                stack.push(Integer.parseInt(element));
+                stack.addLast(Integer.parseInt(element));
             } else {
                 switch (check) {
                     case '+' -> {
-                        right = stack.pop();
-                        left = stack.pop();
+                        right = stack.pollLast();
+                        left = stack.pollLast();
                         result = left + right;
-                        stack.push(result);
+                        stack.addLast(result);
                     }
                     case '-' -> {
-                        right = stack.pop();
-                        left = stack.pop();
+                        right = stack.pollLast();
+                        left = stack.pollLast();
                         result = left - right;
-                        stack.push(result);
+                        stack.addLast(result);
                     }
                     case '*' -> {
-                        right = stack.pop();
-                        left = stack.pop();
+                        right = stack.pollLast();
+                        left = stack.pollLast();
                         result = left * right;
-                        stack.push(result);
+                        stack.addLast(result);
                     }
                     case '/' -> {
-                        right = stack.pop();
-                        left = stack.pop();
+                        right = stack.pollLast();
+                        left = stack.pollLast();
                         result = left / right;
-                        stack.push(result);
+                        stack.addLast(result);
                     }
                 }
             }
         }
-        System.out.println(stack.pop());
+        System.out.println(stack.pollLast());
     }
 }
