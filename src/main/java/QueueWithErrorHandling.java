@@ -57,11 +57,6 @@ public class QueueWithErrorHandling {
             if (this.frontNode == null) {
                 this.frontNode = new Node();
                 this.backNode = this.frontNode;
-            }
-            else if (this.frontNode == this.backNode) {
-                this.backNode = new Node();
-                this.frontNode.nextNode = this.backNode;
-                this.backNode.prevNode = this.frontNode;
             } else {
                 Node prevBackNode = this.backNode;
                 this.backNode = new Node();
