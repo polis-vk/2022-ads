@@ -18,8 +18,6 @@ public final class SolveTemplate {
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        String inp = in.next();
-        out.println(inp);
     }
 
     private static final class FastScanner {

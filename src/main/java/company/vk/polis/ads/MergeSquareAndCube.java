@@ -1,4 +1,4 @@
-package company.vk.polis.ads;
+//package company.vk.polis.ads;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,14 +12,33 @@ import java.util.StringTokenizer;
  *
  * @author Dmitry Schitinin
  */
-public final class SolveTemplate {
-    private SolveTemplate() {
+public final class MergeSquareAndCube {
+    private MergeSquareAndCube() {
         // Should not be instantiated
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        String inp = in.next();
-        out.println(inp);
+        final int x = in.nextInt();
+        long i = 1;
+        long j = 1;
+        int t = 1;
+        long cX = 1;
+        while (t != x) {
+            if (i * i <= j * j * j) {
+                if (i * i != cX) {
+                    cX = i * i;
+                    t++;
+                }
+                i++;
+            } else {
+                if (j * j * j != cX) {
+                    cX = j * j * j;
+                    t++;
+                }
+                j++;
+            }
+        }
+        out.println(cX);
     }
 
     private static final class FastScanner {

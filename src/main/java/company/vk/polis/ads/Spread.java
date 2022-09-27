@@ -1,4 +1,4 @@
-package company.vk.polis.ads;
+//package company.vk.polis.ads;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +22,7 @@ public final class Spread {
         int[] array = new int[N];
         int min;
         int max;
-        max = min = array[0];
+        max = min = array[0] = in.nextInt();
         for (int i = 1; i < N; i++) {
             array[i] = in.nextInt();
             if (array[i] < min) {
@@ -48,11 +48,11 @@ public final class Spread {
 
         for (int number : array) {
             sortedArray[indexes[number - min]] = number;
-            indexes[number]++;
+            indexes[number - min]++;
         }
 
         for (int number : sortedArray) {
-            out.println(number);
+                out.println(number);
         }
     }
 
