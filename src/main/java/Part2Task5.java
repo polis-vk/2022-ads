@@ -15,8 +15,38 @@ public final class Part2Task5 {
         // Should not be instantiated
     }
 
+    private static final int LATTIN_LETTERS_COUNT = 26;
+
+    private static int getLetterNumber(char ch) {
+        return ch - 'A';
+    }
+
+    private static char getLetter(int index) {
+        return (char) (index + 'A');
+    }
+
     private static void solve(final FastScanner in, final PrintWriter out) {
-        // Write me
+        int[] letters = new int[LATTIN_LETTERS_COUNT];
+        int n = in.nextInt();
+        String str = in.next();
+        for (char ch : str.toCharArray()) {
+            letters[getLetterNumber(ch)]++;
+        }
+        int firstOddIndex = -1;
+        StringBuilder leftPart = new StringBuilder();
+        for (int i = 0; i < letters.length; i++) {
+            if (letters[i] % 2 != 0 && firstOddIndex == -1) {
+                firstOddIndex = i;
+            }
+            for (int j = 0; j < letters[i] / 2; j++) {
+                leftPart.append(getLetter(i));
+            }
+        }
+        if (firstOddIndex == -1) {
+            out.println(leftPart.toString() + leftPart.reverse().toString());
+        } else {
+            out.println(leftPart.toString() + getLetter(firstOddIndex) + leftPart.reverse().toString());
+        }
     }
 
     private static final class FastScanner {
