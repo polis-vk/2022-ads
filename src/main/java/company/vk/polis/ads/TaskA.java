@@ -1,4 +1,4 @@
-package company.vk.polis.ads;
+package company.vk.polis.ads.homework;
 
 import java.io.BufferedReader;
 import java.io.IOException;
