@@ -15,8 +15,37 @@ public final class Part2Task2 {
         // Should not be instantiated
     }
 
+    private static long getA(long i) {
+        return i * i;
+    }
+
+    private static long getB(long i) {
+        return i * i * i;
+    }
+
     private static void solve(final FastScanner in, final PrintWriter out) {
-        // Write me
+        int x = in.nextInt();
+        int a = 1;
+        int b = 1;
+        int count = 0;
+        long result = 0;
+        while (count != x) {
+            if (getA(a) < getB(b)) {
+                result = getA(a);
+                a++;
+                count++;
+            } else if (getA(a) == getB(b)) {
+                result = getA(a);
+                a++;
+                b++;
+                count++;
+            } else {
+                result = getB(b);
+                b++;
+                count++;
+            }
+        }
+        out.println(result);
     }
 
     private static final class FastScanner {
