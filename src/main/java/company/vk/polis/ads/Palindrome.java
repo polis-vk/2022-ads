@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.Scanner;
 import java.util.StringTokenizer;
 
 /**
@@ -25,7 +24,7 @@ public final class Palindrome {
         }
         StringBuilder equalsBuilder = new StringBuilder();
         for (int i = 0; i < lastIndex - fromInclusive + 1; i++) {
-            equalsBuilder.append(array[fromInclusive]);
+            equalsBuilder.append(array[fromInclusive + i]);
         }
         return equalsBuilder;
     }
@@ -74,6 +73,8 @@ public final class Palindrome {
         int i = 0;
         char minOddLetter = 'Z' + 1;
         StringBuilder evenPalindromeBuilder = new StringBuilder();
+        // Тоже O(N), т. к. каждый раз к i прибавляется количество одинаковых значений,
+        // которые были найдены в функции
         while (i < letters.length) {
             StringBuilder equals = selectEquals(letters, i);
             if (equals.length() % 2 != 0 && letters[i] < minOddLetter) {
