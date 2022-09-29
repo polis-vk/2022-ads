@@ -27,15 +27,15 @@ public final class E {
     int insertInx = 0;
     for (int i = 0; i < 26; ++i) {
       while (alphabet[i] >= 2) {
-        builder.insert(insertInx++, (char)(i + 65));
-        builder.insert(insertInx++, (char)(i + 65));
-        alphabet[i]-=2;
+        builder.insert(insertInx++, (char) (i + 65));
+        builder.insert(insertInx++, (char) (i + 65));
+        alphabet[i] -= 2;
       }
       insertInx = builder.length() / 2;
     }
     for (int i = 0; i < 26; ++i) {
       if (alphabet[i] == 1) {
-        builder.insert(insertInx, (char)(i + 65));
+        builder.insert(insertInx, (char) (i + 65));
         break;
       }
     }
