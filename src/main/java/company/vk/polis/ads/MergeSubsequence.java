@@ -14,42 +14,24 @@ import java.util.StringTokenizer;
  */
 public final class MergeSubsequence {
     private static void solve(final FastScanner in, final PrintWriter out) {
-        int indexJustPrinted = 0;
         int capacity = in.nextInt();
-        long indexStable = 0;
-        long indexRunning = 2;
+        long indexForA = 1;
+        long indexForB = 1;
         long result = 0;
-        do {
-            indexStable++;
-            if (capacity == 1) {
-                out.println(capacity);
-                break;
+        for (long i = 1; i <= capacity; i++) {
+            if (indexForA * indexForA == indexForB * indexForB * indexForB) {
+                result = indexForA * indexForA;
+                indexForA++;
+                indexForB++;
+            } else if (indexForA * indexForA < indexForB * indexForB * indexForB) {
+                result = indexForA * indexForA;
+                indexForA++;
+            } else {
+                result = indexForB * indexForB * indexForB;
+                indexForB++;
             }
-            if (indexStable == 1) {
-                indexJustPrinted = 1;
-                continue;
-            }
-            while (indexRunning * indexRunning < indexStable * indexStable * indexStable) {
-                result = indexRunning * indexRunning;
-                indexJustPrinted++;
-                indexRunning++;
-                if (indexJustPrinted == capacity) {
-                    break;
-                }
-            }
-            if (indexJustPrinted == capacity) { // сделать только одну проверку
-                break;
-            }
-            if (indexRunning * indexRunning == indexStable * indexStable * indexStable) {
-                indexRunning++;
-            } //
-            result = indexStable *indexStable*indexStable;
-            indexJustPrinted++;
-
-        } while (indexJustPrinted != capacity);
-        if (capacity != 1) {
-            out.println(result);
         }
+        out.println(result);
     }
 
     private static final class FastScanner {
