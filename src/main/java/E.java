@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /**
@@ -10,29 +11,35 @@ import java.util.StringTokenizer;
  *
  * @author Dmitry Schitinin
  */
-public final class A {
-  private A() {
+public final class E {
+  private E() {
     // Should not be instantiated
   }
 
   private static void solve(final FastScanner in, final PrintWriter out) {
     int n = in.nextInt();
-    int[] arr = new int[n];
-    arr[0] = in.nextInt();
-    int min = arr[0];
-    for (int i = 1; i < n; ++i) {
-      arr[i] = in.nextInt();
-      min = Math.min(min, arr[i]);
-    }
-    int[] count = new int[108];
+    String str = in.next();
+    int[] alphabet = new int[26];
     for (int i = 0; i < n; ++i) {
-      count[arr[i] - min]++;
+      alphabet[str.charAt(i) - 65]++;
     }
-    for (int i = 0; i < 108; ++i) {
-      while (count[i]-- > 0) {
-        out.print((min + i) + " ");
+    StringBuilder builder = new StringBuilder();
+    int insertInx = 0;
+    for (int i = 0; i < 26; ++i) {
+      while (alphabet[i] >= 2) {
+        builder.insert(insertInx++, (char)(i + 65));
+        builder.insert(insertInx++, (char)(i + 65));
+        alphabet[i]-=2;
+      }
+      insertInx = builder.length() / 2;
+    }
+    for (int i = 0; i < 26; ++i) {
+      if (alphabet[i] == 1) {
+        builder.insert(insertInx, (char)(i + 65));
+        break;
       }
     }
+    out.println(builder);
   }
 
   private static final class FastScanner {

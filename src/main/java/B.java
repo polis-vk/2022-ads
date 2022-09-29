@@ -10,29 +10,27 @@ import java.util.StringTokenizer;
  *
  * @author Dmitry Schitinin
  */
-public final class A {
-  private A() {
+public final class B {
+  private B() {
     // Should not be instantiated
   }
 
   private static void solve(final FastScanner in, final PrintWriter out) {
-    int n = in.nextInt();
-    int[] arr = new int[n];
-    arr[0] = in.nextInt();
-    int min = arr[0];
-    for (int i = 1; i < n; ++i) {
-      arr[i] = in.nextInt();
-      min = Math.min(min, arr[i]);
-    }
-    int[] count = new int[108];
-    for (int i = 0; i < n; ++i) {
-      count[arr[i] - min]++;
-    }
-    for (int i = 0; i < 108; ++i) {
-      while (count[i]-- > 0) {
-        out.print((min + i) + " ");
-      }
-    }
+   int x = in.nextInt();
+   long a = 1;
+   long b = 1;
+   for (int i = 1; i < x; ++i) {
+     long tmp = (int)(Math.pow(a, 2) - Math.pow(b, 3));
+     if (tmp == 0) {
+       a++;
+       b++;
+     } else if (tmp < 0) {
+       a++;
+     } else {
+       b++;
+     }
+   }
+   out.println(Math.min(a * a, b * b * b));
   }
 
   private static final class FastScanner {
