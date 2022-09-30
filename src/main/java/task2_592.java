@@ -1,5 +1,3 @@
-package company.vk.polis.ads;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,14 +10,37 @@ import java.util.StringTokenizer;
  *
  * @author Dmitry Schitinin
  */
-public final class SolveTemplate {
-    private SolveTemplate() {
+public final class task2_592 {
+    private task2_592() {
         // Should not be instantiated
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
         // Write me
+        in.next();
+        String inp = in.next();
+        int[] cntArr = new int[26];
 
+        for (int i = 0; i < inp.length(); i++) {
+            cntArr[inp.charAt(i) - 'A']++;
+        }
+
+        StringBuilder outPart = new StringBuilder();
+        char mid = 0;
+        for (int i = 0; i < 26; i++) {
+            for (int j = 0; j < cntArr[i] / 2; j++) {
+                outPart.append((char) (i + 'A'));
+            }
+            if (mid == 0 && cntArr[i] % 2 == 1) {
+                mid = (char) (i + 'A');
+            }
+        }
+        out.print(outPart);
+        if (mid != 0) {
+            out.print(mid);
+        }
+        outPart.reverse();
+        out.print(outPart);
     }
 
     private static final class FastScanner {
