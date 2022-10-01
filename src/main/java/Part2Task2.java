@@ -33,17 +33,15 @@ public final class Part2Task2 {
             if (getA(a) < getB(b)) {
                 result = getA(a);
                 a++;
-                count++;
             } else if (getA(a) == getB(b)) {
                 result = getA(a);
                 a++;
                 b++;
-                count++;
             } else {
                 result = getB(b);
                 b++;
-                count++;
             }
+            count++;
         }
         out.println(result);
     }
