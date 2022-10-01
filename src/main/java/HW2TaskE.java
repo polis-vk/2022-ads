@@ -16,27 +16,29 @@ public class HW2TaskE {
         int size = in.nextInt();
         int[] alphabet = new int[ALPHABET_SIZE];
         char[] data = in.next().toCharArray();
+        //сложность O(n)
         for (char el : data){
             alphabet[getAlphabetIndex(el)]++;
         }
 
         StringBuilder result = new StringBuilder();
         int indexOfSingleLetter = -1;
+        //сложность(O(N))
         for (int i = 0; i < alphabet.length; i++){
             while (alphabet[i] / 2 != 0) {
-                int midIndex = result.length() / 2;
-                result.insert(midIndex, getLetterFromIndex(i));
-                result.insert(midIndex, getLetterFromIndex(i));
+                //Сложность O(1)
+                result.append(getLetterFromIndex(i));
                 alphabet[i] -= 2;
             }
             if (alphabet[i] % 2 == 1 && indexOfSingleLetter == -1){
                 indexOfSingleLetter = i;
             }
         }
+        System.out.print(result);
         if (indexOfSingleLetter != -1){
-            int midIndex = result.length() / 2;
-            result.insert(midIndex, getLetterFromIndex(indexOfSingleLetter));
+            System.out.print(getLetterFromIndex(indexOfSingleLetter));
         }
-        System.out.println(result);
+        //сложность O(N)
+        System.out.println(result.reverse());
     }
 }
