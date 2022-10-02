@@ -16,30 +16,29 @@ public final class E {
     // Should not be instantiated
   }
 
+  private static final int ALPHABET_SIZE = 26;
+
   private static void solve(final FastScanner in, final PrintWriter out) {
     int n = in.nextInt();
     String str = in.next();
-    int[] alphabet = new int[26];
+    int[] alphabet = new int[ALPHABET_SIZE];
     for (int i = 0; i < n; ++i) {
       alphabet[str.charAt(i) - 65]++;
     }
     StringBuilder builder = new StringBuilder();
-    int insertInx = 0;
-    for (int i = 0; i < 26; ++i) {
-      while (alphabet[i] >= 2) {
-        builder.insert(insertInx++, (char) (i + 65));
-        builder.insert(insertInx++, (char) (i + 65));
+    int indexOfCenter = -1;
+    for (int i = 0; i < ALPHABET_SIZE; ++i) {
+      while(alphabet[i] >= 2) {
+        builder.append((char)(i + 65));
         alphabet[i] -= 2;
       }
-      insertInx = builder.length() / 2;
-    }
-    for (int i = 0; i < 26; ++i) {
-      if (alphabet[i] == 1) {
-        builder.insert(insertInx, (char) (i + 65));
-        break;
+      if (indexOfCenter == -1 && alphabet[i] == 1) {
+        indexOfCenter = i;
       }
     }
-    out.println(builder);
+    String res = builder.toString();
+    res = (indexOfCenter == -1) ? res + builder.reverse() : res + (char)(indexOfCenter + 65) + builder.reverse();
+    out.println(res);
   }
 
   private static final class FastScanner {
