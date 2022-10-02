@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /**
@@ -24,17 +25,18 @@ public final class C {
 
         int inID;
         int inScore;
+
         // Заполняем данные олимпиадников
         for (int i = 0; i < OlympianNumber; i++) {
             inID = in.nextInt();
             inScore = in.nextInt();
             olympians[i] = new Olympian(inID, inScore);
         }
+        Olympian[] copyolympians = Arrays.copyOf(olympians, olympians.length);
 
-        QuickSort<Olympian> sorter = new QuickSort<Olympian>();
+        MergeSort<Olympian> olympicsorter = new MergeSort<Olympian>(olympians);
 
-        // Сортируем быстрой сортировкой
-        sorter.quickSort(olympians, 0, olympians.length - 1);
+        olympicsorter.mergeSort(olympians, 0, olympians.length - 1);
 
         for (Olympian participant : olympians) {
             out.println(participant.toString());
@@ -49,39 +51,45 @@ public final class C {
         }
     }
 
-    public static class QuickSort<T extends Comparable<T>> {
-        int partition(T[] arr, int low, int high) {
-            // Выбираем последний элемент массива в качестве опорного элемента
-            T knot = arr[high];
-            int i = (low - 1);
-            // Производим сравнения слева от опорного элемента
-            for (int j = low; j < high; j++) {
-                if (arr[j].compareTo(knot) > 0) {
-                    i++;
-                    T tmp = arr[i];
-                    arr[i] = arr[j];
-                    arr[j] = tmp;
-                }
-            }
-
-            T tmp = arr[i + 1];
-            arr[i + 1] = arr[high];
-            arr[high] = tmp;
-
-            return i + 1;
+    public static class MergeSort<T extends Comparable<T>> {
+        MergeSort(T[] sortableArr){
+            helpingArr = Arrays.copyOf(sortableArr, sortableArr.length);
         }
 
+        T[] helpingArr;
 
-        // Рекурсивно сортируем части разделенного массива
-        void quickSort(T[] arr, int low, int high) {
-            if (low < high) {
-                // Разделяем каждую массив на две части
-                int knot = partition(arr, low, high);
+        void merge(T[] arr, int low, int mid, int top) {
+            int i = low;
+            int j = mid + 1;
+            int k = low;
 
-                // Сортируем каждую разделенную часть
-                quickSort(arr, low, knot - 1);
-                quickSort(arr, knot + 1, high);
+            while (i <= mid && j <= top) {
+                if (arr[i].compareTo(arr[j]) > 0) {
+                    helpingArr[k++] = arr[i++];
+                } else {
+                    helpingArr[k++] = arr[j++];
+                }
             }
+            while (i <= mid) {
+                helpingArr[k++] = arr[i++];
+            }
+
+            for (i = low; i <= top; i++) {
+                arr[i] = helpingArr[i];
+            }
+        }
+
+        void mergeSort(T[] arr, int low, int top) {
+            if (top == low) {
+                return;
+            }
+
+            int mid = (low + ((top - low) / 2));
+
+            mergeSort(arr, low, mid);
+            mergeSort(arr, mid + 1, top);
+
+            merge(arr, low, mid, top);
         }
     }
 

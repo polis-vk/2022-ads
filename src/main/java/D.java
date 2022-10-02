@@ -15,57 +15,33 @@ public final class D {
         // Should not be instantiated
     }
 
-    static int minNum(int[] arr){
-        int min = Integer.MAX_VALUE;
-        for(int num : arr){
-            if(num < min){
-                min = num;
-            }
-        }
-        return min;
-    }
-
-    static int maxNum(int[] arr){
-        int max = Integer.MIN_VALUE;
-        for(int num : arr){
-            if(num > max){
-                max = num;
-            }
-        }
-        return max;
-    }
-
-    static int[] getCountArr(int[] arr, int min, int max){
-        int minmaxDiff = max - min;
-
-        int[] countArr = new int[minmaxDiff + 1];
-        for(int num : arr){
-            countArr[num - min]++;
-        }
-
-        return countArr;
-    }
-
-    static int[] readArr(final FastScanner in){
+    static int[] readArr(final FastScanner in) {
         int numAmount = in.nextInt();
         int[] numsIn = new int[numAmount];
-        for(int i = 0; i < numAmount; i++){
+        for (int i = 0; i < numAmount; i++) {
             numsIn[i] = in.nextInt();
         }
 
         return numsIn;
     }
 
-    static String compareArrs(int[] arr1, int[] arr2){
-        if(arr1.length != arr2.length){
-            return "NO";
-        }
-        else{
-            for(int i = 0; i < arr1.length; i++){
-                // если один элемент присутствует в одном массиве, а в другом нет - return "NO"
-                if((arr1[i] == 0 && arr2[i] != 0) || (arr1[i] != 0 && arr2[i] == 0)){
-                    return "NO";
+    static String compareArrs(int[] arr1, int[] arr2) {
+
+        int currNum;
+
+        for (int ctr1 = 0, ctr2 = 0; ctr1 < arr1.length && ctr2 < arr1.length; ) {
+            if (arr1[ctr1] == arr2[ctr2]) {
+                currNum = arr1[ctr1];
+                ctr1++;
+                ctr2++;
+                while (ctr1 < arr1.length && arr1[ctr1] == currNum) {
+                    ctr1++;
                 }
+                while (ctr2 < arr2.length && arr2[ctr2] == currNum) {
+                    ctr2++;
+                }
+            } else {
+                return "NO";
             }
         }
         return "YES";
@@ -77,24 +53,55 @@ public final class D {
         int[] arr2 = readArr(in);
 
 
-        // Для экономии места сразу найдем минимумы и максимумы
-        int arr1Min = minNum(arr1);
-        int arr1Max = maxNum(arr1);
-        int arr2Min = minNum(arr2);
-        int arr2Max = maxNum(arr2);
+        QuickSort sorter = new QuickSort();
 
-        // Чтобы немного сократить время работы программы, попарно сравним минимумы и максимумы
-        if(arr1Min != arr2Min && arr1Max != arr2Max){
-            out.println("NO");
-            return;
+        sorter.quickSort(arr1, 0, arr1.length - 1);
+        sorter.quickSort(arr2, 0, arr2.length - 1);
+
+        out.println(compareArrs(arr1, arr2));
+    }
+
+    public static void main(final String[] arg) {
+        final FastScanner in = new FastScanner(System.in);
+        try (PrintWriter out = new PrintWriter(System.out)) {
+            solve(in, out);
+        }
+    }
+
+    public static class QuickSort {
+        int partition(int[] arr, int low, int high) {
+            // Выбираем последний элемент массива в качестве опорного элемента
+            int knot = arr[high];
+            int i = (low - 1);
+            // Производим сравнения слева от опорного элемента
+            for (int j = low; j < high; j++) {
+                if (arr[j] > knot) {
+                    i++;
+                    int tmp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = tmp;
+                }
+            }
+
+            int tmp = arr[i + 1];
+            arr[i + 1] = arr[high];
+            arr[high] = tmp;
+
+            return i + 1;
         }
 
-        // Получим счетные массивы
-        int[] countArr1 = getCountArr(arr1, arr1Min, arr1Max);
-        int[] countArr2 = getCountArr(arr2, arr2Min, arr2Max);
 
-        // Сравним их на содержание одинаковых элементов
-        out.println(compareArrs(countArr1,countArr2));
+        // Рекурсивно сортируем части разделенного массива
+        void quickSort(int[] arr, int low, int high) {
+            if (low < high) {
+                // Разделяем каждую массив на две части
+                int knot = partition(arr, low, high);
+
+                // Сортируем каждую разделенную часть
+                quickSort(arr, low, knot - 1);
+                quickSort(arr, knot + 1, high);
+            }
+        }
     }
 
     private static final class FastScanner {
@@ -118,13 +125,6 @@ public final class D {
 
         int nextInt() {
             return Integer.parseInt(next());
-        }
-    }
-
-    public static void main(final String[] arg) {
-        final FastScanner in = new FastScanner(System.in);
-        try (PrintWriter out = new PrintWriter(System.out)) {
-            solve(in, out);
         }
     }
 }
