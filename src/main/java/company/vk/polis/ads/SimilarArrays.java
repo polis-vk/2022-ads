@@ -44,6 +44,7 @@ public final class SimilarArrays {
         }
         qSort(array1, 0, array1.length - 1);
         qSort(array2, 0, array2.length - 1);
+
         if (array1[0] != array2[0] || array1[array1.length - 1] != array2[array2.length - 1]) {
             out.write("NO");
             return;
@@ -61,12 +62,16 @@ public final class SimilarArrays {
         int indexForLongArray = 0;
         boolean flag = false;
         int lastDigit = 0;
-        for (int i = 0; i < longArray.length; i++) {
+        while (indexForLongArray < longArray.length) {
             if (longArray[indexForLongArray] == shortArray[indexForShortArray]) {
                 flag = true;
                 if (indexForShortArray == shortArray.length - 1) {
                     indexForLongArray++;
-                    break;
+                    continue;
+                }
+                if (indexForLongArray == longArray.length - 1) {
+                    indexForShortArray++;
+                    continue;
                 }
                 lastDigit = longArray[indexForLongArray];
                 indexForLongArray++;
