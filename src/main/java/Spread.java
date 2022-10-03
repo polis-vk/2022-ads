@@ -3,13 +3,13 @@ public class Spread {
     int range;
     int[] array;
 
-    Spread(int range, int[] array){
+    Spread(int range, int[] array) {
         this.range = range;
         this.array = array;
         this.count = array.length;
     }
 
-    private int findMin(){
+    private int findMin() {
         int min = array[0];
         for (int i = 1; i < count; i++) {
             if (array[i] < min) {
@@ -19,8 +19,8 @@ public class Spread {
         return min;
     }
 
-    public int[] sort(){
-        if(count == 0){
+    public int[] sort() {
+        if (count == 0) {
             return null;
         }
         int min = findMin();
