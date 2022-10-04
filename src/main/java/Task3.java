@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.StringTokenizer;
+import java.util.Comparator;
 
 /**
  * Problem solution template.
@@ -15,94 +16,76 @@ public final class Task3 {
         // Should not be instantiated
     }
 
-    private static class Node {
-        int value;
-        Node prev;
-        Node next;
+    public static void sort(int[][] array, Comparator<int[]> comparator) {
+        int[][] temp = new int[array.length][2];
 
-        Node(int value, Node prev, Node next) {
-            this.value = value;
-            this.prev = prev;
-            this.next = next;
+        for (int i = 0; i < array.length; i++) {
+            temp[i] = array[i];
         }
+        mergeSort(array, 0, array.length - 1, comparator, temp);
     }
 
-    private static class SecureStack {
-        private Node head;
-        private Node tail;
-        private int size;
-
-        SecureStack() {
-            this.clear();
+    public static void mergeSort(int[][] array, int fromInclusive, int toExclusive,
+                                Comparator<int[]> comparator, int[][] temp) {
+        if (fromInclusive == toExclusive) {
+            return;
         }
 
-        public void clear() {
-            this.head = this.tail = null;
-            this.size = 0;
-        }
+        int mid = fromInclusive + ((toExclusive - fromInclusive) >> 1);
 
-        public int size() {
-            return size;
-        }
+        mergeSort(array, fromInclusive, mid, comparator, temp);
+        mergeSort(array, mid + 1, toExclusive, comparator, temp);
+        merge(array, fromInclusive, mid, toExclusive, comparator, temp);
+    }
 
-        public void push(int value) {
-            this.size++;
-
-            if (this.head == null) {
-                this.head = new Node(value, null, null);
-                return;
+    private static void merge(int[][] array, int fromInclusive, int mid, int toExclusive,
+                              Comparator<int[]> comparator, int[][] temp) {
+        int i = fromInclusive;
+        int j = fromInclusive;
+        int q = mid + 1;
+        
+        while (i <= mid && q <= toExclusive) {
+            if (comparator.compare(temp[i], temp[q]) < 0) {
+                array[j] = temp[i];
+                i++;
+            } else {
+                array[j] = temp[q];
+                q++;
             }
-
-
-            Node temp = new Node(value, null, head);
-            head = temp;
+            j++;
         }
 
-        public int back() {
-            return head.value;
+        while (i <= mid) {
+            array[j] = temp[i];
+            j++;
+            i++;
         }
 
-        public int pop() {
-            this.size--;
+        while (q <= toExclusive) {
+            array[j] = temp[q];
+            j++;
+            q++;
+        }
 
-            int ret = head.value;
-
-            head = head.next;
-            return ret;
+        for (int k = fromInclusive; k <= toExclusive; k++) {
+            temp[k] = array[k];
         }
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
 
-        SecureStack stack = new SecureStack();
+        int N = in.nextInt();
+        int[][] students = new int[N][2];
 
-        while (true) {
-            String input = in.next();
+        for (int i = 0; i < N; i++) {
+            students[i][0] = in.nextInt();
+            students[i][1] = in.nextInt();
+        }
 
-            if (input.equals("exit")) {
-                out.println("bye");
-                return;
-            } else if (input.equals("size")) {
-                out.println(stack.size());
-            } else if (input.equals("clear")) {
-                stack.clear();
-                out.println("ok");
-            } else if (input.equals("back")) {
-                if (stack.size() == 0) {
-                    out.println("error");
-                } else {
-                    out.println(stack.back());
-                }
-            } else if (input.equals("pop")) {
-                if (stack.size() == 0) {
-                    out.println("error");
-                } else {
-                    out.println(stack.pop());
-                }
-            } else if (input.equals("push")) {
-                stack.push(in.nextInt());
-                out.println("ok");
-            }
+        sort(students, (o1, o2) -> o1[1] == o2[1] ? o1[0] - o2[0] : o2[1] - o1[1]);
+
+        for (int i = 0; i < N; i++) {
+            out.println(students[i][0] + " " + students[i][1]);
         }
     }
 

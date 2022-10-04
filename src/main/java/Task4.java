@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Random;
 import java.util.StringTokenizer;
 
 /**
@@ -15,123 +16,84 @@ public final class Task4 {
         // Should not be instantiated
     }
 
-    private static class Node {
-        char value;
-        Node prev;
-        Node next;
-
-        Node(char value, Node prev, Node next) {
-            this.value = value;
-            this.prev = prev;
-            this.next = next;
-        }
+    private static void swap(int[] a, int i, int j) {
+        int temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
     }
+    private static void quickSort(int[] a, int from, int to, Random random) {
 
-    private static class SecureStack {
-        private Node head;
-        private Node tail;
-        private int size;
-
-        SecureStack() {
-            this.clear();
-        }
-
-        public void clear() {
-            this.head = this.tail = null;
-            this.size = 0;
-        }
-
-        public int size() {
-            return size;
-        }
-
-        public void push(char value) {
-            this.size++;
-
-            if (this.head == null) {
-                this.head = new Node(value, null, null);
-                return;
-            }
-
-
-            Node temp = new Node(value, null, head);
-            head = temp;
-        }
-
-        public char back() {
-            return head.value;
-        }
-
-        public char pop() {
-            this.size--;
-
-            char ret = head.value;
-
-            head = head.next;
-            return ret;
-        }
-    }
-    private static void solve(final FastScanner in, final PrintWriter out) {
-
-        SecureStack stack = new SecureStack();
-        String input = in.next();
-
-        if (input.length() == 0) {
-            out.println("yes");
+        if (from + 1 >= to) {
             return;
         }
+        int i = partition(a, from, to, random);
+        quickSort(a, from, i, random);
+        quickSort(a, i + 1, to, random);
+    }
 
-        for (int i = 0; i < input.length(); i++) {
+    private static int partition(int[] a, int fromInclusive, int toExclusive, Random random) {
+        int i = random.nextInt(toExclusive - fromInclusive) + fromInclusive;
+        swap(a, fromInclusive, i);
+        int pivotal = a[fromInclusive];
+        i = fromInclusive;
+        for (int j = fromInclusive + 1; j < toExclusive; j++) {
+            if (a[j] <= pivotal) {
+                swap(a, ++i, j);
+            }
+        }
+        swap(a, i, fromInclusive);
+        return i;
+    }
 
-            switch (input.charAt(i)) {
-                case '{':
-                    stack.push('{');
-                    break;
-                case '(':
-                    stack.push('(');
-                    break;
-                case '[':
-                    stack.push('[');
-                    break;
-                case '}':
-                    if (stack.size() > 0 && stack.back() != '{') {
-                        out.println("no");
-                        return;
-                    } else if (stack.size() == 0) {
-                        out.println("no");
-                        return;
-                    }
-                    stack.pop();
-                    break;
-                case ')':
-                    if (stack.size() > 0 && stack.back() != '(') {
-                        out.println("no");
-                        return;
-                    } else if (stack.size() == 0) {
-                        out.println("no");
-                        return;
-                    }
-                    stack.pop();
-                    break;
-                case ']':
-                    if (stack.size() > 0 && stack.back() != '[') {
-                        out.println("no");
-                        return;
-                    } else if (stack.size() == 0) {
-                        out.println("no");
-                        return;
-                    }
-                    stack.pop();
-                    break;
-                default:
-                    return;
+    public static boolean isSimilar(int[] a, int[] b) {
+        int[] arr1 = a;
+        int[] arr2 = b;
+
+        int i = 0;
+        int j = 0;
+
+        while (i < arr1.length && j < arr2.length) {
+            while (i < arr1.length - 1 && arr1[i] == arr1[i + 1]) {
+                i++;
             }
 
+            while (j < arr2.length - 1 && arr2[j] == arr2[j + 1]) {
+                j++;
+            }
+
+            if (arr1[i] != arr2[j]) {
+                return false;
+            }
+            i++;
+            j++;
         }
-        if (stack.size() == 0) {
-            out.println("yes");
+        if (i < arr1.length || j < arr2.length) {
+            return false;
+        }
+        return true;
+    }
+
+    private static void solve(final FastScanner in, final PrintWriter out) {
+
+        int N = in.nextInt();
+        int[] a = new int[N];
+        for (int i = 0; i < N; i++) {
+            a[i] = in.nextInt();
+        }
+
+        N = in.nextInt();
+        int[] b = new int[N];
+        for (int i = 0; i < N; i++) {
+            b[i] = in.nextInt();
+        }
+
+        quickSort(a, 0, a.length, new Random());
+        quickSort(b, 0, b.length, new Random());
+
+        if (isSimilar(a, b)) {
+            out.println("YES");
         } else {
-            out.println("no");
+            out.println("NO");
         }
     }
 

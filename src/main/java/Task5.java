@@ -3,7 +3,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.StringTokenizer;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Problem solution template.
  *
@@ -14,34 +16,48 @@ public final class Task5 {
         // Should not be instantiated
     }
 
-    private static void solve(final FastScanner in, final PrintWriter out) {
-        Deque<Integer> deque = new ArrayDeque<Integer>();
-        String[] input;
+    public static StringBuilder createPart(int[] countLetters, AtomicInteger oddIdx) {
+        StringBuilder part = new StringBuilder();
 
-        try {
-            input = in.reader.readLine().split(" ");
-        } catch (IOException e) {
-            return;
-        }
+        for (int i = 0; i < countLetters.length; i++) {
 
-        for (int i = 0; i < input.length; i++) {
-            switch (input[i].charAt(0)) {
-                case '*':
-                    deque.addLast(deque.pollLast() * deque.pollLast());
-                    break;
-                case '+':
-                    deque.addLast(deque.pollLast() + deque.pollLast());
-                    break;
-                case '-':
-                    deque.addLast(-deque.pollLast() + deque.pollLast());
-                    break;
-                default:
-                    deque.addLast(Integer.parseInt(input[i]));
-                    break;
+            for (int j = 0; j < countLetters[i] / 2; j++) {
+                char letter = (char) (i + 'A');
+                part.append(letter);
+            }
+
+            if (oddIdx.get() == -1 && countLetters[i] % 2 != 0) {
+                oddIdx.set(i);
             }
         }
 
-        out.println(deque.pop());
+        return part;
+    }
+
+    private static void solve(final FastScanner in, final PrintWriter out) {
+        int N = in.nextInt();
+        String input = in.next();
+
+        int[] countLetters = new int[26];
+
+        for (int i = 0; i < input.length(); i++) {
+            int idxLetter = input.charAt(i) - 'A';
+            countLetters[idxLetter]++;
+        }
+
+        AtomicInteger oddIdx = new AtomicInteger(-1);
+        StringBuilder part = createPart(countLetters, oddIdx);
+
+        String output;
+
+        if (oddIdx.get() != -1) {
+            char letter = (char) (oddIdx.get() + 'A');
+            output = part.toString() + letter + part.reverse().toString();
+        } else {
+            output = part.toString() + part.reverse().toString();
+        }
+
+        out.println(output);
     }
 
     private static final class FastScanner {
