@@ -1,5 +1,8 @@
-import java.io.*;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.StringTokenizer;
 
 /**
@@ -12,75 +15,25 @@ public final class Task2 {
         // Should not be instantiated
     }
 
-    private static class MyQueue {
-
-        ArrayList<Integer> queue = new ArrayList<>();
-
-        public void push(int x) {
-            queue.add(x);
-        }
-
-        public int pop() {
-            if (queue.isEmpty()) {
-                throw new RuntimeException();
-            }
-            int element = queue.get(0);
-            queue.remove(0);
-            return element;
-        }
-
-        public int front() {
-            if (queue.isEmpty()) {
-                throw new RuntimeException();
-            }
-            return queue.get(0);
-        }
-
-        public int size() {
-            return queue.size();
-        }
-
-        public void clear() {
-            queue.clear();
-        }
-    }
-
     private static void solve(final FastScanner in, final PrintWriter out) {
-        MyQueue queue = new MyQueue();
-        while (true) {
-            switch (in.next()) {
-                case "push":
-                    queue.push(in.nextInt());
-                    out.println("ok");
-                    break;
-                case "pop":
-                    try {
-                        out.println(queue.pop());
-                    } catch (RuntimeException exception) {
-                        out.println("error");
-                    }
-                    break;
-                case "front":
-                    try {
-                        out.println(queue.front());
-                    } catch (RuntimeException exception) {
-                        out.println("error");
-                    }
-                    break;
-                case "size":
-                    out.println(queue.size());
-                    break;
-                case "clear":
-                    queue.clear();
-                    out.println("ok");
-                    break;
-                case "exit":
-                    out.println("bye");
-                    return;
-                default:
-                    System.exit(-1);
+        int x = in.nextInt();
+        long i = 1, j = 1;
+        long result = 0L;
+        for (int k = 1; k <= x; k++) {
+            if (Math.pow(i, 2) == Math.pow(j, 3)) {
+                i++;
+                k--;
+                continue;
+            }
+            if (Math.pow(i, 2) < Math.pow(j, 3)) {
+                result = (long) Math.pow(i, 2);
+                i++;
+            } else if (Math.pow(i, 2) > Math.pow(j, 3)) {
+                result = (long) Math.pow(j, 3);
+                j++;
             }
         }
+        out.println(result);
     }
 
     private static final class FastScanner {

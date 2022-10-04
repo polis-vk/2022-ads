@@ -3,8 +3,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Problem solution template.
@@ -16,74 +15,65 @@ public final class Task3 {
         // Should not be instantiated
     }
 
-    private static class MyStack {
+    public static class Pair implements Comparable<Pair> {
+        private final int key;
+        private final int value;
 
-        ArrayList<Integer> stack = new ArrayList<>();
-
-        public void push(int x) {
-            stack.add(x);
+        public Pair(int key, int value) {
+            this.key = key;
+            this.value = value;
         }
 
-        public int pop() {
-            if (stack.isEmpty()) {
-                throw new RuntimeException();
-            }
-            int element = stack.get(stack.size() - 1);
-            stack.remove(stack.get(stack.size() - 1));
-            return element;
-        }
-
-        public int back() {
-            if (stack.isEmpty()) {
-                throw new RuntimeException();
-            }
-            return stack.get(stack.size() - 1);
-        }
-
-        public int size() {
-            return stack.size();
-        }
-
-        public void clear() {
-            stack.clear();
+        @Override
+        public int compareTo(Pair o) {
+            return this.value != o.value ? o.value - this.value : this.key - o.key;
         }
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        MyStack stack = new MyStack();
-        while (true) {
-            switch (in.next()) {
-                case "push":
-                    stack.push(in.nextInt());
-                    out.println("ok");
-                    break;
-                case "pop":
-                    try {
-                        out.println(stack.pop());
-                    } catch (RuntimeException exception) {
-                        out.println("error");
-                    }
-                    break;
-                case "back":
-                    try {
-                        out.println(stack.back());
-                    } catch (RuntimeException exception) {
-                        out.println("error");
-                    }
-                    break;
-                case "size":
-                    out.println(stack.size());
-                    break;
-                case "clear":
-                    stack.clear();
-                    out.println("ok");
-                    break;
-                case "exit":
-                    out.println("bye");
-                    return;
-                default:
-                    System.exit(-1);
+        int n = in.nextInt();
+        Pair[] array = new Pair[n];
+        for (int i = 0; i < n; i++) {
+            array[i] = new Pair(in.nextInt(), in.nextInt());
+        }
+        mergeSort(array);
+        for (Pair element : array) {
+            out.println(element.key + " " + element.value);
+        }
+    }
+
+    private static void mergeSort(Pair[] arr) {
+        if (arr.length < 2) {
+            return;
+        }
+        int midIndex = arr.length / 2;
+        Pair[] leftArray = new Pair[midIndex];
+        Pair[] rightArray = new Pair[arr.length - midIndex];
+        for (int i = 0; i < midIndex; i++) {
+            leftArray[i] = arr[i];
+        }
+        for (int i = midIndex; i < arr.length; i++) {
+            rightArray[i - midIndex] = arr[i];
+        }
+        mergeSort(leftArray);
+        mergeSort(rightArray);
+        merge(arr, leftArray, rightArray);
+    }
+
+    private static void merge(Pair[] array, Pair[] leftArray, Pair[] rightArray) {
+        int i = 0, j = 0, k = 0;
+        while (i < leftArray.length && j < rightArray.length) {
+            if (leftArray[i].compareTo(rightArray[j]) < 0) {
+                array[k++] = leftArray[i++];
+            } else {
+                array[k++] = rightArray[j++];
             }
+        }
+        while (i < leftArray.length) {
+            array[k++] = leftArray[i++];
+        }
+        while (j < rightArray.length) {
+            array[k++] = rightArray[j++];
         }
     }
 

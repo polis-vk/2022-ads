@@ -1,85 +1,119 @@
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.*;
 
-public class Task4 {
+/**
+ * Problem solution template.
+ *
+ * @author Dmitry Schitinin
+ */
+public final class Task4 {
+    private Task4() {
+        // Should not be instantiated
+    }
 
-    private static class MyStack<T> {
-        ArrayList<T> stack = new ArrayList<>();
-
-        public void push(T x) {
-            stack.add(x);
+    private static void solve(final FastScanner in, final PrintWriter out) {
+        int[] array = new int[in.nextInt()];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = in.nextInt();
         }
+        int[] arrayTwo = new int[in.nextInt()];
+        for (int i = 0; i < arrayTwo.length; i++) {
+            arrayTwo[i] = in.nextInt();
+        }
+        int low = 0;
+        int high = array.length - 1;
+        int highTwo = arrayTwo.length - 1;
+        quickSort(array, low, high);
+        quickSort(arrayTwo, low, highTwo);
+        contains(array, arrayTwo, out);
+    }
 
-        public void pop() {
-            if (stack.isEmpty()) {
-                throw new RuntimeException();
+    private static void quickSort(int[] array, int low, int high) {
+        if (array.length == 0)
+            return;
+        if (low >= high)
+            return;
+        int opElement = array[low + (high - low) / 2];
+        int i = low, j = high;
+        while (i <= j) {
+            while (array[i] < opElement) {
+                i++;
             }
-            stack.remove(stack.size() - 1);
-        }
-
-        public T peek() {
-            if (stack.isEmpty()) {
-                throw new RuntimeException();
+            while (array[j] > opElement) {
+                j--;
             }
-            return stack.get(stack.size() - 1);
+            if (i <= j) {
+                int temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+                i++;
+                j--;
+            }
         }
-
-        public boolean isEmpty() {
-            return stack.isEmpty();
+        if (low < j) {
+            quickSort(array, low, j);
+        }
+        if (high > i) {
+            quickSort(array, i, high);
         }
     }
 
-    public static void main(String[] args) {
-        MyStack<Integer> stack = new MyStack<>();
-        Scanner scanner = new Scanner(System.in);
-        String brackets = scanner.nextLine();
-        char a;
-        int i, k;
-        boolean flag = true;
-        for (i = 0; i < brackets.length(); i++) {
-            a = brackets.charAt(i);
-            switch (a) {
-                case '(' -> stack.push(1);
-                case '[' -> stack.push(2);
-                case '{' -> stack.push(3);
-                case ')' -> {
-                    if (stack.isEmpty()) {
-                        flag = false;
-                        break;
-                    }
-                    k = stack.peek();
-                    stack.pop();
-                    if (k != 1) flag = false;
-                }
-                case ']' -> {
-                    if (stack.isEmpty()) {
-                        flag = false;
-                        break;
-                    }
-                    k = stack.peek();
-                    stack.pop();
-                    if (k != 2) flag = false;
-                }
-                case '}' -> {
-                    if (stack.isEmpty()) {
-                        flag = false;
-                        break;
-                    }
-                    k = stack.peek();
-                    stack.pop();
-                    if (k != 3) flag = false;
-                }
-                default -> {
-                }
+    private static void contains(int[] array, int[] arrayTwo, final PrintWriter out) {
+        int i = 0;
+        int j = 0;
+        while (i < array.length && j < arrayTwo.length) {
+            while (i != array.length - 1 && array[i] == array[i + 1]) {
+                i++;
             }
-            if (!flag) {
-                break;
+            while (j != arrayTwo.length - 1 && arrayTwo[j] == arrayTwo[j + 1]) {
+                j++;
             }
+            if (array[i] != arrayTwo[j]) {
+                out.println("NO");
+                return;
+            }
+            i++;
+            j++;
         }
-        if (flag && stack.isEmpty()) {
-            System.out.println("yes");
+        if (i == array.length && j == arrayTwo.length) {
+            out.println("YES");
         } else {
-            System.out.println("no");
+            out.println("NO");
+        }
+    }
+
+    private static final class FastScanner {
+        private final BufferedReader reader;
+        private StringTokenizer tokenizer;
+
+        FastScanner(final InputStream in) {
+            reader = new BufferedReader(new InputStreamReader(in));
+        }
+
+        String next() {
+            while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+                try {
+                    tokenizer = new StringTokenizer(reader.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return tokenizer.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+    }
+
+    public static void main(final String[] arg) {
+        final FastScanner in = new FastScanner(System.in);
+        try (PrintWriter out = new PrintWriter(System.out)) {
+            solve(in, out);
         }
     }
 }
