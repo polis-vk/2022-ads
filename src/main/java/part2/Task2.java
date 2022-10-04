@@ -1,48 +1,41 @@
+package part2;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.OptionalInt;
 import java.util.StringTokenizer;
-import java.util.stream.IntStream;
 
 /**
  * Problem solution template.
  *
  * @author Dmitry Schitinin
  */
-public final class Task1 {
-    private Task1() {
+public final class Task2 {
+    private Task2() {
         // Should not be instantiated
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        int[] array = new int[in.nextInt()];
-        for (int i = 0; i < array.length; i++) {
-            array[i] = in.nextInt();
-        }
-        IntStream streamForSearchMaxNum = Arrays.stream(array);
-        IntStream streamForSearchMinNum = Arrays.stream(array);
-        OptionalInt optionalMax = streamForSearchMaxNum.max();
-        OptionalInt optionalMin = streamForSearchMinNum.min();
-        int maxNumberArr = optionalMax.getAsInt();
-        int minNumberArr = optionalMin.getAsInt();
-        int[] countArr = new int[maxNumberArr - minNumberArr + 1];
-        for (int k : array) {
-            countArr[k - minNumberArr]++;
-        }
-        int arrayIndex = 0;
-        for (int i = 0; i < countArr.length; i++) {
-            for (int j = 0; j < countArr[i]; j++) {
-                array[arrayIndex] = i + minNumberArr;
-                arrayIndex++;
+        int x = in.nextInt();
+        long i = 1, j = 1;
+        long result = 0L;
+        for (int k = 1; k <= x; k++) {
+            if (Math.pow(i, 2) == Math.pow(j, 3)) {
+                i++;
+                k--;
+                continue;
+            }
+            if (Math.pow(i, 2) < Math.pow(j, 3)) {
+                result = (long) Math.pow(i, 2);
+                i++;
+            } else if (Math.pow(i, 2) > Math.pow(j, 3)) {
+                result = (long) Math.pow(j, 3);
+                j++;
             }
         }
-        for (int element : array) {
-            out.print(element + " ");
-        }
+        out.println(result);
     }
 
     private static final class FastScanner {
