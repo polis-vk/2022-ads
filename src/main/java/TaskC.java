@@ -3,106 +3,93 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class TaskC {
 
-    private static void solve(final FastScanner in, final PrintWriter out) {
-        Stack stack = new Stack();
-        String command = "";
-        while (!command.equals("exit")) {
-            command = in.next();
-            switch (command) {
-                case "push":
-                    stack.push(in.nextInt());
-                    out.println("ok");
-                    break;
-                case "pop":
-                    if (stack.size() == 0) {
-                        out.println("error");
-                        break;
-                    }
-                    out.println(stack.pop());
-                    break;
-                case "back":
-                    if (stack.size() == 0){
-                        out.println("error");
-                        break;
-                    }
-                    out.println(stack.back());
-                    break;
-                case "clear":
-                    stack.clear();
-                    out.println("ok");
-                    break;
-                case "size":
-                    out.println(stack.size());
-                    break;
-                case "exit":
-                    command = "exit";
-                    break;
-            }
+    private static class Participant implements Comparable<Participant> {
+        private int identNumber;
+        private int result;
+
+        Participant(int identNumber, int result) {
+            this.identNumber = identNumber;
+            this.result = result;
         }
-        out.println("bye");
+
+        public int getIdentNumber() {
+            return identNumber;
+        }
+
+        public int getResult() {
+            return result;
+        }
+
+        @Override
+        public int compareTo(Participant participant) {
+            int result = Integer.compare(getResult(), participant.result);
+            if (result == 0) {
+                return -Integer.compare(getIdentNumber(), participant.identNumber);
+            }
+            return result;
+        }
     }
 
-    private static class Stack {
-        private Node head;
-        private Node tail;
-        private int size;
+    private static void solve(final FastScanner in, final PrintWriter out) {
+        int cntParticipant = in.nextInt();
+        Participant[] participants = new Participant[cntParticipant];
 
-        private static class Node {
-            int data;
-            Node pNext;
-            Node pPrev;
-            public Node(int value) {
-                data = value;
-                pNext = null;
-                pPrev = null;
-            }
+        for (int i = 0; i < cntParticipant; i++) {
+            participants[i] = new Participant(in.nextInt(), in.nextInt());
         }
 
-        public Stack() {
-            head = null;
-            tail = null;
-            size = 0;
-        }
+        mergeSort(participants, 0, cntParticipant);
 
-        public void push(int value) {
-            if (head == null) {
-                head = new Node(value);
-                tail = head;
+        for (int i = 0; i < cntParticipant; i++) {
+            System.out.println(participants[i].getIdentNumber() + " " + participants[i].getResult());
+        }
+    }
+
+    private static void mergeSort(Participant[] mas, int fromIndex, int toIndex) {
+        if (fromIndex == toIndex - 1) {
+            return;
+        }
+        int mid = toIndex - (toIndex - fromIndex) / 2;
+        mergeSort(mas, fromIndex, mid);
+        mergeSort(mas, mid, toIndex);
+        merge(mas, fromIndex, mid, toIndex);
+    }
+
+    private static void merge(Participant[] mas, int fromIndex, int mid, int toIndex) {
+        int sizeLeftMas = mid - fromIndex;
+        int sizeRightMas = toIndex - mid;
+        Participant[] masLeft = new Participant[sizeLeftMas];
+        Participant[] masRight = new Participant[sizeRightMas];
+
+        System.arraycopy(mas, fromIndex, masLeft, 0, sizeLeftMas);
+        System.arraycopy(mas, mid, masRight, 0, sizeRightMas);
+
+        int i = 0;
+        int j = 0;
+        int index = fromIndex;
+
+        while (i < sizeLeftMas && j < sizeRightMas) {
+            if (masLeft[i].compareTo(masRight[j]) > 0) {
+                mas[index++] = masLeft[i++];
             } else {
-                tail.pNext = new Node(value);
-                tail.pNext.pPrev = tail;
-                tail = tail.pNext;
+                mas[index++] = masRight[j++];
             }
-            size++;
         }
 
-        public int back() {
-            return tail.data;
+        while (i < sizeLeftMas) {
+            mas[index++] = masLeft[i++];
         }
 
-        public int pop() {
-            int value = tail.data;
-            tail = tail.pPrev;
-            if (tail == null) {
-                head = null;
-            }
-            size--;
-            return value;
+        while (j < sizeRightMas) {
+            mas[index++] = masRight[j++];
         }
 
-        public int size(){
-            return size;
-        }
 
-        public void clear() {
-            head = null;
-            tail = null;
-            size = 0;
-        }
     }
 
     private static final class FastScanner {

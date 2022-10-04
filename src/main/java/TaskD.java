@@ -6,103 +6,100 @@ import java.io.PrintWriter;
 import java.util.StringTokenizer;
 
 public class TaskD {
-    private TaskD() { }
-
-    private static void solve(final FastScanner in, final PrintWriter out) throws Exception {
-        String str = in.reader.readLine();
-        // ([)]
-        // ()[]
-        char symbol = ' ';
-        boolean flag = true;
-        Stack stack = new Stack();
-        for (int i = 0; i < str.length(); i++) {
-            symbol = str.charAt(i);
-            if (symbol == '(' || symbol == '[' || symbol == '{') {
-                stack.push(symbol);
-            } else {
-                if(stack.size() == 0) {
-                    flag = false;
-                    break;
-                }
-                char stackSymbol = stack.pop();
-                if(stackSymbol == '(' && symbol != ')'){
-                    flag = false;
-                    break;
-                }
-                if(stackSymbol == '[' && symbol != ']') {
-                    flag = false;
-                    break;
-                }
-                if(stackSymbol == '{' && symbol != '}') {
-                    flag = false;
-                    break;
-                }
-            }
-        }
-
-        if(flag && stack.size() == 0) {
-            out.println("yes");
-        } else out.println("no");
+    private TaskD() {
     }
 
-    private static class Stack {
-        private Node head;
-        private Node tail;
-        private int size;
-
-        private static class Node {
-            char data;
-            Node pNext;
-            Node pPrev;
-            public Node(char value) {
-                data = value;
-                pNext = null;
-                pPrev = null;
-            }
+    private static void solve(final FastScanner in, final PrintWriter out) {
+        int sizeMasOne = in.nextInt();
+        int[] masOne = new int[sizeMasOne];
+        for (int i = 0; i < sizeMasOne; i++) {
+            masOne[i] = in.nextInt();
         }
 
-        public Stack() {
-            head = null;
-            tail = null;
-            size = 0;
+        int sizeMasTwo = in.nextInt();
+        int[] masTwo = new int[sizeMasTwo];
+        for (int i = 0; i < sizeMasTwo; i++) {
+            masTwo[i] = in.nextInt();
         }
 
-        public void push(char value) {
-            if (head == null) {
-                head = new Node(value);
-                tail = head;
-            } else {
-                tail.pNext = new Node(value);
-                tail.pNext.pPrev = tail;
-                tail = tail.pNext;
-            }
-            size++;
-        }
+        quickSort(masOne, 0, sizeMasOne);
+        quickSort(masTwo, 0, sizeMasTwo);
 
-        public char back() {
-            return tail.data;
-        }
-
-        public char pop() {
-            char value = tail.data;
-            tail = tail.pPrev;
-            if (tail == null) {
-                head = null;
-            }
-            size--;
-            return value;
-        }
-
-        public int size(){
-            return size;
-        }
-
-        public void clear() {
-            head = null;
-            tail = null;
-            size = 0;
+        if (compare(masOne, masTwo)) {
+            out.println("YES");
+        } else {
+            out.println("NO");
         }
     }
+
+    private static boolean compare(int[] masOne, int[] masTwo) {
+        int i = 0;
+        int j = 0;
+
+        boolean flagAnswer = true;
+        boolean flagEndSizeMasOne = true;
+        boolean flagEndSizeMasTwo = true;
+
+        while (flagEndSizeMasOne || flagEndSizeMasTwo) {
+
+            while (i != masOne.length - 1 && masOne[i] == masOne[i + 1]) {
+                i++;
+            }
+
+            while (j != masTwo.length - 1 && masTwo[j] == masTwo[j + 1]) {
+                j++;
+            }
+
+            if (masOne[i] != masTwo[j]) {
+                flagAnswer = false;
+                break;
+            }
+
+            if (i != masOne.length - 1) {
+                i++;
+            } else {
+                flagEndSizeMasOne = false;
+            }
+
+            if (j != masTwo.length - 1) {
+                j++;
+            } else {
+                flagEndSizeMasTwo = false;
+            }
+
+        }
+
+        return flagAnswer;
+    }
+
+    private static void quickSort(int[] mas, int fromIndex, int toIndex) {
+        if (fromIndex >= toIndex - 1) {
+            return;
+        }
+
+        int i = partition(mas, fromIndex, toIndex);
+        quickSort(mas, fromIndex, i);
+        quickSort(mas, i + 1, toIndex);
+    }
+
+    private static int partition(int[] mas, int fromIndex, int toIndex) {
+        int pivotElement = mas[fromIndex];
+        int i = fromIndex;
+        for (int j = fromIndex + 1; j < toIndex; j++) {
+            if (mas[j] <= pivotElement) {
+                swap(mas, ++i, j);
+            }
+        }
+        swap(mas, i, fromIndex);
+        return i;
+    }
+
+    private static void swap(int[] array, int i, int j) {
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+
 
     private static final class FastScanner {
         private final BufferedReader reader;
@@ -128,7 +125,7 @@ public class TaskD {
         }
     }
 
-    public static void main(final String[] arg) throws Exception {
+    public static void main(final String[] arg) {
         final FastScanner in = new FastScanner(System.in);
         try (PrintWriter out = new PrintWriter(System.out)) {
             solve(in, out);
