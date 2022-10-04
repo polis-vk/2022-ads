@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TopKTest {
     @Test
     void testTopK() {
-        var input = IntStream.range(0, 100_000_000)
+        var input = IntStream.range(0, 10_000_000)
                 .map(__ -> ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE))
                 .boxed()
                 .collect(Collectors.toList());
