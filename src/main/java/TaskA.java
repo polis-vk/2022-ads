@@ -16,8 +16,39 @@ public final class TaskA {
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        out.println(in.nextInt() % 10);
+        int n = in.nextInt();
+        int[] array = new int[n];
+        for (int i = 0; i < n; i++) {
+            array[i] = in.nextInt();
+        }
+        int[] sortedArray = countingSort(array);
+        for (int j : sortedArray) {
+            out.print(j + " ");
+        }
+    }
 
+    public static int[] countingSort(int[] array) {
+        int min = array[0];
+        int max = array[0];
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] < min) {
+                min = array[i];
+            }
+            if (array[i] > max) {
+                max = array[i];
+            }
+        }
+        int[] count = new int[max - min + 1];
+        for (int k : array) {
+            count[k - min]++;
+        }
+        int idx = 0;
+        for (int i = 0; i < count.length; i++) {
+            for (int j = 0; j < count[i]; j++) {
+                array[idx++] = i + min;
+            }
+        }
+        return array;
     }
 
     private static final class FastScanner {

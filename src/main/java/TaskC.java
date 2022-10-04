@@ -1,4 +1,8 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.StringTokenizer;
 
 /**
@@ -7,59 +11,99 @@ import java.util.StringTokenizer;
  * @author Dmitry Schitinin
  */
 public final class TaskC {
-    private static final String PUSH_N = "push";
-    private static final String POP = "pop";
-    private static final String BACK = "back";
-    private static final String SIZE = "size";
-    private static final String CLEAR = "clear";
-    private static final String EXIT = "exit";
-    private static final String OK = "ok";
-    private static final String ERROR = "error";
-    private static final String BYE = "bye";
-
     private TaskC() {
         // Should not be instantiated
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        Stack stack = new Stack();
-        try {
-            while (true) {
-                switch (in.next()) {
-                    case PUSH_N -> {
-                        stack.push(in.nextInt());
-                        out.println(OK);
-                    }
-                    case POP -> {
-                        if (stack.size() == 0) {
-                            out.println(ERROR);
-                        } else {
-                            out.println(stack.pop());
-                        }
-                    }
-                    case BACK -> {
-                        if (stack.size() == 0) {
-                            out.println(ERROR);
-                        } else {
-                            out.println(stack.back());
-                        }
-                    }
-                    case SIZE -> out.println(stack.size());
-                    case CLEAR -> {
-                        stack.clear();
-                        out.println(OK);
-                    }
-                    case EXIT -> {
-                        out.println(BYE);
-                        return;
-                    }
-                    default -> throw new IllegalStateException("Unexpected command");
-                }
-            }
-        } catch (NumberFormatException | IllegalStateException e) {
-            e.printStackTrace();
+        int n = in.nextInt();
+        Participant[] participants = new Participant[n];
+        for (int i = 0; i < n; i++) {
+            participants[i] = new Participant(in.nextInt(), in.nextInt());
+        }
+        mergeSort(participants, 0, participants.length);
+        for (Participant participant : participants) {
+            out.println(participant);
         }
     }
+
+    public static void mergeSort(Participant[] array, int fromInclusive, int toExclusive) {
+        if (fromInclusive == toExclusive - 1) {
+            return;
+        }
+        int mid = fromInclusive + ((toExclusive - fromInclusive) >> 1);
+        mergeSort(array, fromInclusive, mid);
+        mergeSort(array, mid, toExclusive);
+        merge(array, fromInclusive, mid, toExclusive);
+    }
+
+    public static void merge(Participant[] array, int fromInclusive, int mid, int toExclusive) {
+        Participant[] sortParticipants = new Participant[array.length];
+        int leftCursor = fromInclusive;
+        int rightCursor = mid;
+        int i = 0;
+        while (leftCursor != mid && rightCursor != toExclusive) {
+            if (array[leftCursor].compareTo(array[rightCursor]) < 0) {
+                sortParticipants[i] = array[leftCursor];
+                i++;
+                leftCursor++;
+            } else {
+                sortParticipants[i] = array[rightCursor];
+                i++;
+                rightCursor++;
+            }
+        }
+        while (leftCursor != mid) {
+            sortParticipants[i] = array[leftCursor];
+            i++;
+            leftCursor++;
+        }
+        while (rightCursor != toExclusive) {
+            sortParticipants[i] = array[rightCursor];
+            i++;
+            rightCursor++;
+        }
+        for (leftCursor = 0; leftCursor < i; leftCursor++) {
+            array[leftCursor + fromInclusive] = sortParticipants[leftCursor];
+        }
+    }
+
+    private static final class Participant implements Comparable<Participant> {
+        private final int id;
+        private final int points;
+
+        private Participant(int id, int points) {
+            this.id = id;
+            this.points = points;
+        }
+
+        @Override
+        public int compareTo(Participant participant) {
+            return (points == participant.points) ? id - participant.id : participant.points - points;
+        }
+
+        @Override
+        public String toString() {
+            return id + " " + points;
+        }
+
+    }
+    /*
+    //informaitcs не принимает java16
+        private record Participant(int id, int points) implements Comparable<Participant> {
+
+        @Override
+        public int compareTo(Participant participant) {
+            return (points == participant.points) ? id - participant.id : participant.points - points;
+        }
+
+        @Override
+        public String toString() {
+            return id + " " + points;
+        }
+
+    }
+     */
 
     private static final class FastScanner {
         private final BufferedReader reader;
@@ -89,64 +133,6 @@ public final class TaskC {
         final FastScanner in = new FastScanner(System.in);
         try (PrintWriter out = new PrintWriter(System.out)) {
             solve(in, out);
-        }
-    }
-
-    static class Stack {
-        private Node rear, front;
-        private int size;
-
-        private class Node {
-            final private int number;
-            private Node previous;
-
-            Node(int number, Node previous) {
-                this.number = number;
-                this.previous = previous;
-            }
-        }
-
-        public Stack() {
-            rear = null;
-            front = null;
-            size = 0;
-        }
-
-        public void push(int n) {
-            if (size == 0) {
-                front = rear = new Node(n, null);
-            } else {
-                Node oldRear = rear;
-                rear = new Node(n, oldRear);
-            }
-            size++;
-        }
-
-        public int pop() {
-            int num = rear.number;
-            rear = rear.previous;
-            size--;
-            if (size == 0) {
-                front = null;
-            }
-            return num;
-        }
-
-        public int back() {
-            return rear.number;
-        }
-
-        public int size() {
-            return size;
-        }
-
-        public void clear() {
-            while (size != 0) {
-                rear = rear.previous;
-                size--;
-            }
-            rear = null;
-            front = null;
         }
     }
 }

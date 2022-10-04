@@ -1,4 +1,8 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.StringTokenizer;
 
 /**
@@ -7,58 +11,31 @@ import java.util.StringTokenizer;
  * @author Dmitry Schitinin
  */
 public final class TaskB {
-    private static final String PUSH_N = "push";
-    private static final String POP = "pop";
-    private static final String FRONT = "front";
-    private static final String SIZE = "size";
-    private static final String CLEAR = "clear";
-    private static final String EXIT = "exit";
-    private static final String OK = "ok";
-    private static final String ERROR = "error";
-    private static final String BYE = "bye";
-
     private TaskB() {
         // Should not be instantiated
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        Queue queue = new Queue();
-        try {
-            while (true) {
-                switch (in.next()) {
-                    case PUSH_N -> {
-                        queue.push(in.nextInt());
-                        out.println(OK);
-                    }
-                    case POP -> {
-                        if (queue.size() == 0) {
-                            out.println(ERROR);
-                        } else {
-                            out.println(queue.pop());
-                        }
-                    }
-                    case FRONT -> {
-                        if (queue.size() == 0) {
-                            out.println(ERROR);
-                        } else {
-                            out.println(queue.front());
-                        }
-                    }
-                    case SIZE -> out.println(queue.size());
-                    case CLEAR -> {
-                        queue.clear();
-                        out.println(OK);
-                    }
-                    case EXIT -> {
-                        out.println(BYE);
-                        return;
-                    }
-                    default -> throw new IllegalStateException("Unexpected command");
-                }
+        int length = in.nextInt();
+        int a = 1;
+        int b = 1;
+        long cx = 0;
+        for (int i = 0; i < length; i++) {
+            long square = (long) a * a;
+            long cube = (long) b * b * b;
+            if (square == cube) {
+                cx = square;
+                a++;
+                b++;
+            } else if (square < cube) {
+                cx = square;
+                a++;
+            } else {
+                cx = cube;
+                b++;
             }
-        } catch (NumberFormatException | IllegalStateException e) {
-            e.printStackTrace();
         }
+        out.println(cx);
     }
 
     private static final class FastScanner {
@@ -89,65 +66,6 @@ public final class TaskB {
         final FastScanner in = new FastScanner(System.in);
         try (PrintWriter out = new PrintWriter(System.out)) {
             solve(in, out);
-        }
-    }
-
-    static class Queue {
-        private Node front, rear;
-        private int size;
-
-        private class Node {
-            final private int number;
-            private Node next;
-
-            Node(int number, Node next) {
-                this.number = number;
-                this.next = next;
-            }
-        }
-
-        public Queue() {
-            front = null;
-            rear = null;
-            size = 0;
-        }
-
-        public void push(int n) {
-            Node oldRear = rear;
-            rear = new Node(n, null);
-            if (size == 0) {
-                front = rear;
-            } else {
-                oldRear.next = rear;
-            }
-            size++;
-        }
-
-        public int pop() {
-            int num = front.number;
-            front = front.next;
-            size--;
-            if (size == 0) {
-                rear = null;
-            }
-            return num;
-        }
-
-        public int front() {
-            return front.number;
-        }
-
-        public int size() {
-            return size;
-        }
-
-        public void clear() {
-            while (size != 0) {
-                front = front.next;
-                size--;
-            }
-            front = null;
-            rear = null;
         }
     }
 }
