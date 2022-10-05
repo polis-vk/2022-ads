@@ -46,9 +46,9 @@ public final class Median {
             }
         }
         private void swim(int k) {
-            while (k > 1 && comparator.compare(heap[k / 2], heap[k]) < 0) {
-                swap(k / 2, k);
-                k /= 2;
+            while (k > 1 && comparator.compare(heap[k >> 1], heap[k]) < 0) {
+                swap(k >> 1, k);
+                k >>= 1;
             }
         }
         public int popRoot() {
@@ -73,13 +73,11 @@ public final class Median {
         Scanner in = new Scanner(System.in);
         IntHeap minHeap = new IntHeap((x, y) -> y - x);
         IntHeap maxHeap = new IntHeap((x, y) -> x - y);
-        int median = 0;
+        int median = Integer.MIN_VALUE;
         int t = 0;
         while (in.hasNextInt()) {
             int number = in.nextInt();
-            if (t == 0) {
-                median = number;
-            } else if (t % 2 == 0) {
+            if ((t & 1) == 0) {
                 if (number <= median) {
                     maxHeap.add(number);
                     median = maxHeap.popRoot();
@@ -95,7 +93,7 @@ public final class Median {
                     maxHeap.add(median);
                     minHeap.add(number);
                 }
-                median = (minHeap.peekRoot() + maxHeap.peekRoot()) / 2;
+                median = (minHeap.peekRoot() + maxHeap.peekRoot()) >> 1;
             }
             System.out.println(median);
             t++;
