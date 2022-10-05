@@ -3,88 +3,37 @@ import java.util.StringTokenizer;
 
 public class TaskE {
 
-    private static void solve(final FastScanner in, final PrintWriter out) throws IOException{
-        Stack stack = new Stack();
-        String example = in.reader.readLine().trim();
+    private static StringBuilder getPalindrom(String str) {
+        int[] masAlphabet = new int[26]; // алфавит
+        for (int i = 0; i < str.length(); i++) {
+            masAlphabet[str.charAt(i) - 'A']++;
+        }
 
-        for (int i = 0; i < example.length(); i += 2) {
-            switch (example.charAt(i)) {
-                case '+':
-                    stack.push(stack.pop() + stack.pop());
-                    break;
-                case '-':
-                    stack.push(-stack.pop() + stack.pop());
-                    break;
-                case '*':
-                    stack.push(stack.pop() * stack.pop());
-                    break;
-                default:
-                    stack.push(Integer.parseInt(String.valueOf(example.charAt(i))));
-                    break;
+        StringBuilder leftPart = new StringBuilder();
+        boolean flagLastWithoutPair = true;
+        String midSymbol = "";
+        for (int i = 0; i < masAlphabet.length; i++) {
+            if (masAlphabet[i] >= 2) {
+                for (int j = 0; j < masAlphabet[i] / 2; j++) {
+                    leftPart.append((char) (i + 'A'));
+                }
+            }
+
+            if (masAlphabet[i] % 2 != 0 && flagLastWithoutPair) {
+                midSymbol += (char) (i + 'A');
+                flagLastWithoutPair = false;
             }
         }
-        out.println(stack.pop());
+        StringBuilder rightPart = new StringBuilder(leftPart).reverse();
+        return leftPart.append(midSymbol).append(rightPart);
     }
 
-    private static class Stack {
-        private Node head;
-        private Node tail;
-        private int size;
-
-        private static class Node {
-            int data;
-            Node pNext;
-            Node pPrev;
-
-            public Node(int value) {
-                data = value;
-                pNext = null;
-                pPrev = null;
-            }
-        }
-
-        public Stack() {
-            head = null;
-            tail = null;
-            size = 0;
-        }
-
-        public void push(int value) {
-            if (head == null) {
-                head = new Node(value);
-                tail = head;
-            } else {
-                tail.pNext = new Node(value);
-                tail.pNext.pPrev = tail;
-                tail = tail.pNext;
-            }
-            size++;
-        }
-
-        public int back() {
-            return tail.data;
-        }
-
-        public int pop() {
-            int value = tail.data;
-            tail = tail.pPrev;
-            if (tail == null) {
-                head = null;
-            }
-            size--;
-            return value;
-        }
-
-        public int size() {
-            return size;
-        }
-
-        public void clear() {
-            head = null;
-            tail = null;
-            size = 0;
-        }
+    private static void solve(final FastScanner in, final PrintWriter out) {
+        in.next();
+        String strInput = in.next();
+        System.out.println(getPalindrom(strInput));
     }
+
 
     private static final class FastScanner {
         private final BufferedReader reader;
@@ -110,7 +59,7 @@ public class TaskE {
         }
     }
 
-    public static void main(final String[] arg) throws IOException {
+    public static void main(final String[] arg) {
         final FastScanner in = new FastScanner(System.in);
         try (PrintWriter out = new PrintWriter(System.out)) {
             solve(in, out);

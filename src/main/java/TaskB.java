@@ -14,97 +14,37 @@ public final class TaskB {
     private TaskB() { }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        Queue queue = new Queue();
-        String command = " ";
-        while (!command.equals("exit")) {
-            command = in.next();
-            switch (command) {
-                case "push":
-                    queue.push(in.nextInt());
-                    out.println("ok");
-                    break;
-                case "pop":
-                    if (queue.size() == 0) {
-                        out.println("error");
-                        break;
-                    }
-                    out.println(queue.pop());
-                    break;
-                case "front":
-                    if (queue.size() == 0){
-                        out.println("error");
-                        break;
-                    }
-                    out.println(queue.front());
-                    break;
-                case "clear":
-                    queue.clear();
-                    out.println("ok");
-                    break;
-                case "size":
-                    out.println(queue.size());
-                    break;
-                case "exit":
-                    command = "exit";
-                    break;
-            }
-        }
-        out.println("bye");
+        System.out.println(getValueSequence(in.nextInt()));
     }
 
-    static class Queue {
-        private Node head;
-        private Node tail;
-        private int size;
+    private static long getValueSequence(int distIndex) {
+        long squareDigit = 1;
+        long cubeDigit = 1;
 
-        private static class Node {
-            int data;
-            Node pNext;
-            public Node(int value) {
-                data = value;
-                pNext = null;
-            }
-        }
+        int cntOne = 1;
+        int cntTwo = 1;
 
-        public Queue() {
-            head = null;
-            size = 0;
-        }
+        long result = 0;
 
-        public void push(int value) {
-            if (head == null) {
-                head = new Node(value);
-                tail = head;
+        for (int i = 0; i < distIndex; i++) {
+            if (squareDigit == cubeDigit) {
+                cntOne++;
+                cntTwo++;
+                result = squareDigit;
+                squareDigit = (long) Math.pow(cntOne, 2);
+                cubeDigit = (long) Math.pow(cntTwo, 3);
+            } else if (squareDigit > cubeDigit) {
+                result = cubeDigit;
+                cntTwo++;
+                cubeDigit = (long) Math.pow(cntTwo, 3);
             } else {
-                tail.pNext = new Node(value);
-                tail = tail.pNext;
+                result = squareDigit;
+                cntOne++;
+                squareDigit = (long) Math.pow(cntOne, 2);
             }
-            size++;
         }
 
-        public int front() {
-            return head.data;
-        }
-
-        public int pop() {
-            int value = head.data;
-            head = head.pNext;
-            if (head == null) {
-                tail = null;
-            }
-            size--;
-            return value;
-        }
-
-        public int size(){
-            return size;
-        }
-
-        public void clear() {
-            head = null;
-            tail = null;
-            size = 0;
-        }
+        return result;
     }
 
     private static final class FastScanner {
