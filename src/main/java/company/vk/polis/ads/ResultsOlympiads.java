@@ -1,4 +1,4 @@
-package company.vk.polis.ads;
+//package company.vk.polis.ads;
 
 import java.util.*;
 import java.io.BufferedReader;
@@ -14,43 +14,41 @@ import java.io.PrintWriter;
  */
 public final class ResultsOlympiads {
 
-    private static <T> void merge(List<T> src1, int src1Start, List<T> src2, int src2Start, List<T> dest, int destStart, int size, Comparator<T> comparator) {
-        int index1 = src1Start;
-        int index2 = src2Start;
+    private static <T> void merge(ArrayList<T> list, int fromInclusive, int mid, int toExclusive, Comparator<T> comparator) {
+        ArrayList<T> temp = new ArrayList<>();
 
-        int src1End = Math.min(src1Start + size, src1.size());
-        int src2End = Math.min(src2Start + size, src2.size());
-
-        int iterCount = src1End - src1Start + src2End - src2Start;
-
-        for (int i = destStart; i < destStart + iterCount; i++) {
-            if (index1 < src1End && (index2 >= src2End ||
-                    comparator.compare(src1.get(index1),src2.get(index2)) == -1)) { // возможно не -1
-                dest.set(i, src1.get(index1));
-                index1++;
+        int leftIndex = fromInclusive;
+        int rightIndex = mid;
+        while (leftIndex < mid && rightIndex < toExclusive) {
+            if (comparator.compare(list.get(leftIndex), list.get(rightIndex)) == -1) {
+                temp.add(list.get(leftIndex++));
             } else {
-                dest.set(i, src2.get(index2));
-                index2++;
+                temp.add(list.get(rightIndex++));
             }
+        }
+
+        while (leftIndex < mid) {
+            temp.add(list.get(leftIndex++));
+        }
+
+        while (rightIndex < toExclusive) {
+            temp.add(list.get(rightIndex++));
+        }
+
+        for (int i = 0; i < temp.size(); fromInclusive++) {
+            list.set(fromInclusive, temp.get(i++));
         }
     }
 
-    private static <T> List<T> mergeSort(List<T> list, Comparator<T> comparator) {
-        List<T> temp;
-        List<T> currentSrc = list;
-        List<T> currentDest = new ArrayList<>(list.size());
-
-        int size = 1;
-        while (size < list.size()) {
-            for (int i = 0; i < list.size(); i += 2 * size) {
-                merge(currentSrc, i, currentSrc, i + size, currentDest, i, size , comparator);
-            }
-            temp = currentSrc;
-            currentSrc = currentDest;
-            currentDest = temp;
-            size = size * 2;
+    public static <T> void mergeSort(ArrayList<T> array, int fromInclusive, int toExclusive, Comparator<T> comparator) {
+        if (fromInclusive == toExclusive - 1) {
+            return;
         }
-        return currentSrc;
+
+        int mid = fromInclusive + ((toExclusive - fromInclusive) >> 1);
+        mergeSort(array, fromInclusive, mid, comparator);
+        mergeSort(array, mid, toExclusive, comparator);
+        merge(array, fromInclusive, mid, toExclusive, comparator);
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
@@ -59,7 +57,7 @@ public final class ResultsOlympiads {
         for (int i = 0; i < capacity; i++) {
             members.add(new MemberOlympiada(in.nextInt(), in.nextInt()));
         }
-        Collections.sort(members, new Comparator<MemberOlympiada>() {
+        mergeSort(members, 0, capacity, new Comparator<MemberOlympiada>() {
             @Override
             public int compare(MemberOlympiada o1, MemberOlympiada o2) {
                 if ((o1.getScore() > o2.getScore()) || (o1.getScore() == o2.getScore() && o1.getId() < o2.getId())) {
