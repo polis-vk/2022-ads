@@ -13,12 +13,11 @@ public class Palindrome {
         return (char) (index + 'A');
     }
 
-    private static StringBuilder insertInMid(StringBuilder stringBuilder, int countChar, char charToInsert, int mid) {
+    private static void appendChars(StringBuilder stringBuilder, int countChar, char charToInsert) {
         while (countChar > 0) {
-            stringBuilder.insert(mid, charToInsert);
+            stringBuilder.append(charToInsert);
             countChar--;
         }
-        return stringBuilder;
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
@@ -30,7 +29,6 @@ public class Palindrome {
         }
 
         char midChar = '[';
-        int mid = 0;
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < countChar.length; i++) {
             if (countChar[i] == 0) {
@@ -39,19 +37,18 @@ public class Palindrome {
 
             if (countChar[i] % 2 == 1) {
                 if (countChar[i] - 1 != 0 && (countChar[i] - 1) % 2 == 0) {
-                    insertInMid(stringBuilder, countChar[i] - 1, getCharByIndex(i), mid);
-                    mid = stringBuilder.length() / 2;
+                    appendChars(stringBuilder, (countChar[i] - 1) / 2, getCharByIndex(i));
                 }
                 if (midChar > getCharByIndex(i)) {
                     midChar = getCharByIndex(i);
                 }
             } else {
-                insertInMid(stringBuilder, countChar[i], getCharByIndex(i), mid);
-                mid = stringBuilder.length() / 2;
+                appendChars(stringBuilder, countChar[i] / 2, getCharByIndex(i));
             }
         }
 
-        out.println((midChar != '[') ? insertInMid(stringBuilder, 1, midChar, mid) : stringBuilder);
+        out.println((midChar != '[') ? stringBuilder.toString() + midChar + stringBuilder.reverse()
+                : stringBuilder.toString() + stringBuilder.reverse());
     }
 
     private static final class FastScanner {
