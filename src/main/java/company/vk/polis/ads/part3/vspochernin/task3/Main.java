@@ -9,6 +9,7 @@ import java.util.StringTokenizer;
 
 /**
  * Problem solution template.
+ * https://www.eolymp.com/ru/submissions/11685138
  *
  * @author Dmitry Schitinin
  */
@@ -17,8 +18,63 @@ public final class Main {
         // Should not be instantiated
     }
 
+    private static class Heap {
+
+        private final int[] a;
+        private int size;
+
+        public Heap(int[] a) {
+            this.size = a.length - 1; // Подразумевается, что нам будет подан массив с "лишним" нулевым элементом.
+            this.a = a;
+
+            for (int k = size / 2; k >= 1; k--) {
+                sink(k);
+            }
+        }
+
+        public void sort() {
+            while (size > 1) {
+                swap(1, size--);
+                sink(1);
+            }
+        }
+
+        public void swap(int i, int j) {
+            int temp = a[i];
+            a[i] = a[j];
+            a[j] = temp;
+        }
+
+        public void sink(int index) {
+            int k = index;
+
+            while (2 * k <= size) {
+                int j = 2 * k;
+                if (j < size && a[j + 1] > a[j]) {
+                    j++;
+                }
+                if (a[k] >= a[j]) {
+                    break;
+                }
+                swap(k, j);
+                k = j;
+            }
+        }
+    }
+
     private static void solve(final FastScanner in, final PrintWriter out) {
-        // Write me
+        int n = in.nextInt();
+        int[] a = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            a[i] = in.nextInt();
+        }
+
+        Heap heap = new Heap(a);
+        heap.sort();
+        for (int i = 1; i < n; i++) {
+            out.print(a[i] + " ");
+        }
+        out.println(a[n]);
     }
 
     private static final class FastScanner {
