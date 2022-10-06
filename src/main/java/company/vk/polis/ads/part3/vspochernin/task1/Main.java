@@ -20,7 +20,7 @@ public final class Main {
 
     private static class Heap {
 
-        private int[] a;
+        private final int[] a;
         private int size;
 
         public Heap(int capacity) {
@@ -65,7 +65,9 @@ public final class Main {
                 if (j < size && a[j + 1] > a[j]) {
                     j++;
                 }
-                if (a[k] >= a[j]) break;
+                if (a[k] >= a[j]) {
+                    break;
+                }
                 swap(k, j);
                 k = j;
             }
