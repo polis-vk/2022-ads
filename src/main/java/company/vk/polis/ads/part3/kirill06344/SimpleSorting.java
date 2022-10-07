@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Comparator;
 import java.util.StringTokenizer;
+import company.vk.polis.ads.Heap;
 
 /**
  * Problem solution template.
@@ -17,62 +19,20 @@ public final class SimpleSorting {
         // Should not be instantiated
     }
 
-    private static class Heap {
-        int[] storage;
-        int heapSize;
+    public static class Ascend implements Comparator<Integer> {
 
-        public Heap(int[] storage) {
-            this.storage = storage;
-            heapSize = storage.length;
-        }
-
-        private void maxHeapify(int k) {
-            int left = getLeft(k);
-            int right = getRight(k);
-            int largest = k;
-
-            if (right < heapSize && storage[right] > storage[k]) {
-                largest = right;
-            }
-
-            if (left < heapSize && storage[left] > storage[largest]) {
-                largest = left;
-            }
-
-            if (largest != k) {
-                swap(k, largest);
-                maxHeapify(largest);
-            }
-        }
-
-        public void buildMaxHeapify() {
-            for (int i = storage.length / 2; i >= 0; --i) {
-                maxHeapify(i);
-            }
-        }
-
-        private int getLeft(int k) {
-            return 2 * k + 1;
-        }
-
-        private int getRight(int k) {
-            return 2 * k + 2;
-        }
-
-        private void swap(int i, int j) {
-            int tmp = storage[i];
-            storage[i] = storage[j];
-            storage[j] = tmp;
+        @Override
+        public int compare(Integer t1, Integer t2) {
+            return t1 - t2;
         }
     }
 
+
     private static void heapSort(int[] arr) {
-        Heap heap = new Heap(arr);
-        heap.buildMaxHeapify();
-        for (int i = arr.length - 1; i > 0; --i) {
-            heap.swap(0, i);
-            --heap.heapSize;
-            heap.maxHeapify(0);
+        Heap heap = new Heap(new Ascend());
+        heap.buildHeapOnArray(arr);
+        for (int i = arr.length - 1; i >= 0; --i) {
+            arr[i] = heap.extract();
         }
     }
 
