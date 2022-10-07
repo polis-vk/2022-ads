@@ -17,11 +17,11 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
     private class Pair {
 
         private final T val;
-        private final int number; // Индекс итератора, откуда пришел элемент.
+        private final Iterator<T> iter; // Итератор коллекции, откуда пришел элемент.
 
-        public Pair(T val, int number) {
+        public Pair(T val, Iterator<T> iter) {
             this.val = val;
-            this.number = number;
+            this.iter = iter;
         }
     }
 
@@ -33,7 +33,7 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
         public Heap(int capacity) {
             this.a = new ArrayList<>();
             for (int i = 0; i < capacity + 1; i++) {
-                a.add(new Pair(null,-1));
+                a.add(new Pair(null,null));
             }
             this.size = 0;
         }
@@ -96,12 +96,10 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
         this.iterators = iterators;
         this.heap = new Heap(iterators.size());
 
-        int count = 0;
         for (Iterator<T> iter : iterators) {
             if (iter.hasNext()) {
-                heap.insert(new Pair(iter.next(), count));
+                heap.insert(new Pair(iter.next(), iter));
             }
-            count++;
         }
     }
 
@@ -123,17 +121,15 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
 
         Pair result = heap.extract(); // Получили минимальный элемент из кучи.
 
-        Iterator<T> curIter = iterators.get(result.number); // Получили итератор, откуда взяли минимальный элемент.
+        Iterator<T> curIter = result.iter; // Итерратор на коллекцию, из которой полученный элемент.
         if (curIter.hasNext()) {
-            heap.insert(new Pair(curIter.next(), result.number));
+            heap.insert(new Pair(curIter.next(), curIter)); // Добавляем из той же коллекции.
         } else {
-            int count = 0;
             for (Iterator<T> iter : iterators) {
                 if (iter.hasNext()) {
-                    heap.insert(new Pair(iter.next(), count));
+                    heap.insert(new Pair(iter.next(), iter)); // Добавляем из первой непустой коллекции.
                     break;
                 }
-                count++;
             }
         }
 
