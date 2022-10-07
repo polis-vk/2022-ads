@@ -9,8 +9,6 @@ import java.util.Comparator;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-import company.vk.polis.ads.Heap;
-
 /**
  * Problem solution template.
  *

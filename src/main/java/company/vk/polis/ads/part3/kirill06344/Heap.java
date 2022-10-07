@@ -1,4 +1,4 @@
-package company.vk.polis.ads;
+package company.vk.polis.ads.part3.kirill06344;
 
 import java.util.Comparator;
 
@@ -45,6 +45,7 @@ public class Heap {
     public int getTop() {
         return storage[0];
     }
+
 
     private void sink(int k) {
         int left = getLeft(k);

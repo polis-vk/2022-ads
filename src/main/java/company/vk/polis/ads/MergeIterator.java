@@ -13,6 +13,31 @@ import java.util.List;
 public final class MergeIterator<T extends Comparable<T>> implements Iterator<T> {
     private final List<Iterator<T>> iterators;
 
+    class Pair implements Comparable<Pair> {
+        private T elem;
+        private int inx;
+
+        public Pair(T elem, int inx) {
+            this.elem = elem;
+            this.inx = inx;
+        }
+
+        public T getElem() {
+            return elem;
+        }
+
+        public int getInx() {
+            return inx;
+        }
+
+        @Override
+        public int compareTo(Pair pair) {
+            return elem.compareTo(pair.elem);
+        }
+    }
+
+    private GenericHeap<Pair> minHeap;
+
     /**
      * Constructor
      *
@@ -20,11 +45,17 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
      */
     public MergeIterator(List<Iterator<T>> iterators) {
         this.iterators = iterators;
+        minHeap = new GenericHeap<>(iterators.size());
+        for (int i = 0; i < iterators.size(); ++i) {
+            if (iterators.get(i).hasNext()) {
+                minHeap.insert(new Pair(iterators.get(i).next(), i));
+            }
+        }
     }
 
     @Override
     public boolean hasNext() {
-        throw new UnsupportedOperationException("Implement me");
+        return minHeap.getHeapSize() > 0;
     }
 
     /**
@@ -34,6 +65,11 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
      */
     @Override
     public T next() {
-        throw new UnsupportedOperationException("Implement me");
+        Pair tmp = minHeap.extract();
+        int indexOfList = tmp.getInx();
+        if (iterators.get(indexOfList).hasNext()) {
+            minHeap.insert(new Pair(iterators.get(indexOfList).next(), indexOfList));
+        }
+        return tmp.elem;
     }
 }
