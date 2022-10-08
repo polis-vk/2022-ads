@@ -32,20 +32,17 @@ public final class E {
     static String getPalindrome(int[] letters) {
         StringBuilder palindrome = new StringBuilder();
 
-        int palindromeMid = 0;
-
         char lowestChar = OUT_OF_ALPHABET;
 
         // Проходимся от А до Z
-        // Будем вставлять буквы в середину, и, проходясь от младшей буквы к старшей,
-        // получим, что первая половина палиндрома будет отсортирована в алфавитном порядке
+        // Будем вставлять буквы в конец StringBuilder,
+        // а затем просто пройдемся с конца до начала,
+        // чтобы в зеркальном отражении вставить полученную строку в её конец
         for (int i = 0; i < letters.length; i++) {
             // Пока таких букв есть больше двух и не меньше одной
             while (letters[i] / 2 != 0) {
                 // Вставляем две буквы в середину палиндрома
-                palindromeMid = palindrome.length() / 2;
-                palindrome.insert(palindromeMid, (char) (i + 'A'));
-                palindrome.insert(palindromeMid, (char) (i + 'A'));
+                palindrome.append((char) (i + 'A'));
                 letters[i] -= 2;
             }
             // Если ещё не задана минимальная в алфавитном порядке буква и текущая буква осталась одна
@@ -55,12 +52,20 @@ public final class E {
                 letters[i]--;
             }
         }
-        // Когда все возможные пары букв вставлены в палиндром
-        // Можем вставить в середину минимальную по алфавитному порядку букву, которая была сохранена ранее
+
+        int midOfPalindrome = palindrome.length();
+
+        // Можем вставить в середину минимальную по алфавитному порядку букву,
+        // которая была сохранена ранее, если такая есть
         if (lowestChar != OUT_OF_ALPHABET) {
-            palindromeMid = palindrome.length() / 2;
-            palindrome.insert(palindromeMid, lowestChar);
+            palindrome.append(lowestChar);
         }
+
+        // Вставляем вторую половину палиндрома
+        for(int i = midOfPalindrome - 1; i >= 0; i--){
+            palindrome.append(palindrome.charAt(i));
+        }
+
         return palindrome.toString();
     }
 
