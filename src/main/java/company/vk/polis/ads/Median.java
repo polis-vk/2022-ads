@@ -3,6 +3,7 @@ package company.vk.polis.ads;
 import java.util.Arrays;
 import java.util.Scanner;
 
+//https://www.eolymp.com/ru/submissions/11720053
 public class Median {
     private static final int INIT_CAPACITY = 10;
 
@@ -32,7 +33,7 @@ public class Median {
                 if (number <= median) {
                     maxHeap.insert(number);
                     maxHeap.swim(maxHeap.heapSize);
-                    median = maxHeap.peek();
+                    median = maxHeap.extract();
                 } else {
                     minHeap.insert(number);
                     minHeap.swim(minHeap.heapSize);

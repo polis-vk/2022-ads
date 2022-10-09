@@ -63,24 +63,24 @@ public final class CustomHeap {
             swim(heapSize);
         }
 
-        private void swim(int k) {
-            while (k > 1 && array[k] > array[k / 2]) {
-                swap(array, k, k / 2);
-                k /= 2;
+        private void swim(int child) {
+            while (child > 1 && array[child] > array[child / 2]) {
+                swap(array, child, child / 2);
+                child /= 2;
             }
         }
 
-        private void sink(int k) {
-            while (2 * k <= heapSize) {
-                int j = 2 * k;
-                if (j < heapSize && array[j] < array[j + 1]) {
-                    j++;
+        private void sink(int parent) {
+            while (2 * parent <= heapSize) {
+                int child = 2 * parent;
+                if (child < heapSize && array[child] < array[child + 1]) {
+                    child++;
                 }
-                if (array[k] >= array[j]) {
+                if (array[parent] >= array[child]) {
                     break;
                 }
-                swap(array, k, j);
-                k = j;
+                swap(array, parent, child);
+                parent = child;
             }
         }
 
