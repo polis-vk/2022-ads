@@ -19,31 +19,28 @@ public final class TaskE {
 
     private static void solve(final FastScanner in, final PrintWriter out) {
         int length = in.nextInt();
-        int[] letters = new int[26];
-        int mid = -1;
-        int middle;
-        StringBuilder result = new StringBuilder();
         String str = in.next();
+        StringBuilder result = new StringBuilder();
+        int mid = -1;
+        int[] letters = new int['Z' - 'A' + 1];
         char[] input = str.toCharArray();
         for (char c : input) {
             letters[c - 'A'] += 1;
         }
         for (int i = 0; i < letters.length; i++) {
             while (letters[i] / 2 != 0) {
-                middle = result.length() / 2;
+                result.append((char) (i + 'A'));
                 letters[i] -= 2;
-                result.insert(middle, (char) (i + 'A'));
-                result.insert(middle, (char) (i + 'A'));
             }
             if (mid == -1 && letters[i] % 2 == 1) {
                 mid = i;
             }
         }
+        System.out.print(result);
         if (mid != -1) {
-            middle = result.length() / 2;
-            result.insert(middle, (char) (mid + 'A'));
+            System.out.print((char) (mid + 'A'));
         }
-        System.out.println(result);
+        System.out.print(result.reverse());
     }
 
     private static final class FastScanner {
