@@ -72,8 +72,8 @@ $ git checkout -b part1
 ‼️ Ветка с решением должна ответвляться от коммита [6af9b4bc15fa61806ba537dea3d63f785a774a12](https://github.com/polis-vk/2022-ads/commit/6af9b4bc15fa61806ba537dea3d63f785a774a12):
 
 ```bash
-$ git fetch upstrean
-$ git checkout -b my-branch-for-part3 6af9b4bc15fa61806ba537dea3d63f785a774a12
+$ git fetch upstream
+$ git checkout -b <my-branch-for-part3> 6af9b4bc15fa61806ba537dea3d63f785a774a12
 ```
 
 Задачки с e-olymp:
