@@ -12,6 +12,7 @@ import java.util.List;
  */
 public final class MergeIterator<T extends Comparable<T>> implements Iterator<T> {
     private final List<Iterator<T>> iterators;
+    MinHeap<Element<T>> heap;
 
     /**
      * Constructor
@@ -20,11 +21,19 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
      */
     public MergeIterator(List<Iterator<T>> iterators) {
         this.iterators = iterators;
+        heap = new MinHeap<Element<T>>(iterators.size());
+        int cnt = 0;
+        for (Iterator<T> iterator: iterators){
+            if (iterator.hasNext()){
+                heap.add(new Element<>(iterator.next(), cnt));
+            }
+            cnt++;
+        }
     }
 
     @Override
     public boolean hasNext() {
-        throw new UnsupportedOperationException("Implement me");
+        return !heap.isEmpty();
     }
 
     /**
@@ -34,6 +43,12 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
      */
     @Override
     public T next() {
-        throw new UnsupportedOperationException("Implement me");
+        var ansElement = heap.pop();
+        var iterator = iterators.get(ansElement.getSourceIndex());
+        if (iterator.hasNext()){
+            heap.add(new Element<>(iterator.next(), ansElement.getSourceIndex()));
+        }
+        return ansElement.getValue();
     }
+
 }
