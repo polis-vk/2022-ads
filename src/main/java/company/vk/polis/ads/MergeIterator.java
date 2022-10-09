@@ -2,6 +2,7 @@ package company.vk.polis.ads;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Iterator that merges k input iterators ordered ascending.
@@ -11,7 +12,7 @@ import java.util.List;
  * @param <T> type of elements
  */
 public final class MergeIterator<T extends Comparable<T>> implements Iterator<T> {
-    private final List<Iterator<T>> iterators;
+    private final HeapKeyValue<T> heap;
 
     /**
      * Constructor
@@ -19,12 +20,16 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
      * @param iterators k input iterators of ascending ordered elements
      */
     public MergeIterator(List<Iterator<T>> iterators) {
-        this.iterators = iterators;
+        heap = new HeapKeyValue<>(iterators.size() + 1);
+
+        for (Iterator<T> iterator : iterators) {
+            valueToHeap(iterator);
+        }
     }
 
     @Override
     public boolean hasNext() {
-        throw new UnsupportedOperationException("Implement me");
+        return heap.getSizeMin() > 0;
     }
 
     /**
@@ -34,6 +39,20 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
      */
     @Override
     public T next() {
-        throw new UnsupportedOperationException("Implement me");
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+
+        Pair<T> pair = heap.extractMin();
+        Iterator<T> iterator = pair.getIterator();
+        valueToHeap(iterator);
+
+        return pair.getValue();
+    }
+
+    private void valueToHeap(Iterator<T> iterator) {
+        if (iterator.hasNext()) {
+            heap.insertMin(new Pair<>(iterator.next(), iterator));
+        }
     }
 }
