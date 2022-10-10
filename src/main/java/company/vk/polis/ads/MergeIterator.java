@@ -2,6 +2,7 @@ package company.vk.polis.ads;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Iterator that merges k input iterators ordered ascending.
@@ -11,7 +12,31 @@ import java.util.List;
  * @param <T> type of elements
  */
 public final class MergeIterator<T extends Comparable<T>> implements Iterator<T> {
+     class Pair implements Comparable<Pair> {
+        private final int index;
+        private final T data;
+
+        public Pair(int indexOfMassive, T data){
+            this.data = data;
+            index = indexOfMassive;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public T getData() {
+            return data;
+        }
+
+        @Override
+        public int compareTo(Pair o) {
+            return data.compareTo(o.getData());
+        }
+    }
+
     private final List<Iterator<T>> iterators;
+    private final MinHeap<Pair> minHeap;
 
     /**
      * Constructor
@@ -20,11 +45,18 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
      */
     public MergeIterator(List<Iterator<T>> iterators) {
         this.iterators = iterators;
+        minHeap = new MinHeap<>(iterators.size());
+        for (int i = 0; i < iterators.size(); i++){
+            if (iterators.get(i).hasNext()){
+                Pair heapPair = new Pair(i, iterators.get(i).next());
+                minHeap.insert(heapPair);
+            }
+        }
     }
 
     @Override
     public boolean hasNext() {
-        throw new UnsupportedOperationException("Implement me");
+        return minHeap.getSize() > 0;
     }
 
     /**
@@ -34,6 +66,26 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
      */
     @Override
     public T next() {
-        throw new UnsupportedOperationException("Implement me");
+        if (!hasNext()){
+            throw new NoSuchElementException();
+        }
+        Pair result = minHeap.extract();
+        if (!iterators.get(result.getIndex()).hasNext()){
+            for (int i = 0; i < iterators.size(); i++){
+                if (iterators.get(i).hasNext()){
+                    Pair heapPair = new Pair(i, iterators.get(i).next());
+                    minHeap.insert(heapPair);
+                    break;
+                }
+            }
+        }
+        else {
+            int indexOfResult = result.getIndex();
+            Pair heapPair = new Pair(indexOfResult, iterators.get(indexOfResult).next());
+            minHeap.insert(heapPair);
+        }
+
+        return result.getData();
     }
+
 }

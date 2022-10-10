@@ -1,5 +1,6 @@
 package company.vk.polis.ads;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -14,6 +15,23 @@ public final class TopK {
      * @param <T> type of elements
      */
     public <T extends Comparable<T>> List<T> topK(List<T> list, int k) {
-        throw new UnsupportedOperationException("Implement me");
+        MinHeap<T> minHeap = new MinHeap<>(k);
+        int counter = list.size() - 1;
+        for (int i = 0; i < k; i++){
+            minHeap.insert(list.get(counter));
+            list.remove(counter);
+            counter--;
+        }
+        for (;counter >= 0; counter--){
+            if (minHeap.peek().compareTo(list.get(counter)) < 0){
+                minHeap.extract();
+                minHeap.insert(list.get(counter));
+            }
+        }
+        LinkedList<T> result = new LinkedList<>();
+        for (int i = 0; i < k; i++){
+            result.addFirst(minHeap.extract());
+        }
+        return result;
     }
 }
