@@ -8,7 +8,7 @@ public class Heap {
     private static final double GOLDEN_RATIO = 1.618D;
 
     int[] data;
-    int counter;
+    int currentIndex;
     int capacity;
     Comparator<Integer> cmp;
 
@@ -19,23 +19,23 @@ public class Heap {
     public Heap(int size, Comparator<Integer> cmp){
         capacity = size + DEFAULT_STARTING_VALUE;
         data = new int[capacity];
-        counter = DEFAULT_STARTING_VALUE;
+        currentIndex = DEFAULT_STARTING_VALUE;
         this.cmp = cmp;
     }
 
     public void insert(int value){
-        if (counter == capacity){
+        if (currentIndex == capacity){
             ensureCapacity();
         }
-        data[counter] = value;
-        swim(counter);
-        counter++;
+        data[currentIndex] = value;
+        swim(currentIndex);
+        currentIndex++;
     }
 
     public int extract(){
         int maxValue = data[DEFAULT_STARTING_VALUE];
-        data[DEFAULT_STARTING_VALUE] = data[counter - 1];
-        counter--;
+        data[DEFAULT_STARTING_VALUE] = data[currentIndex - 1];
+        currentIndex--;
         sink(DEFAULT_STARTING_VALUE);
         return maxValue;
     }
@@ -45,9 +45,9 @@ public class Heap {
     }
 
     private void sink(int index){
-        while (getLeftChild(index) <= counter - DEFAULT_STARTING_VALUE) {
+        while (getLeftChild(index) <= currentIndex - DEFAULT_STARTING_VALUE) {
             int i = getLeftChild(index);
-            if (i < counter - DEFAULT_STARTING_VALUE && cmp.compare(data[i  + 1], data[i]) > 0){
+            if (i < currentIndex - DEFAULT_STARTING_VALUE && cmp.compare(data[i  + 1], data[i]) > 0){
                 i++;
             }
             if (cmp.compare(data[index], data[i]) >= 0){
