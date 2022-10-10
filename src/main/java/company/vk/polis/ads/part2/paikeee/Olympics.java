@@ -20,15 +20,41 @@ public final class Olympics {
 
     private static void solve(final FastScanner in, final PrintWriter out) throws IOException {
         int n = in.nextInt();
-        TreeSet<Student> result = new TreeSet<>();
-        while (n > 0) {
-            String[] studentData = in.reader.readLine().split(" ");
-            int id = Integer.parseInt(studentData[0]);
-            int score = Integer.parseInt(studentData[1]);
-            result.add(new Student(id, score));
-            n--;
+        Student[] result = new Student[n];
+        for (int i = 0; i < n; i++) {
+            String[] student = in.reader.readLine().split(" ");
+            result[i] = new Student(Integer.parseInt(student[0]), Integer.parseInt(student[1]));
         }
-        result.forEach(it -> out.println(it.toString()));
+        mergeSort(result);
+        for (int i = 0; i < n; i++) {
+            out.println(result[i].toString());
+        }
+    }
+
+    private static void merge(Student[] elements, int begin, int middle, int end) {
+        Student[] left = Arrays.copyOfRange(elements, begin, middle);
+        Student[] right = Arrays.copyOfRange(elements, middle, end);
+        int li = 0, ri = 0;
+        for (int i = begin; i < end; i++) {
+            if (li < left.length && (ri == right.length || left[li].compareTo(right[ri]) < 0)) {
+                elements[i] = left[li++];
+            }
+            else {
+                elements[i] = right[ri++];
+            }
+        }
+    }
+
+    private static void mergeSort(Student[] elements, int begin, int end) {
+        if (end - begin <= 1) return;
+        int middle = (begin + end) / 2;
+        mergeSort(elements, begin, middle);
+        mergeSort(elements, middle, end);
+        merge(elements, begin, middle, end);
+    }
+
+    public static void mergeSort(Student[] elements) {
+        mergeSort(elements, 0, elements.length);
     }
 
     private static final class FastScanner {

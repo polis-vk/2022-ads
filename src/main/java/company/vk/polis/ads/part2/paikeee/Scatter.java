@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.TreeMap;
 import java.util.StringTokenizer;
 
 /**
@@ -15,6 +14,8 @@ import java.util.StringTokenizer;
  */
 public final class Scatter {
 
+    private static final byte CAPACITY = 107;
+
     private Scatter() {
         // Should not be instantiated
     }
@@ -22,19 +23,27 @@ public final class Scatter {
     // Время работы: O(n)
     private static void solve(final FastScanner in, final PrintWriter out) throws IOException {
         int n = Integer.parseInt(in.reader.readLine());
-        TreeMap<Integer, Integer> valuesCount = new TreeMap<>();
-        while (n > 0) {
-            int index = in.nextInt();
-            valuesCount.put(index, valuesCount.getOrDefault(index, 0) + 1);
-            n--;
+        int[] elements = new int[n];
+        int minElement = Integer.MAX_VALUE;
+        for (int i = 0; i < n; i++) {
+            elements[i] = in.nextInt();
+            if (elements[i] < minElement) {
+                minElement = elements[i];
+            }
         }
-        for (Integer value: valuesCount.keySet()) {
-            int count = valuesCount.get(value);
-            for (int i = 0; i < count; i++) {
-                out.print(value + " ");
+        int[] result = new int[CAPACITY];
+        for (int i = 0; i < n; i++) {
+           result[elements[i] - minElement]++;
+        }
+        for (int i = 0; i < CAPACITY; i++) {
+            if (result[i] > 0) {
+                for (int j = 0; j < result[i]; j++) {
+                    out.print(i + minElement + " ");
+                }
             }
         }
     }
+
 
     private static final class FastScanner {
         private final BufferedReader reader;

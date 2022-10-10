@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
 
 /**
  * Problem solution template.
@@ -15,6 +14,9 @@ import java.util.TreeMap;
  */
 public final class Palindrome {
 
+    private static final int ALPHABET_SIZE = 26;
+    private static final int CHAR_TO_INT = 65;
+
     private Palindrome() {
         // Should not be instantiated
     }
@@ -22,35 +24,34 @@ public final class Palindrome {
     private static void solve(final FastScanner in, final PrintWriter out) throws IOException {
         int n = in.nextInt();
         String string = in.reader.readLine();
-        TreeMap<Character, Integer> letters = new TreeMap<>();
+        int[] charCount = new int[ALPHABET_SIZE];
         for (int i = 0; i < n; i++) {
-            letters.put(string.charAt(i), letters.getOrDefault(string.charAt(i), 0) + 1);
+            charCount[string.charAt(i) - CHAR_TO_INT]++;
         }
         StringBuilder answer = new StringBuilder();
-        Character minChar = null;
-        for (Character key : letters.keySet()) {
-            Integer value = letters.get(key);
-            if (minChar == null && value % 2 == 1) {
-                minChar = key;
-                value--;
-                letters.put(key, value);
+        int minChar = ALPHABET_SIZE;
+        for (int i = 0; i < ALPHABET_SIZE; i++) {
+            if (minChar == ALPHABET_SIZE && charCount[i] % 2 == 1) {
+                minChar = i;
+                charCount[i]--;
             }
-            if (value / 2 > 0) {
-                if (value % 2 == 1) {
-                    value--;
+            if (charCount[i] / 2 > 0) {
+                if (charCount[i] % 2 == 1) {
+                    charCount[i]--;
                 }
-                value /= 2;
-                answer.append(String.valueOf(key).repeat(value));
-                letters.put(key, value);
+                charCount[i] /= 2;
+                answer.append(String.valueOf((char) (i + CHAR_TO_INT)).repeat(charCount[i]));
             } else {
-                letters.put(key, 0);
+                charCount[i] = 0;
             }
         }
-        if (minChar != null) {
-            answer.append(minChar);
+        if (minChar != ALPHABET_SIZE) {
+            answer.append((char) (minChar + CHAR_TO_INT));
         }
-        for (Character key : letters.descendingKeySet()) {
-            answer.append(String.valueOf(key).repeat(letters.get(key)));
+        for (int i = ALPHABET_SIZE - 1; i >= 0; i--) {
+            if (charCount[i] != 0) {
+                answer.append(String.valueOf((char) (i + CHAR_TO_INT)).repeat(charCount[i]));
+            }
         }
         out.println(answer);
     }
