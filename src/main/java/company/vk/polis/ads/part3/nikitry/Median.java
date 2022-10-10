@@ -69,12 +69,6 @@ final class UniversalHeap {
         heap.add(0);
     }
 
-//    void showHeap() {
-//        for (Integer integer : heap) {
-//            System.out.print(integer + " ");
-//        }
-//    }
-
     private void sink(int k, int n) {
         while (2 * k <= n) {
             int j = 2 * k;
