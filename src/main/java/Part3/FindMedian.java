@@ -21,19 +21,12 @@ public class FindMedian {
     }
 
     private static class Median {
-        private final Heap maxHeap;
-        private final Heap minHeap;
+        private final Heap maxHeap = new Heap(new Increasing());
+        private final Heap minHeap = new Heap(new Decreasing());
         private int counter;
-        private int median;
+        private int median = -1;
 
-        public Median(){
-            maxHeap = new Heap(new Increasing());
-            minHeap = new Heap(new Decreasing());
-            counter = 0;
-            median = -1;
-        }
-
-        public void insert(int value){
+        public int getNextMedian(int value){
             counter++;
             if (isOdd(counter)){
                 if (value > median){
@@ -56,9 +49,6 @@ public class FindMedian {
                 }
                 median = (maxHeap.peek() + minHeap.peek()) / 2;
             }
-        }
-
-        public int getMedian(){
             return median;
         }
 
@@ -71,8 +61,7 @@ public class FindMedian {
         Scanner in = new Scanner(System.in);
         Median result = new Median();
         while (in.hasNextInt()){
-            result.insert(in.nextInt());
-            System.out.println(result.getMedian());
+            System.out.println(result.getNextMedian(in.nextInt()));
         }
     }
 }
