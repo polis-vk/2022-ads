@@ -2,6 +2,7 @@ package company.vk.polis.ads;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Iterator that merges k input iterators ordered ascending.
@@ -12,6 +13,7 @@ import java.util.List;
  */
 public final class MergeIterator<T extends Comparable<T>> implements Iterator<T> {
     private final List<Iterator<T>> iterators;
+    private MyHeap<Pair> heap;
 
     /**
      * Constructor
@@ -20,11 +22,12 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
      */
     public MergeIterator(List<Iterator<T>> iterators) {
         this.iterators = iterators;
+        fillHeap();
     }
 
     @Override
     public boolean hasNext() {
-        throw new UnsupportedOperationException("Implement me");
+        return heap.getSize() > 0;
     }
 
     /**
@@ -34,6 +37,37 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
      */
     @Override
     public T next() {
-        throw new UnsupportedOperationException("Implement me");
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+        Pair pair = heap.delMin();
+        T res = pair.value;
+        if (pair.iterator.hasNext()) {
+            pair.value = pair.iterator.next();
+            heap.insert(pair);
+        }
+        return res;
+    }
+
+    private void fillHeap() {
+        heap = new MyHeap<>(iterators.size() + 1);
+        for (Iterator<T> iterator : iterators) {
+            heap.insert(new Pair(iterator.next(), iterator));
+        }
+    }
+
+    private class Pair implements Comparable<Pair> {
+        Iterator<T> iterator;
+        T value;
+
+        Pair(T value, Iterator<T> iterator) {
+            this.iterator = iterator;
+            this.value = value;
+        }
+
+        @Override
+        public int compareTo(Pair pair) {
+            return value.compareTo(pair.value);
+        }
     }
 }
