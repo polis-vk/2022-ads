@@ -16,7 +16,6 @@ public final class TopK {
      */
     public <T extends Comparable<T>> List<T> topK(List<T> list, int k) {
         MinHeap<T> heap = new MinHeap<>();
-        List<T> result = new ArrayList<>();
 
         if (list.size() <= k) {
             for (T item : list) {
@@ -34,8 +33,15 @@ public final class TopK {
             }
         }
 
+        List<T> result = new ArrayList<>(heap.size());
         while(heap.size() != 0) {
-            result.add(0, heap.delMin());
+            result.add(heap.delMin());
+        }
+
+        for (int i = 0; i < result.size() / 2; i++) {
+            T temp = result.get(i);
+            result.set(i, result.get(result.size() - 1 - i));
+            result.set(result.size() - 1 - i, temp);
         }
 
         return result;
