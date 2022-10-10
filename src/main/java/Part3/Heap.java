@@ -7,10 +7,11 @@ public class Heap {
     private static final int DEFAULT_ARRAY_SIZE = 15;
     private static final double GOLDEN_RATIO = 1.618D;
 
-    int[] data;
-    int currentIndex;
-    int capacity;
-    Comparator<Integer> cmp;
+    private int[] data;
+    private int currentIndex;
+    private int capacity;
+    private int size;
+    private Comparator<Integer> cmp;
 
     public Heap(Comparator<Integer> cmp){
         this(DEFAULT_ARRAY_SIZE, cmp);
@@ -23,6 +24,10 @@ public class Heap {
         this.cmp = cmp;
     }
 
+    public int getSize() {
+        return size;
+    }
+
     public void insert(int value){
         if (currentIndex == capacity){
             ensureCapacity();
@@ -30,6 +35,7 @@ public class Heap {
         data[currentIndex] = value;
         swim(currentIndex);
         currentIndex++;
+        size++;
     }
 
     public int extract(){
@@ -37,6 +43,7 @@ public class Heap {
         data[DEFAULT_STARTING_VALUE] = data[currentIndex - 1];
         currentIndex--;
         sink(DEFAULT_STARTING_VALUE);
+        size--;
         return maxValue;
     }
 

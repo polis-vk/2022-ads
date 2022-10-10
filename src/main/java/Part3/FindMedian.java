@@ -23,12 +23,11 @@ public class FindMedian {
     private static class Median {
         private final Heap maxHeap = new Heap(new Increasing());
         private final Heap minHeap = new Heap(new Decreasing());
-        private int counter;
+        private boolean medianIsUsed = false;
         private int median = -1;
 
         public int getNextMedian(int value){
-            counter++;
-            if (isOdd(counter)){
+            if (!medianIsUsed && isEven(Math.abs(maxHeap.getSize() - minHeap.getSize()))){
                 if (value > median){
                     minHeap.insert(value);
                     median = minHeap.extract();
@@ -37,8 +36,10 @@ public class FindMedian {
                     maxHeap.insert(value);
                     median = maxHeap.extract();
                 }
+                medianIsUsed = true;
             }
             else {
+                medianIsUsed = false;
                 if (value > median){
                     minHeap.insert(value);
                     maxHeap.insert(median);
@@ -52,8 +53,8 @@ public class FindMedian {
             return median;
         }
 
-        private boolean isOdd(int item){
-            return item % 2 == 1;
+        private boolean isEven(int item){
+            return item % 2 == 0;
         }
     }
 
