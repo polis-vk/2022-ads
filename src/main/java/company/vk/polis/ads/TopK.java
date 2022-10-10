@@ -1,5 +1,6 @@
 package company.vk.polis.ads;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,6 +15,29 @@ public final class TopK {
      * @param <T> type of elements
      */
     public <T extends Comparable<T>> List<T> topK(List<T> list, int k) {
-        throw new UnsupportedOperationException("Implement me");
+        MinHeap<T> heap = new MinHeap<>();
+        List<T> result = new ArrayList<>();
+
+        if (list.size() <= k) {
+            for (T item : list) {
+                heap.insert(item);
+            }
+        } else {
+            for (int i = 0; i < k; i++) {
+                heap.insert(list.get(i));
+            }
+
+            for (int i = k; i < list.size(); i++) {
+                if (list.get(i).compareTo(heap.min()) > 0) {
+                    heap.insert(list.get(i));
+                }
+            }
+        }
+
+        while(heap.size() != 0) {
+            result.add(0, heap.delMin());
+        }
+
+        return result;
     }
 }
