@@ -3,6 +3,8 @@ package company.vk.polis.ads.part3.tedbear;
 import java.io.*;
 import java.util.StringTokenizer;
 
+//https://www.eolymp.com/ru/submissions/11671341
+
 public class HeapSort {
     private static void solve(final FastScanner in, final PrintWriter out) {
         // Write me
