@@ -27,7 +27,7 @@ public class FindMedian {
         private int median = -1;
 
         public int getNextMedian(int value){
-            if (!medianIsUsed && isEven(Math.abs(maxHeap.getSize() - minHeap.getSize()))){
+            if (!medianIsUsed){
                 if (value > median){
                     minHeap.insert(value);
                     median = minHeap.extract();
@@ -51,10 +51,6 @@ public class FindMedian {
                 median = (maxHeap.peek() + minHeap.peek()) / 2;
             }
             return median;
-        }
-
-        private boolean isEven(int item){
-            return item % 2 == 0;
         }
     }
 
