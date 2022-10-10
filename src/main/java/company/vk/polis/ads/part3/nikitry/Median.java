@@ -88,7 +88,6 @@ final class UniversalHeap {
         return heap.get(1);
     }
 
-
     private void swap(int k, int j) {
         int temp = heap.get(k);
         heap.set(k, heap.get(j));
