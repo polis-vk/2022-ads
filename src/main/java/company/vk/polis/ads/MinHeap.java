@@ -1,10 +1,10 @@
 package company.vk.polis.ads;
 
-public class MyHeap<T extends Comparable<T>> {
+public class MinHeap<T extends Comparable<T>> {
     private T[] array;
     private int size = 0;
 
-    MyHeap(int size) {
+    MinHeap(int size) {
         array = (T[]) new Comparable[size + 1];
     }
 
