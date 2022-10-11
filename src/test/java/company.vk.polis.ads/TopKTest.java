@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TopKTest {
-    private static final int SEQUENCE_SIZE = 10_000_000;
+    private static final int SEQUENCE_SIZE = 100_000_000;
     private static final int TOP_K = 1_000_000;
 
     @Test
