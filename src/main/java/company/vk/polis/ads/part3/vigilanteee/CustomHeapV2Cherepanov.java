@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
  *
  * @author Dmitry Schitinin
  */
-public final class CustomHeapCherepanov {
+public final class CustomHeapV2Cherepanov {
     private void SolveTemplate() {
         // Should not be instantiated
     }
@@ -34,7 +34,7 @@ public final class CustomHeapCherepanov {
     }
 
     /*
-     * Heap with [1..n] indexes
+     * Heap with [0..n - 1] indexes
      */
     static class Heap {
 
@@ -42,18 +42,20 @@ public final class CustomHeapCherepanov {
         private int size;
 
         public Heap(int size) {
-            this.heap = new int[size + 1];
+            this.heap = new int[size];
         }
 
         public void insert(int x) {
-            heap[++size] = x;
-            siftUp(size);
+            size++;
+            heap[size - 1] = x;
+            siftUp(size - 1);
         }
 
         public int extract() {
-            int max = heap[1];
-            swap(heap, 1, size--);
-            siftDown(1);
+            int max = heap[0];
+            heap[0] = heap[size - 1];
+            size--;
+            siftDown(0);
             return max;
         }
 
@@ -64,16 +66,18 @@ public final class CustomHeapCherepanov {
         }
 
         private void siftUp(int k) {
-            while (k > 1 && heap[k] > heap[k / 2]) {
-                swap(heap, k, k / 2);
-                k = k / 2;
+            while (k > 0 && heap[k] > heap[(k - 1) / 2]) {
+                swap(heap, k, (k - 1) / 2);
+                k = (k - 1) / 2;
             }
         }
 
         private void siftDown(int k) {
-            while (2 * k <= size) {
-                int j = 2 * k;
-                if (j < size && heap[j] < heap[j + 1]) {
+            while (2 * k + 1 < size) {
+                int left = 2 * k + 1;
+                int right = 2 * k + 2;
+                int j = left;
+                if (right < size && heap[j] < heap[right]) {
                     j++;
                 }
                 if (heap[k] >= heap[j]) {
