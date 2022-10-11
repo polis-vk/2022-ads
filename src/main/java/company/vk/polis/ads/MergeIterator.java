@@ -2,6 +2,7 @@ package company.vk.polis.ads;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Iterator that merges k input iterators ordered ascending.
@@ -12,6 +13,7 @@ import java.util.List;
  */
 public final class MergeIterator<T extends Comparable<T>> implements Iterator<T> {
     private final List<Iterator<T>> iterators;
+    private final Heap<WrapperIterator<T>> heap;
 
     /**
      * Constructor
@@ -20,11 +22,18 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
      */
     public MergeIterator(List<Iterator<T>> iterators) {
         this.iterators = iterators;
+        this.heap = new Heap<>(iterators.size());
+
+        for (int i = 0; i < iterators.size(); i++) {
+            if (iterators.get(i).hasNext()) {
+                heap.insert(new WrapperIterator<>(i, iterators.get(i).next()));
+            }
+        }
     }
 
     @Override
     public boolean hasNext() {
-        throw new UnsupportedOperationException("Implement me");
+        return !heap.isEmpty();
     }
 
     /**
@@ -34,6 +43,24 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
      */
     @Override
     public T next() {
-        throw new UnsupportedOperationException("Implement me");
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+
+        if (heap.isEmpty()) {
+            for (int i = 0; i < iterators.size(); i++) {
+                if (iterators.get(i).hasNext()) {
+                    heap.insert(new WrapperIterator<>(i, iterators.get(i).next()));
+                }
+            }
+        }
+
+        WrapperIterator<T> wrapper = heap.extract();
+
+        if (iterators.get(wrapper.getIndex()).hasNext()) {
+            heap.insert(new WrapperIterator<>(wrapper.getIndex(), iterators.get(wrapper.getIndex()).next()));
+        }
+
+        return wrapper.getValue();
     }
 }
