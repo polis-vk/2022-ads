@@ -3,23 +3,19 @@ package company.vk.polis.ads;
 import java.util.Arrays;
 
 public class MinHeap<T extends Comparable<T>> {
-    private T[] a;//Куча
-    private int size;//Мощность
+    private T[] a;
+    private int n;
+
     private int capacity;
 
     public MinHeap(int capacity) {
+        this.a = (T[]) new Comparable[capacity + 1];
         this.capacity = capacity;
-        a = (T[]) new Comparable[capacity + 1];
-        size = 0;
-
     }
 
     public void insert(T v) {
-        if (a.length - 1 == size) {
-            a = Arrays.copyOf(a, a.length * 2);
-        }
-        a[++size] = v;
-        swim(size);
+        a[++n] = v;
+        swim(n);
     }
 
     private void swim(int k) {
@@ -29,9 +25,9 @@ public class MinHeap<T extends Comparable<T>> {
         }
     }
     private void sink(int k) {
-        while (2 * k <= size) {
+        while (2 * k <= n) {
             int j = 2 * k;// left child
-            if (j < size && a[j].compareTo(a[j + 1]) < 0) {
+            if (j < n && a[j].compareTo(a[j + 1]) < 0) {
                 j++;
             }
             if (a[k].compareTo(a[j]) < 0) {
@@ -49,7 +45,7 @@ public class MinHeap<T extends Comparable<T>> {
 
     public T delMin() {
         T min = a[1];
-        swap(1, size--);
+        swap(1, n--);
         sink(1);
         return min;
     }
@@ -59,6 +55,6 @@ public class MinHeap<T extends Comparable<T>> {
     }
 
     public int size() {
-        return size;
+        return n;
     }
 }
