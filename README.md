@@ -87,3 +87,13 @@ $ git checkout -b <my-branch-for-part3> 6af9b4bc15fa61806ba537dea3d63f785a774a12
 * Реализовать метод `company.vk.polis.ads.TopK#topK`, который должен возвращать список из k максимальных элементов, отсортированных по убыванию, так, чтобы выполнялись тесты в `company.vk.polis.ads.TopKTest`.
 
 Локально тесты можно запустить с помощью `./gradlew test`.
+
+## ДЗ 4. Динамическое программирование. Дедлайн 18.10.2022 18:29:59
+
+Задачки с e-olymp:
+
+* https://www.e-olymp.com/ru/problems/1087 - Скобочная последовательность
+* https://www.e-olymp.com/ru/problems/15 - Мышки и зернышки
+* https://www.e-olymp.com/ru/problems/1618 - Наибольшая общая подпоследовательность
+* https://www.e-olymp.com/ru/problems/262 - Лесенка
+* https://www.e-olymp.com/ru/problems/4261 - Количество инверсий
