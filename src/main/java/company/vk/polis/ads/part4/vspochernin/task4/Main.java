@@ -10,6 +10,8 @@ import java.util.StringTokenizer;
 /**
  * Problem solution template.
  *
+ * https://www.eolymp.com/ru/submissions/11760777
+ *
  * @author Dmitry Schitinin
  */
 public final class Main {
