@@ -18,7 +18,31 @@ public final class Main {
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        // Write me
+        int n = in.nextInt();
+
+        int[] stairs = new int[n + 2];
+        for (int i = 1; i <= n; i++) {
+            stairs[i] = in.nextInt();
+        }
+
+        int k = in.nextInt();
+
+        int[] costs = new int[stairs.length];
+        for (int i = 1; i < stairs.length; i++) {
+            int max = Integer.MIN_VALUE;
+            for (int j = 1; j <= k; j++) {
+                if (i - j < 0) { // Если вышли за границы массива.
+                    break;
+                }
+                int cur = costs[i - j];
+                if (cur > max) {
+                    max = cur;
+                }
+            }
+            costs[i] = stairs[i] + max;
+        }
+
+        out.println(costs[costs.length - 1]);
     }
 
     private static final class FastScanner {
