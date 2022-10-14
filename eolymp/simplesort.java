@@ -55,7 +55,7 @@ public class Main {
             arr[i] = in.nextInt();
         }
 
-        heapSort(arr);
+        heapSort(arr);g
 
         for (int i = 1; i < arrSize; i++) {
             out.print(arr[i]);
