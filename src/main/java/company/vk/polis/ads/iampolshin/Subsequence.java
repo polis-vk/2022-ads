@@ -31,17 +31,17 @@ public final class Subsequence {
     }
 
     private static int longestCommonSubsequence(int[] seq1, int[] seq2) {
-        int[][] res = new int[seq1.length + 1][seq2.length + 1];
+        int[][] solutionsTable = new int[seq1.length + 1][seq2.length + 1];
         for (int i = 0; i < seq1.length; i++) {
             for (int j = 0; j < seq2.length; j++) {
                 if (seq1[i] == seq2[j]) {
-                    res[i + 1][j + 1] = res[i][j] + 1;
+                    solutionsTable[i + 1][j + 1] = solutionsTable[i][j] + 1;
                 } else {
-                    res[i + 1][j + 1] = Math.max(res[i][j + 1], res[i + 1][j]);
+                    solutionsTable[i + 1][j + 1] = Math.max(solutionsTable[i][j + 1], solutionsTable[i + 1][j]);
                 }
             }
         }
-        return res[seq1.length][seq2.length];
+        return solutionsTable[seq1.length][seq2.length];
     }
 
 

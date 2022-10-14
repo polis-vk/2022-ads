@@ -1,3 +1,5 @@
+package company.vk.polis.ads.iampolshin;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,11 +13,13 @@ import java.util.StringTokenizer;
  * @author Dmitry Schitinin
  */
 public final class InversionCount {
+    private static int[] tempNumbers;
+
     private InversionCount() {
         // Should not be instantiated
     }
 
-    //Решение: https://www.eolymp.com/ru/submissions/11765757
+    //Решение: https://www.eolymp.com/ru/submissions/11783599
     private static void solve(final FastScanner in, final PrintWriter out) {
         int n = in.nextInt();
         int[] numbers = new int[n];
@@ -23,21 +27,21 @@ public final class InversionCount {
             numbers[i] = in.nextInt();
         }
 
-        int[] tempNumbers = new int[n];
-        out.println(countInv(numbers, 0, n, tempNumbers));
+        tempNumbers = new int[n];
+        out.println(countInv(numbers, 0, n));
     }
 
-    private static int countInv(int[] numbers, int fromInclusive, int toExclusive, int[] tempNumbers) {
+    private static int countInv(int[] numbers, int fromInclusive, int toExclusive) {
         if (toExclusive - fromInclusive <= 1) {
             return 0;
         }
         int mid = fromInclusive + (toExclusive - fromInclusive) / 2;
-        return countInv(numbers, fromInclusive, mid, tempNumbers) +
-                countInv(numbers, mid, toExclusive, tempNumbers) +
-                merge(numbers, fromInclusive, mid, toExclusive, tempNumbers);
+        return countInv(numbers, fromInclusive, mid) +
+                countInv(numbers, mid, toExclusive) +
+                merge(numbers, fromInclusive, mid, toExclusive);
     }
 
-    private static int merge(int[] numbers, int fromInclusive, int mid, int toExclusive, int[] tempNumbers) {
+    private static int merge(int[] numbers, int fromInclusive, int mid, int toExclusive) {
         int i = fromInclusive;
         int j = mid;
         int index = fromInclusive;
