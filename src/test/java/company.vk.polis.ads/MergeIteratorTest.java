@@ -1,6 +1,7 @@
 package company.vk.polis.ads;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -12,12 +13,13 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled("Disabled since 4th homework released")
 class MergeIteratorTest {
-    private static List<Iterator<Integer>> lists;
+    private static List<Iterator<Integer>> iterators;
 
     @BeforeEach
     void beforeEach() {
-        lists = new ArrayList<>(List.of(
+        iterators = new ArrayList<>(List.of(
             IntStream.range(0, Integer.MAX_VALUE / 4)
                 .filter(i -> i % 2 == 0)
                 .iterator(),
@@ -33,7 +35,7 @@ class MergeIteratorTest {
             IntStream.range(0, Integer.MAX_VALUE / 2)
                 .iterator()
         ));
-        Collections.shuffle(lists);
+        Collections.shuffle(iterators);
     }
 
     @Test
@@ -49,13 +51,13 @@ class MergeIteratorTest {
 
     @Test
     void testMerge() {
-        var iter = new MergeIterator<>(lists);
+        var iter = new MergeIterator<>(iterators);
         var prev = iter.next();
         while (iter.hasNext()) {
             var next = iter.next();
             assertTrue(prev <= next, prev + " > " + next);
             prev = next;
         }
-        assertTrue(lists.stream().noneMatch(Iterator::hasNext), "Some source iterators are not fully consumed");
+        assertTrue(iterators.stream().noneMatch(Iterator::hasNext), "Some source iterators are not fully consumed");
     }
 }
