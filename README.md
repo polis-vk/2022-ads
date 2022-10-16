@@ -69,14 +69,31 @@ $ git checkout -b part1
 
 ## ДЗ 3. Куча. Дедлайн 11.10.2022 18:29:59
 
+‼️ Ветка с решением должна ответвляться от коммита [6af9b4bc15fa61806ba537dea3d63f785a774a12](https://github.com/polis-vk/2022-ads/commit/6af9b4bc15fa61806ba537dea3d63f785a774a12):
+
+```bash
+$ git fetch upstream
+$ git checkout -b <my-branch-for-part3> 6af9b4bc15fa61806ba537dea3d63f785a774a12
+```
+
 Задачки с e-olymp:
 
 * https://www.e-olymp.com/ru/problems/4039 - Хипуй
 * https://www.e-olymp.com/ru/problems/4074 - Найти медиану 2
 * https://www.e-olymp.com/ru/problems/3738 - Простая сортирока - реализовать HeapSort
 
-Реализовать методы `hasNext()` и `next()` в классе `company.vk.polis.ads.MergeIterator` так, чтобы успешно выполнялись тесты в `company.vk.polis.ads.MergeIteratorTest`. Время работы должно быть O(n logk), где n - суммарное количество всех элементов в k подаваемых на вход итераторах.
+* Реализовать методы `hasNext()` и `next()` в классе `company.vk.polis.ads.MergeIterator` так, чтобы успешно выполнялись тесты в `company.vk.polis.ads.MergeIteratorTest`. Время работы должно быть O(n logk), где n - суммарное количество всех элементов в k подаваемых на вход итераторах.
 
-Реализовать метод `company.vk.polis.ads.TopK#topK`, который должен возвращать список из k максимальных элементов, отсортированных по убыванию, так, чтобы выполнялись тесты в `company.vk.polis.ads.TopKTest`.
+* Реализовать метод `company.vk.polis.ads.TopK#topK`, который должен возвращать список из k максимальных элементов, отсортированных по убыванию, так, чтобы выполнялись тесты в `company.vk.polis.ads.TopKTest`.
 
 Локально тесты можно запустить с помощью `./gradlew test`.
+
+## ДЗ 4. Динамическое программирование. Дедлайн 18.10.2022 18:29:59
+
+Задачки с e-olymp:
+
+* https://www.e-olymp.com/ru/problems/1087 - Скобочная последовательность
+* https://www.e-olymp.com/ru/problems/15 - Мышки и зернышки
+* https://www.e-olymp.com/ru/problems/1618 - Наибольшая общая подпоследовательность
+* https://www.e-olymp.com/ru/problems/262 - Лесенка
+* https://www.e-olymp.com/ru/problems/4261 - Количество инверсий

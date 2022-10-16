@@ -1,6 +1,7 @@
 package company.vk.polis.ads;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled("Disabled since 4th homework released")
 class MergeIteratorTest {
     private static List<Iterator<Integer>> iterators;
 
