@@ -36,7 +36,7 @@ $ git checkout -b part1
 Решение каждой задачи - отдельный Java-класс. Можно воспользоваться классом `company.vk.polis.ads.SolveTemplate`, в котором остается реализовать лишь метод `solve`.
 
 * informatics-msk: добавлять ничего не нужно, статус решения отображается в общих результатах.
-* E-olymp: В самом PR либо в его описании, либо в комментариях к каждому классу-решению нужно добавить ссылку на submission в e-olymp, где видно, что все решение прошло все тесты.
+* E-olymp: В самом PR в его описании нужно добавить ссылку на submission в e-olymp, где видно, что решение прошло все тесты.
   Эти ссылки имеют вид "https://www.e-olymp.com/ru/submissions/5707028".
 
 Все обсуждения решения происходят в рамках комментариев к PR
@@ -82,9 +82,9 @@ $ git checkout -b <my-branch-for-part3> 6af9b4bc15fa61806ba537dea3d63f785a774a12
 * https://www.e-olymp.com/ru/problems/4074 - Найти медиану 2
 * https://www.e-olymp.com/ru/problems/3738 - Простая сортирока - реализовать HeapSort
 
-* Реализовать методы `hasNext()` и `next()` в классе `company.vk.polis.ads.MergeIterator` так, чтобы успешно выполнялись тесты в `company.vk.polis.ads.MergeIteratorTest`. Время работы должно быть O(n logk), где n - суммарное количество всех элементов в k подаваемых на вход итераторах.
+* Реализовать методы `hasNext()` и `next()` в классе `company.vk.polis.ads.heap.MergeIterator` так, чтобы успешно выполнялись тесты в `company.vk.polis.ads.heap.MergeIteratorTest`. Время работы должно быть O(n logk), где n - суммарное количество всех элементов в k подаваемых на вход итераторах.
 
-* Реализовать метод `company.vk.polis.ads.TopK#topK`, который должен возвращать список из k максимальных элементов, отсортированных по убыванию, так, чтобы выполнялись тесты в `company.vk.polis.ads.TopKTest`.
+* Реализовать метод `company.vk.polis.ads.heap.TopK#topK`, который должен возвращать список из k максимальных элементов, отсортированных по убыванию, так, чтобы выполнялись тесты в `company.vk.polis.ads.heap.TopKTest`.
 
 Локально тесты можно запустить с помощью `./gradlew test`.
 

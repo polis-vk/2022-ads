@@ -1,3 +1,7 @@
+import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
+import org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
+import org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED
+
 plugins {
     id("java")
 }
@@ -23,5 +27,9 @@ dependencies {
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
-    this.maxHeapSize = "1g"
+    maxHeapSize = "384m"
+
+    testLogging {
+        events(PASSED, SKIPPED, FAILED)
+    }
 }
