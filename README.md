@@ -69,11 +69,11 @@ $ git checkout -b part1
 
 ## ДЗ 3. Куча. Дедлайн 11.10.2022 18:29:59
 
-‼️ Ветка с решением должна ответвляться от коммита [6af9b4bc15fa61806ba537dea3d63f785a774a12](https://github.com/polis-vk/2022-ads/commit/6af9b4bc15fa61806ba537dea3d63f785a774a12):
+‼️ Ветка с решением должна ответвляться от коммита [b759305df2f671fba410b8bd21d40d8eeb6d2701](https://github.com/polis-vk/2022-ads/commit/b759305df2f671fba410b8bd21d40d8eeb6d2701):
 
 ```bash
 $ git fetch upstream
-$ git checkout -b <my-branch-for-part3> 6af9b4bc15fa61806ba537dea3d63f785a774a12
+$ git checkout -b <my-branch-for-part3> b759305df2f671fba410b8bd21d40d8eeb6d2701
 ```
 
 Задачки с e-olymp:
