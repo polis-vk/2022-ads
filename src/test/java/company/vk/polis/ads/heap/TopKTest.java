@@ -2,6 +2,7 @@ package company.vk.polis.ads.heap;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntComparators;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -9,6 +10,7 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled("Disabled since 4th homework released")
 class TopKTest {
     private static final int SEQUENCE_SIZE = nextInt(150_000_000, 200_000_000);
     private static final int TOP_K = nextInt(7_500_000, 10_000_000);
