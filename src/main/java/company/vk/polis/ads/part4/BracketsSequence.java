@@ -1,58 +1,80 @@
 package company.vk.polis.ads.part4;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.StringTokenizer;
+import java.util.Scanner;
 
-/**
- * Problem solution template.
- *
- * @author Dmitry Schitinin
- */
-public final class BracketSequence {
-    int[][] leastNumOfBrackets;
 
-    private BracketSequence() {
-        // Should not be instantiated
-    }
+//https://www.eolymp.com/ru/submissions/11808758
+public class BracketsSequence {
+    private static int[][] leastNumOfBrackets;
+    private static int[][] seqRecovery;
 
-    private static void solve(final FastScanner in, final PrintWriter out) {
-        // Write me
-    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-    private int[][] 
-
-    private static final class FastScanner {
-        private final BufferedReader reader;
-        private StringTokenizer tokenizer;
-
-        FastScanner(final InputStream in) {
-            reader = new BufferedReader(new InputStreamReader(in));
+        char[] charArr = sc.nextLine().toCharArray();
+        int length = charArr.length;
+        if (length == 0) {
+            return;
         }
 
-        String next() {
-            while (tokenizer == null || !tokenizer.hasMoreTokens()) {
-                try {
-                    tokenizer = new StringTokenizer(reader.readLine());
-                } catch (IOException e) {
-                    e.printStackTrace();
+        leastNumOfBrackets = new int[length][length];
+        seqRecovery = new int[length][length];
+
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                seqRecovery[i][j] = Integer.MIN_VALUE;
+                if (i > j) {
+                    leastNumOfBrackets[i][j] = 0;
+                } else if (i == j) {
+                    leastNumOfBrackets[i][j] = 1;
+                } else {
+                    leastNumOfBrackets[i][j] = Integer.MAX_VALUE;
                 }
             }
-            return tokenizer.nextToken();
         }
+        minSequence(charArr, 0, length - 1);
+        displaySeq(charArr, 0, length - 1);
+    }
 
-        int nextInt() {
-            return Integer.parseInt(next());
+    private static void displaySeq(char[] arrBrackets, int left, int right) {
+        if (left > right) {
+            return;
+        }
+        if (left == right) {
+            if (arrBrackets[left] == '(' || arrBrackets[left] == ')') {
+                System.out.print("()");
+            } else if (arrBrackets[left] == '[' || arrBrackets[left] == ']') {
+                System.out.print("[]");
+            } else {
+                System.out.print(arrBrackets[left]);
+            }
+        } else if (seqRecovery[left][right] == Integer.MIN_VALUE) {
+            System.out.print(arrBrackets[left]);
+            displaySeq(arrBrackets, left + 1, right - 1);
+            System.out.print(arrBrackets[right]);
+        } else {
+            displaySeq(arrBrackets, left, seqRecovery[left][right]);
+            displaySeq(arrBrackets, seqRecovery[left][right] + 1, right);
         }
     }
 
-    public static void main(final String[] arg) {
-        final FastScanner in = new FastScanner(System.in);
-        try (PrintWriter out = new PrintWriter(System.out)) {
-            solve(in, out);
+    private static int minSequence(char[] arrayBrackets, int left, int right) {
+        if (leastNumOfBrackets[left][right] != Integer.MAX_VALUE) {
+            return leastNumOfBrackets[left][right];
         }
+        if ((arrayBrackets[left] == '(' && arrayBrackets[right] == ')') ||
+                (arrayBrackets[left] == '[' && arrayBrackets[right] == ']')) {
+            leastNumOfBrackets[left][right] = Math.min(leastNumOfBrackets[left][right],
+                    minSequence(arrayBrackets, left + 1, right - 1));
+        }
+
+        for (int i = left; i < right; i++) {
+            int res = minSequence(arrayBrackets, left, i) + minSequence(arrayBrackets, i + 1, right);
+            if (res < leastNumOfBrackets[left][right]) {
+                leastNumOfBrackets[left][right] = res;
+                seqRecovery[left][right] = i;
+            }
+        }
+        return leastNumOfBrackets[left][right];
     }
 }
