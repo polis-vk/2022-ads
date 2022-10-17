@@ -1,5 +1,8 @@
 import java.io.*;
+<<<<<<< HEAD
 import java.io.*;
+=======
+>>>>>>> d316210 (task 4)
 import java.util.StringTokenizer;
 
 public class Ladder {
@@ -75,4 +78,8 @@ public class Ladder {
             solve(in, out);
         }
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> d316210 (task 4)
 }
