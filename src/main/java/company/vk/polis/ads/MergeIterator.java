@@ -1,7 +1,9 @@
 package company.vk.polis.ads;
 
+import javax.xml.validation.Validator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Iterator that merges k input iterators ordered ascending.
@@ -12,19 +14,29 @@ import java.util.List;
  */
 public final class MergeIterator<T extends Comparable<T>> implements Iterator<T> {
     private final List<Iterator<T>> iterators;
+    private MinHeap<Pair> heap;
 
     /**
      * Constructor
      *
      * @param iterators k input iterators of ascending ordered elements
      */
+
+
+
     public MergeIterator(List<Iterator<T>> iterators) {
         this.iterators = iterators;
+        heap = new MinHeap<>(iterators.size());
+        for (int i = 0; i < iterators.size(); i++) {
+            if (iterators.get(i).hasNext()) {
+                heap.insert(new Pair(iterators.get(i).next(), i));
+            }
+        }
     }
 
     @Override
     public boolean hasNext() {
-        throw new UnsupportedOperationException("Implement me");
+       return heap.size() > 0;
     }
 
     /**
@@ -34,6 +46,31 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
      */
     @Override
     public T next() {
-        throw new UnsupportedOperationException("Implement me");
+       if (!hasNext()) {
+           throw new NoSuchElementException();
+       }
+       Pair current = heap.extract();
+       int index = current.index;
+
+       if (iterators.get(index).hasNext()) {
+           heap.insert(new Pair(iterators.get(index).next(), index));
+       }
+       return  current.value;
+    }
+
+
+    private class Pair implements Comparable<Pair> {
+        private final T value;
+        private final int index;
+
+        public Pair(T value, int index) {
+            this.value = value;
+            this.index = index;
+        }
+
+        @Override
+        public int compareTo(Pair o) {
+            return value.compareTo(o.value);
+        }
     }
 }
