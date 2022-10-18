@@ -26,7 +26,7 @@ public final class MaxSubarray {
 
     private static Res maxSubarrayCross(int[] array, int fromInclusive, int m, int toExclusive) {
         int sum = 0;
-        int left = m - 1;
+        int left = m;
         int leftSum = Integer.MIN_VALUE;
         for (int i = m - 1; i >= fromInclusive; i--) {
             sum += array[i];
@@ -37,7 +37,7 @@ public final class MaxSubarray {
         }
 
         sum = 0;
-        int right = m;
+        int right = m - 1;
         int rightSum = Integer.MIN_VALUE;
         for (int i = m; i < toExclusive; i++) {
             sum += array[i];
