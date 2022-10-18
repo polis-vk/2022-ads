@@ -10,6 +10,8 @@ import java.util.StringTokenizer;
 /**
  * Problem solution template.
  *
+ * https://www.eolymp.com/ru/submissions/11850634
+ *
  * @author Dmitry Schitinin
  */
 public final class Ropes {
@@ -21,15 +23,13 @@ public final class Ropes {
         int n = in.nextInt();
         int k = in.nextInt();
         int[] ropes = new int[n];
-        int sum = 0;
         for (int i = 0; i < n; i++) {
             int rope = in.nextInt();
             ropes[i] = rope;
-            sum += rope;
         }
 
-        int l = 1;
-        int r = (sum / k) + 1; // Exclusive.
+        int l = 0;
+        int r = 10_000_001; // В задании сказано, что все длины до 10_000_000 включительно.
         while (l < r - 1) {
             int mid = (l + r) >>> 1;
             int houseCount = 0;
