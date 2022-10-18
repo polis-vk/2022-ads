@@ -1,4 +1,4 @@
-package company.vk.polis.ads;
+package company.vk.polis.ads.heap;
 
 import java.util.Iterator;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Iterator that merges k input iterators ordered ascending.
  * Each value returned by #next() is greater than or equal to previous one.
- * Total cost of iteration is O(n logk).
+ * Total cost of iteration is O(n log(k)).
  *
  * @param <T> type of elements
  */
@@ -28,7 +28,7 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
     }
 
     /**
-     * Returns next element in ascending order with O(log k) complexity
+     * Returns next element in ascending order with O(log(k)) complexity
      *
      * @return next
      */
