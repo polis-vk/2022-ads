@@ -97,3 +97,22 @@ $ git checkout -b <my-branch-for-part3> b759305df2f671fba410b8bd21d40d8eeb6d2701
 * https://www.e-olymp.com/ru/problems/1618 - Наибольшая общая подпоследовательность
 * https://www.e-olymp.com/ru/problems/262 - Лесенка
 * https://www.e-olymp.com/ru/problems/4261 - Количество инверсий
+
+## Семинар. Дедлайн 01.11.2022 18:29:59
+
+* Реализовать в `company.vk.polis.ads.workshop.CircularBufferQueue` методы, чтобы выполнялись все тесты в `company.vk.polis.ads.workshop.CircularBufferQueueTest`
+
+* Реализовать в `company.vk.polis.ads.workshop.ImprovedInsertionSort` алгоритм "улучшенной" сортировки вставками, в котором позиция вставки находится с помощью бинарного поиска, а сдвиг элементов выполняется не по одному, а с помощью `java.lang.System#arraycopy`. Решение должно проходить тесты в `company.vk.polis.ads.workshop.ImprovedInsertionSortTest`.
+
+* Написать [JMH](https://github.com/openjdk/jmh) бенчмарки и сравнить время работы следующих алгоритмов:
+  1) обычная сортировка вставками
+  2) "улучшенная" сортировка вставками
+  3) сортировка слиянием
+  4) быстрая сортировка
+  5) пирамидальная сортировка
+
+  Посмотреть на время работы алгоритмов на различных по длине входных массивах (например, 100, 1000, 10_000, 100_000, 1_000_000 элементов). На основе полученных результатов сделать отчет в формате [Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax). В отчёте среди прочего необходимо отметить, какие алгоритмы на каких размерах массивов ведут себя лучше других. Таблички с результатами бенчмарков вставить в отчет в виде кода (а не скриншота)
+
+* Решить задачку "Верёвочки" на eolymp - https://www.eolymp.com/ru/problems/3967
+
+* Реализовать поиск максимального подмассива в классе `company.vk.polis.ads.workshop.MaxSubarray` так, чтобы успешно выполнялись тесты в `company.vk.polis.ads.workshop.MaxSubarrayTest`. Время работы решения должно быть не хуже O(n log(n))
