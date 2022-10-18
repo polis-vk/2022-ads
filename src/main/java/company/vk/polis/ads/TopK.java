@@ -1,7 +1,6 @@
 package company.vk.polis.ads;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,11 +27,9 @@ public final class TopK {
             }
         }
         List<T> result = new ArrayList<>();
-        while (minHeap.size > 0) {
-            result.add(minHeap.extract());
+        for (int i = 1; i <= k; i++) {
+            result.add(minHeap.array[i]);
         }
-        Collections.sort(result);
-        Collections.reverse(result);
         return result;
     }
 
