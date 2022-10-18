@@ -17,7 +17,7 @@ class MaxSubarrayTest {
 
     @Test
     public void testMaximumSubarray() {
-        final int[] LENGTHS = {10, 100, 1000, 10_000};
+        final int[] LENGTHS = {10, 100, 1000};
         for (int i = 0; i < 1000; ++i) {
             for (int length : LENGTHS) {
                 int[] array = generateArray(length);
@@ -33,7 +33,7 @@ class MaxSubarrayTest {
     private static MaxSubarray.Res bruteForceSolution(int[] array) {
         int left = 0;
         int right = 0;
-        int maximumSum = 0;
+        int maximumSum = Integer.MIN_VALUE;
         for (int i = 0; i < array.length; ++i) {
             int sum = 0;
             for (int j = i; j < array.length; ++j) {
