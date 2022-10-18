@@ -1,10 +1,6 @@
-package company.vk.polis.ads.tasks;
+package company.vk.polis.ads;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.StringTokenizer;
 
 /**
@@ -12,29 +8,14 @@ import java.util.StringTokenizer;
  *
  * @author Dmitry Schitinin
  */
-public final class Task1 {
-    private Task1() {
+public final class Task3 {
+    private Task3() {
         // Should not be instantiated
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
+        
 
-
-        int N = in.nextInt();
-        MaxHeap heap = new MaxHeap(N);
-
-        for (int i = 0; i < N; i++) {
-
-            int V = in.nextInt();
-
-            switch (V) {
-                case 0:
-                    heap.insert(in.nextInt());
-                    break;
-                default:
-                    out.println(heap.extract());
-            }
-        }
     }
 
     private static final class FastScanner {

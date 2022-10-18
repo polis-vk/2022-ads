@@ -1,10 +1,6 @@
 package company.vk.polis.ads;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.StringTokenizer;
 
 /**
@@ -12,13 +8,14 @@ import java.util.StringTokenizer;
  *
  * @author Dmitry Schitinin
  */
-public final class SolveTemplate {
-    private SolveTemplate() {
+public final class Task2 {
+    private Task2() {
         // Should not be instantiated
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        // Write me
+        
+
     }
 
     private static final class FastScanner {

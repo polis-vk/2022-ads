@@ -1,11 +1,12 @@
-package company.vk.polis.ads.tasks;
+package company.vk.polis.ads;
+
+import company.vk.polis.ads.tasks.MaxHeap;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.Scanner;
 import java.util.StringTokenizer;
 
 /**
@@ -13,44 +14,13 @@ import java.util.StringTokenizer;
  *
  * @author Dmitry Schitinin
  */
-public final class Task2 {
-    private Task2() {
+public final class Task1 {
+    private Task1() {
         // Should not be instantiated
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        MaxHeap maxHeap = new MaxHeap((int) 1e6);
-        MinHeap minHeap = new MinHeap((int) 1e6);
 
-
-        int M = Integer.MIN_VALUE;
-        Scanner scan = new Scanner(System.in);
-        int T = 0;
-
-        while(scan.hasNextInt()) {
-            int number = scan.nextInt();
-            if ((T & 1) == 0) {
-                if (number <= M) {
-                    maxHeap.insert(number);
-                    M = maxHeap.extract();
-                } else {
-                    minHeap.insert(number);
-                    M = minHeap.extract();
-                }
-            } else {
-                if (number <= M) {
-                    maxHeap.insert(number);
-                    minHeap.insert(M);
-                } else {
-                    maxHeap.insert(M);
-                    minHeap.insert(number);
-                }
-
-                M = (minHeap.peek() + maxHeap.peek()) >> 1;
-            }
-            System.out.println(M);
-            T++;
-        }
 
     }
 
