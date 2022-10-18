@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
 
 /**
  * Problem solution template.
- *
+ * https://www.eolymp.com/ru/submissions/11850678
  * @author Dmitry Schitinin
  */
 public final class Main {
@@ -49,27 +49,6 @@ public final class Main {
         for(int i = 1; i < count2 + 1; i++) {
             sequence2[i] = in.nextInt();
         }
-//        int[] MaxSequence = new int[count2];
-//        for(int i = 0; i < count2; i++) {
-//            if(contains(sequence1, sequence2[i])) {
-//                int maxCurrentSequence = 0;
-//                for(int j = i - 1; j >= 0; j--) {
-//                    if(indexOfElement(sequence1, sequence2[j]) < indexOfElement(sequence1, sequence2[i])) {
-//                        if(MaxSequence[j] > maxCurrentSequence) {
-//                            maxCurrentSequence = MaxSequence[j];
-//                        }
-//                    }
-//                }
-//                MaxSequence[i] += maxCurrentSequence + 1;
-//            }
-//        }
-//        int result = 0;
-//        for(int i = count2 - 1; i >= 0; i--) {
-//            if(MaxSequence[i] > result) {
-//                result = MaxSequence[i];
-//            }
-//        }
-//        out.println(result);
         int[][] maxCurrentSequence = new int[2][count2 + 1];
         for (int i = 1; i <= count1; i++){
             for (int j = 1; j <= count2; j++){
