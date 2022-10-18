@@ -1,7 +1,6 @@
 package company.vk.polis.ads;
 
-import java.io.*;
-import java.util.StringTokenizer;
+import java.util.Scanner;
 
 /**
  * Problem solution template.
@@ -13,39 +12,65 @@ public final class Task5 {
         // Should not be instantiated
     }
 
-    private static void solve(final FastScanner in, final PrintWriter out) {
-        
+    private static int countInversions(int[] array, int from, int to, int[] temp) {
 
+        if (to <= from + 1) {
+            return 0;
+        }
+
+        int mid = from + ((to - from) >> 1);
+
+        int first = countInversions(array, from, mid, temp);
+        int second = countInversions(array, mid, to, temp);
+        int split = countSplit(array, from, mid, to, temp);
+
+        return first + split + second;
     }
 
-    private static final class FastScanner {
-        private final BufferedReader reader;
-        private StringTokenizer tokenizer;
+    private static int countSplit(int[] array, int from, int mid, int to, int[] temp) {
 
-        FastScanner(final InputStream in) {
-            reader = new BufferedReader(new InputStreamReader(in));
-        }
+        int i = from;
+        int j = mid;
+        int res = 0;
 
-        String next() {
-            while (tokenizer == null || !tokenizer.hasMoreTokens()) {
-                try {
-                    tokenizer = new StringTokenizer(reader.readLine());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        while (i < mid && j < to) {
+            if (array[i] < array[j]) {
+                temp[i + j - from - mid] = array[i++];
+            } else {
+                temp[i + j - from - mid] = array[j++];
+                res += mid - i;
             }
-            return tokenizer.nextToken();
         }
 
-        int nextInt() {
-            return Integer.parseInt(next());
+        while (i < mid) {
+            temp[i + j - from - mid] = array[i++];
         }
+
+        while (j < to) {
+            temp[i + j - from - mid] = array[j++];
+        }
+
+        for (i = from; i < to; i++) {
+            array[i] = temp[i - from];
+        }
+
+        return res;
     }
 
     public static void main(final String[] arg) {
-        final FastScanner in = new FastScanner(System.in);
-        try (PrintWriter out = new PrintWriter(System.out)) {
-            solve(in, out);
+
+        Scanner scanner = new Scanner(System.in);
+
+        int N = scanner.nextInt();
+
+        int[] array = new int[N];
+        int[] temp = new int[N];
+
+        for (int i = 0; i < N; i++) {
+            array[i] = scanner.nextInt();
         }
+
+        int output = countInversions(array, 0, N, temp);
+        System.out.println(output);
     }
 }

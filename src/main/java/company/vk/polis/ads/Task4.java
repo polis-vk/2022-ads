@@ -2,6 +2,7 @@ package company.vk.polis.ads;
 
 import java.io.*;
 import java.util.StringTokenizer;
+import java.util.Scanner;
 
 /**
  * Problem solution template.
@@ -13,39 +14,36 @@ public final class Task4 {
         // Should not be instantiated
     }
 
-    private static void solve(final FastScanner in, final PrintWriter out) {
-        
+    public static void main(final String[] arg) {
 
-    }
+        Scanner scanner = new Scanner(System.in);
 
-    private static final class FastScanner {
-        private final BufferedReader reader;
-        private StringTokenizer tokenizer;
+        int N = scanner.nextInt();
 
-        FastScanner(final InputStream in) {
-            reader = new BufferedReader(new InputStreamReader(in));
+        int[] stairs = new int[N + 2];
+        for (int i = 0; i < N; i++) {
+            stairs[i + 1] = scanner.nextInt();
         }
 
-        String next() {
-            while (tokenizer == null || !tokenizer.hasMoreTokens()) {
-                try {
-                    tokenizer = new StringTokenizer(reader.readLine());
-                } catch (IOException e) {
-                    e.printStackTrace();
+        int K = scanner.nextInt();
+        int[] maxs = new int[K];
+
+        for (int i = 1; i < N + 2; i++) {
+
+            int max = maxs[0];
+            for (int j = 1; j < maxs.length; j++) {
+                if (maxs[j] > max) {
+                    max = maxs[j];
                 }
             }
-            return tokenizer.nextToken();
+
+            for (int j = 0; j < K - 1; j++) {
+                maxs[j] = maxs[j + 1];
+            }
+
+            maxs[K - 1] = stairs[i] + max;
         }
 
-        int nextInt() {
-            return Integer.parseInt(next());
-        }
-    }
-
-    public static void main(final String[] arg) {
-        final FastScanner in = new FastScanner(System.in);
-        try (PrintWriter out = new PrintWriter(System.out)) {
-            solve(in, out);
-        }
+        System.out.println(maxs[K - 1]);
     }
 }

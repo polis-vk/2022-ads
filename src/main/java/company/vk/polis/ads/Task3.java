@@ -1,6 +1,7 @@
 package company.vk.polis.ads;
 
 import java.io.*;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 /**
@@ -13,39 +14,33 @@ public final class Task3 {
         // Should not be instantiated
     }
 
-    private static void solve(final FastScanner in, final PrintWriter out) {
-        
-
-    }
-
-    private static final class FastScanner {
-        private final BufferedReader reader;
-        private StringTokenizer tokenizer;
-
-        FastScanner(final InputStream in) {
-            reader = new BufferedReader(new InputStreamReader(in));
-        }
-
-        String next() {
-            while (tokenizer == null || !tokenizer.hasMoreTokens()) {
-                try {
-                    tokenizer = new StringTokenizer(reader.readLine());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return tokenizer.nextToken();
-        }
-
-        int nextInt() {
-            return Integer.parseInt(next());
-        }
-    }
-
     public static void main(final String[] arg) {
-        final FastScanner in = new FastScanner(System.in);
-        try (PrintWriter out = new PrintWriter(System.out)) {
-            solve(in, out);
+        Scanner scanner = new Scanner(System.in);
+
+        int N = scanner.nextInt();
+
+        int[] A = new int[N + 1];
+        for (int i = 1; i <= N; i++) {
+            A[i] = scanner.nextInt();
         }
+
+        int M = scanner.nextInt();
+
+        int[] B = new int[M + 1];
+        for (int i = 1; i <= N; i++) {
+            B[i] = scanner.nextInt();
+        }
+
+        int[][] res = new int[N + 1][M + 1];
+
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <= M; j++) {
+
+                res[i][j] = A[i] != B[j] ?
+                        Math.max(res[i - 1][j], res[i][j - 1]) : res[i - 1][j - 1] + 1;
+            }
+        }
+
+        System.out.println(res[N][M]);
     }
 }
