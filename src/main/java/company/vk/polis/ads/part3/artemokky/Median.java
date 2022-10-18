@@ -1,3 +1,5 @@
+package company.vk.polis.ads.part3.artemokky;
+
 import java.util.Arrays;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,14 +9,9 @@ import java.io.PrintWriter;
 import java.util.StringTokenizer;
 import java.util.Scanner;
 
-public class Main {
+public class Median {
 
     private final static int INIT_SIZE = 32;
-
-
-    Main() {
-
-    }
 
     private static void solve(final Scanner in, final PrintWriter out) {
         HeapMax heapMax = new HeapMax(INIT_SIZE);

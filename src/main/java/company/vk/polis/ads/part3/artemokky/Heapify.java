@@ -1,5 +1,6 @@
+package company.vk.polis.ads.part3.artemokky;
+
 import java.util.Arrays;
-import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,15 +8,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.StringTokenizer;
 
-public class Main {
+public class Heapify {
 
     private final static int INIT_SIZE = 32;
     private static final int IN = 0;
     private static final int OUT = 1;
-
-    Main() {
-
-    }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
         Heap heap = new Heap(INIT_SIZE);

@@ -1,4 +1,5 @@
-import java.util.Arrays;
+package company.vk.polis.ads.part3.artemokky;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,12 +7,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.StringTokenizer;
 
-public class Main {
-
-    Main() {
-
-    }
-
+public class Simplesort {
 
     static void swap(int[] a, int i, int j) {
         int tmp = a[i];
@@ -55,7 +51,7 @@ public class Main {
             arr[i] = in.nextInt();
         }
 
-        heapSort(arr);g
+        heapSort(arr);
 
         for (int i = 1; i < arrSize; i++) {
             out.print(arr[i]);
