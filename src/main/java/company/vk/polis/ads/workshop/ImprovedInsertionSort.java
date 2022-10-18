@@ -6,6 +6,32 @@ public final class ImprovedInsertionSort {
     }
 
     public static <E extends Comparable<E>> void sort(E[] array, int fromInclusive, int toExclusive) {
-        throw new UnsupportedOperationException();
+        for (int i = fromInclusive + 1; i < toExclusive; i++) {
+            E key = array[i];
+            if (key.compareTo(array[i - 1]) >= 0) {
+                continue;
+            }
+            int insertionPosition = insertionPosition(array, key, fromInclusive, i);
+            System.arraycopy(array, insertionPosition, array, insertionPosition + 1, i - insertionPosition);
+            array[insertionPosition] = key;
+        }
+    }
+
+    private static <E extends Comparable<E>> int insertionPosition(E[] array, E key,
+                                                                   int fromInclusive, int toExclusive) {
+        int l = fromInclusive;
+        int r = toExclusive;
+        while (l < r) {
+            int m = (l + r) / 2;
+            final int cmp = array[m].compareTo(key);
+            if (cmp > 0) {
+                r = m;
+            } else if (cmp < 0) {
+                l = m + 1;
+            } else {
+                return m;
+            }
+        }
+        return l;
     }
 }
