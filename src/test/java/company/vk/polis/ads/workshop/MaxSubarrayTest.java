@@ -36,7 +36,7 @@ class MaxSubarrayTest {
         int maximumSum = 0;
         for (int i = 0; i < array.length; ++i) {
             int sum = 0;
-            for (int j = i; j < array.length; ++j) {
+            for (int j = i + 1; j < array.length; ++j) {
                 sum += array[j];
                 if (sum >= maximumSum) {
                     maximumSum = sum;
