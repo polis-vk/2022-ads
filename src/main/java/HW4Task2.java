@@ -11,7 +11,7 @@ public final class HW4Task2 {
         // Should not be instantiated
     }
 
-    // Мышка и зёрнышки: https://www.eolymp.com/ru/submissions/11844712
+    // Мышки и зёрнышки: https://www.eolymp.com/ru/submissions/11844712
     private static void solve(final FastScanner in, final PrintWriter out) {
         int m = in.nextInt();
         int n = in.nextInt();
