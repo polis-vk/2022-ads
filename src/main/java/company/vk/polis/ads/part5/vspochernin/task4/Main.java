@@ -1,4 +1,4 @@
-package company.vk.polis.ads.workshop;
+package company.vk.polis.ads.part5.vspochernin.task4;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,8 +14,8 @@ import java.util.StringTokenizer;
  *
  * @author Dmitry Schitinin
  */
-public final class Ropes {
-    private Ropes() {
+public final class Main {
+    private Main() {
         // Should not be instantiated
     }
 
