@@ -25,10 +25,11 @@ public final class CircularBufferQueue<E> extends AbstractQueue<E> implements Qu
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {
-            int i = head;
+            int i = head; // Изначально указываем на голову очереди.
 
             @Override
             public boolean hasNext() {
+                // Если указываем на хвост - значит очередь пуста.
                 return i != tail && size != 0;
             }
 
@@ -37,9 +38,11 @@ public final class CircularBufferQueue<E> extends AbstractQueue<E> implements Qu
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
+
                 final var res = array[i];
                 i++;
-                i %= array.length;
+                i %= array.length; // Если вышли за границу - делаем оборот.
+
                 return res;
             }
         };
@@ -55,10 +58,12 @@ public final class CircularBufferQueue<E> extends AbstractQueue<E> implements Qu
         if (size == array.length) {
             return false;
         }
-        array[tail] = e;
+
+        array[tail] = e; // Записываем в хвост.
         size++;
         tail++;
-        tail %= array.length;
+        tail %= array.length; // Если вышли за границу - делаем оборот.
+
         return true;
     }
 
@@ -67,10 +72,12 @@ public final class CircularBufferQueue<E> extends AbstractQueue<E> implements Qu
         if (isEmpty()) {
             return null;
         }
-        final var el = array[head];
+
+        final var el = array[head]; // Читаем с головы.
         head++;
-        head %= array.length;
+        head %= array.length; // Если вышли за границу - делаем оборот.
         size--;
+
         return el;
     }
 
@@ -79,6 +86,7 @@ public final class CircularBufferQueue<E> extends AbstractQueue<E> implements Qu
         if (isEmpty()) {
             return null;
         }
+
         return array[head];
     }
 }

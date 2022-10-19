@@ -9,15 +9,16 @@ public final class MaxSubarray {
     }
 
     private static Res maxSubarray(int[] array, int l, int r) {
-        if (l == r - 1) {
+        if (l == r - 1) { // Масив из одного элемента сам по себе - максимальный подмассив.
             return new Res(l, r, array[l]);
         }
 
         int mid = (l + r) >>> 1;
-        var left = maxSubarray(array, l, mid);
-        var right = maxSubarray(array, mid, r);
-        var cross = maxSubarrayCross(array, l, mid, r);
+        var left = maxSubarray(array, l, mid); // Левый максимальный подмассив.
+        var right = maxSubarray(array, mid, r); // Правый максимальный подмассив.
+        var cross = maxSubarrayCross(array, l, mid, r); // Раздельный максимальный подмассив.
 
+        // Как результат - выбираем максимальный из них.
         if (left.sum >= right.sum && left.sum >= cross.sum) {
             return left;
         } else if (right.sum >= left.sum && right.sum >= cross.sum) {
@@ -28,6 +29,7 @@ public final class MaxSubarray {
     }
 
     private static Res maxSubarrayCross(int[] array, int l, int m, int r) {
+        // Считаем влево.
         int sum = 0;
         int leftMaxSum = Integer.MIN_VALUE;
         int leftPosition = 0;
@@ -39,6 +41,7 @@ public final class MaxSubarray {
             }
         }
 
+        // Считаем вправо.
         sum = 0;
         int rightMaxSum = Integer.MIN_VALUE;
         int rightPosition = 0;
@@ -50,6 +53,7 @@ public final class MaxSubarray {
             }
         }
 
+        // Получили индексы внутри которых максимальная сумма.
         return new Res(leftPosition, rightPosition, leftMaxSum + rightMaxSum);
     }
 }
