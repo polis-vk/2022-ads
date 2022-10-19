@@ -19,14 +19,18 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import company.vk.polis.ads.workshop.hometask.sorts.HeapSort;
 import company.vk.polis.ads.workshop.hometask.sorts.ImprovedInsertionSort;
+import company.vk.polis.ads.workshop.hometask.sorts.InsertionSort;
+import company.vk.polis.ads.workshop.hometask.sorts.MergeSort;
+import company.vk.polis.ads.workshop.hometask.sorts.QuickSort;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
 public class SortsBench {
 
-    @Param({"100"})
+    @Param({"100", "1000", "10000", "100000"})
     private int dataLength;
     private Integer[] array;
 
@@ -41,7 +45,7 @@ public class SortsBench {
 
     @Benchmark
     public void measureInsertionSort(Blackhole bh) {
-        // TODO.
+        bh.consume(InsertionSort.sort(array));
     }
 
     @Benchmark
@@ -51,17 +55,17 @@ public class SortsBench {
 
     @Benchmark
     public void measureMergeSort(Blackhole bh) {
-        // TODO.
+        bh.consume(MergeSort.sort(array));
     }
 
     @Benchmark
     public void measureQuickSort(Blackhole bh) {
-        // TODO.
+        bh.consume(QuickSort.sort(array));
     }
 
     @Benchmark
     public void measureHeapSort(Blackhole bh) {
-        // TODO.
+        bh.consume(HeapSort.sort(array));
     }
 
     public static void main(String[] args) throws RunnerException {
