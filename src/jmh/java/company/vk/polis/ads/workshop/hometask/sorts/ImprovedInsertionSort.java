@@ -2,16 +2,16 @@ package company.vk.polis.ads.workshop.hometask.sorts;
 
 public final class ImprovedInsertionSort {
 
-    public static <E extends Comparable<E>> E[] sort(E[] array) {
+    public static Integer[] sort(Integer[] array) {
         sort(array, 0, array.length);
         return array;
     }
 
-    public static <E extends Comparable<E>> void sort(E[] array, int fromInclusive, int toExclusive) {
+    public static void sort(Integer[] array, int fromInclusive, int toExclusive) {
         for (int i = fromInclusive + 1; i < toExclusive; ++i) { // Массив из одного элемента уже отсортирован.
-            E key = array[i];
+            Integer key = array[i];
 
-            if (key.compareTo(array[i - 1]) >= 0) { // Обрабатываем случай, когда элемент уже на своем месте.
+            if (key >= array[i - 1]) { // Обрабатываем случай, когда элемент уже на своем месте.
                 continue;
             }
 
