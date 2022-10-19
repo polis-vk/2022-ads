@@ -19,12 +19,14 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import company.vk.polis.ads.workshop.hometask.sorts.ImprovedInsertionSort;
+
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
 public class SortsBench {
 
-    @Param({"100", "1_000", "10_000", "100_000", "1_000_000"})
+    @Param({"100"})
     private int dataLength;
     private Integer[] array;
 
@@ -44,7 +46,7 @@ public class SortsBench {
 
     @Benchmark
     public void measureImprovedInsertionSort(Blackhole bh) {
-        // TODO.
+        bh.consume(ImprovedInsertionSort.sort(array));
     }
 
     @Benchmark
