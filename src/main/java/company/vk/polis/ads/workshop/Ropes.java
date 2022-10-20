@@ -21,16 +21,21 @@ public final class Ropes {
         int n = in.nextInt();
         int k = in.nextInt();
         int[] arr = new int[n];
-        int sum = 0;
+        long sum = 0;
         for (int i = 0; i < n; ++i) {
             arr[i] = in.nextInt();
             sum += arr[i];
         }
-        int l = 1;
-        int r = (sum / k) + 1;
-        while (l < r - 1) {
-            int mid = (l + r) >> 1;
-            int houseCount = 0;
+        long l = 1;
+        long r = ((sum / k) + 1);
+        if (r == l) {
+            out.println(0);
+            return;
+        }
+        long houseCount = 0;
+        while (l + 1 < r) {
+            long mid = (l + r) >> 1;
+            houseCount = 0;
             for (var length : arr) {
                 houseCount += length / mid;
             }
@@ -40,13 +45,17 @@ public final class Ropes {
                 l = mid;
             }
         }
-        if (l == (sum / k) + 1) {
-            out.println(0);
-        } else {
-            out.println(l);
+
+        houseCount = 0;
+        for (var length : arr) {
+            houseCount += length / r;
         }
+        out.println((houseCount == k) ? r : l);
     }
 
+    // 200 201
+    // 12 11
+    // 13 12
     private static final class FastScanner {
         private final BufferedReader reader;
         private StringTokenizer tokenizer;
