@@ -6,8 +6,8 @@ public class MinHeap<T extends  Comparable<T>> {
         private T[] arr;
         private int size;
 
-        public MinHeap(int size){
-            this.arr = (T[]) new Comparable[size * 2];
+        public MinHeap(){
+            this.arr = (T[]) new Comparable[10];
             this.size = 0;
         }
 

@@ -19,7 +19,7 @@ public final class TopK {
      * @param <T> type of elements
      */
     public <T extends Comparable<T>> List<T> topK(List<T> list, int k) {
-        MinHeap<T> heap = new MinHeap<>(100);
+        MinHeap<T> heap = new MinHeap<>();
 
         for (int i = 0; i < k; i++) {
             heap.insert(list.get(i));

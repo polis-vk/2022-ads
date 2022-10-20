@@ -26,7 +26,7 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
 
     public MergeIterator(List<Iterator<T>> iterators) {
         this.iterators = iterators;
-        heap = new MinHeap<>(iterators.size());
+        heap = new MinHeap<>();
         for (int i = 0; i < iterators.size(); i++) {
             if (iterators.get(i).hasNext()) {
                 heap.insert(new Pair(iterators.get(i).next(), i));
