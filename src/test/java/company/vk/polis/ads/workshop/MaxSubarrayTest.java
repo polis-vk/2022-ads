@@ -33,7 +33,7 @@ class MaxSubarrayTest {
     private static MaxSubarray.Res bruteForceSolution(int[] array) {
         int left = 0;
         int right = 0;
-        int maximumSum = 0;
+        int maximumSum = Integer.MIN_VALUE;
         for (int i = 0; i < array.length; ++i) {
             int sum = 0;
             for (int j = i; j < array.length; ++j) {
