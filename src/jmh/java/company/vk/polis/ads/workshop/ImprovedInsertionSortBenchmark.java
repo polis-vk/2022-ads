@@ -15,36 +15,40 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
+
+import company.vk.polis.ads.workshop.sorts.ImprovedInsertionSort;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
-public class SampleBench {
-    @Param({"45"})
+public class ImprovedInsertionSortBenchmark {
+    @Param({"100", "1000", "10000", "100000", "1000000"})
     private int dataLength;
 
-    @Setup(value = Level.Invocation)
+    private Integer[] data;
+
+    @Setup(value = Level.Iteration)
     public void setUpInvocation() {
-        // Generate input data
+        data = IntStream.generate(() -> ThreadLocalRandom.current().nextInt())
+                .limit(dataLength)
+                .boxed()
+                .toArray(Integer[]::new);
     }
 
     @Benchmark
-    public void measureFibClassic(Blackhole bh) {
-        bh.consume(Fib.fibClassic(dataLength));
-    }
-
-    @Benchmark
-    public void measureFibTailRec(Blackhole bh) {
-        bh.consume(Fib.tailRecFib(dataLength));
+    public void improvedInsertionSort(Blackhole bh) {
+        bh.consume(ImprovedInsertionSort.sort(data));
     }
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(SampleBench.class.getSimpleName())
+                .include(ImprovedInsertionSortBenchmark.class.getSimpleName())
                 .forks(1)
                 .jvmArgs("-Xms1G", "-Xmx1G")
-                .warmupIterations(3)
+                .warmupIterations(2)
                 .measurementIterations(3)
                 .build();
 

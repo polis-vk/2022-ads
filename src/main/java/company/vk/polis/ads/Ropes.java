@@ -13,45 +13,64 @@ import java.util.StringTokenizer;
  * @author Dmitry Schitinin
  */
 
-// Submission link: https://www.eolymp.com/ru/submissions/11766676
-public final class Stairs {
-    private Stairs() {
+// Submission link: https://www.eolymp.com/ru/submissions/11874937
+public final class Ropes {
+    private Ropes() {
         // Should not be instantiated
     }
 
-    private static int maxInRange(int[] a, int from, int to) {
-        int max = a[from];
-        for (int i = from + 1; i < to; i++) {
-            if (max < a[i]) {
-                max = a[i];
-            }
+    private static int countInArrayByKey(int[] a, int key) {
+        int count = 0;
+        for (int i : a) {
+            count += i / key;
         }
-        return max;
-    }
-
-    private static int countStairs(int[] a, int k) {
-        int[] d = new int[a.length];
-        int j;
-
-        for (int i = 1; i < d.length; i++) {
-            j = Math.max(0, i - k);
-            d[i] = maxInRange(d, j, i) + a[i];
-        }
-
-        return d[d.length - 1];
+        return count;
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
         int n = in.nextInt();
-        int[] a = new int[n + 2];
-
-        for (int i = 1; i < n + 1; i++) {
-            a[i] = in.nextInt();
-        }
-
         int k = in.nextInt();
 
-        System.out.println(countStairs(a, k));
+        int[] a = new int[n];
+        int max = Integer.MIN_VALUE;
+
+        for (int i = 0; i < n; i++) {
+            a[i] = in.nextInt();
+            if (a[i] > max) {
+                max = a[i];
+            }
+        }
+
+        int l = 1;
+        int r = max + 1;
+        int key = 0;
+        int count;
+        int res = 0;
+
+        while (l < r) {
+            int mid = (l + r) >>> 1;
+            key = mid;
+            count = countInArrayByKey(a, key);
+            if (count > k) {
+                l = mid + 1;
+            } else if (count < k) {
+                r = mid;
+            } else {
+                res = key;
+                l = mid + 1;
+            }
+        }
+
+        if (res == 0) {
+            while (key > 0 && countInArrayByKey(a, key) < k) {
+                key--;
+            }
+            if (key > 0) {
+                res = key;
+            }
+        }
+
+        out.println(res);
     }
 
     private static final class FastScanner {
