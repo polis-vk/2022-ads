@@ -1,6 +1,7 @@
 package company.vk.polis.ads.workshop;
 
 public final class ImprovedInsertionSort {
+
     public static <E extends Comparable<E>> E[] sort(E[] array) {
         sort(array, 0, array.length);
         return array;
