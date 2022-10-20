@@ -15,30 +15,30 @@ public final class TopK {
      * @param <T> type of elements
      */
     public <T extends Comparable<T>> List<T> topK(List<T> list, int k) {
-        MinHeap<T> minHeap = new MinHeap<>(k + 1);
+        MaxHeap<T> maxHeap = new MaxHeap<>(k + 1);
         for (int i = 0; i < k; i++) {
-            minHeap.insert(list.get(i));
+            maxHeap.insert(list.get(i));
         }
         for (int i = k; i < list.size(); i++) {
             T value = list.get(i);
-            if (value.compareTo(minHeap.peek()) > 0) {
-                minHeap.extract();
-                minHeap.insert(value);
+            if (value.compareTo(maxHeap.peek()) > 0) {
+                maxHeap.extract();
+                maxHeap.insert(value);
             }
         }
         List<T> result = new ArrayList<>();
         for (int i = 1; i <= k; i++) {
-            result.add(minHeap.array[i]);
+            result.add(maxHeap.array[i]);
         }
         return result;
     }
 
-    private static class MinHeap<T extends Comparable<T>> {
+    private static class MaxHeap<T extends Comparable<T>> {
 
         T[] array;
         int size;
 
-        public MinHeap(int capacity) {
+        public MaxHeap(int capacity) {
             array = (T[]) new Comparable[capacity];
         }
 
