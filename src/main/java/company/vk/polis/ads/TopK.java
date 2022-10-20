@@ -1,6 +1,7 @@
 package company.vk.polis.ads;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,30 +16,31 @@ public final class TopK {
      * @param <T> type of elements
      */
     public <T extends Comparable<T>> List<T> topK(List<T> list, int k) {
-        MaxHeap<T> maxHeap = new MaxHeap<>(k + 1);
+        MinHeap<T> minHeap = new MinHeap<>(k + 1);
         for (int i = 0; i < k; i++) {
-            maxHeap.insert(list.get(i));
+            minHeap.insert(list.get(i));
         }
         for (int i = k; i < list.size(); i++) {
             T value = list.get(i);
-            if (value.compareTo(maxHeap.peek()) > 0) {
-                maxHeap.extract();
-                maxHeap.insert(value);
+            if (value.compareTo(minHeap.peek()) > 0) {
+                minHeap.extract();
+                minHeap.insert(value);
             }
         }
         List<T> result = new ArrayList<>();
-        for (int i = 1; i <= k; i++) {
-            result.add(maxHeap.array[i]);
+        while (minHeap.size > 0) {
+            result.add(minHeap.extract());
         }
+        Collections.reverse(result);
         return result;
     }
 
-    private static class MaxHeap<T extends Comparable<T>> {
+    private static class MinHeap<T extends Comparable<T>> {
 
         T[] array;
         int size;
 
-        public MaxHeap(int capacity) {
+        public MinHeap(int capacity) {
             array = (T[]) new Comparable[capacity];
         }
 
@@ -49,7 +51,7 @@ public final class TopK {
         }
 
         void swim(int k) {
-            while (k > 1 && array[k].compareTo(array[k / 2]) > 0) {
+            while (k > 1 && array[k].compareTo(array[k / 2]) < 0) {
                 swap(array, k, k / 2);
                 k = k / 2;
             }
@@ -58,7 +60,7 @@ public final class TopK {
         void sink(int k) {
             while (2 * k <= size) {
                 int j = 2 * k;
-                if (j < size && array[j].compareTo(array[j + 1]) < 0) {
+                if (j < size && array[j].compareTo(array[j + 1]) > 0) {
                     j++;
                 }
                 if (array[k].compareTo(array[j]) <= 0) {
