@@ -1,3 +1,6 @@
+| Benchmark | (arraySize) | Mode | Cnt | Score | Error | Units |  |  |  |
+|---|---|---|---|---|---|---|---|---|---|
+
 Benchmark                         (arraySize)  Mode  Cnt       Score        Error  Units
 
 SortsBench.heapSort                       100  avgt    3       0,006 �      0,003  ms/op
