@@ -19,9 +19,7 @@ import java.util.stream.IntStream;
 @State(Scope.Thread)
 public class SortsBench {
 
-//    @Param({"100", "1000", "10000", "100000", "300000"})
-    @Param({"100", "1000", "10000", "100000", "300000", "2000000"})
-//    @Param("2000000")
+    @Param({"100", "1000", "10000", "100000", "300000"})
     private int arraySize;
 
     @Setup(value = Level.Iteration)
@@ -35,25 +33,25 @@ public class SortsBench {
 
     private Integer[] array;
 
-//    @Benchmark
-//    public void mergeSort(Blackhole bh) {
-//        bh.consume(Sorts.mergeSort(array));
-//    }
-//
-//    @Benchmark
-//    public void quickSort(Blackhole bh) {
-//        bh.consume(Sorts.quickSort(array));
-//    }
-//
-//    @Benchmark
-//    public void heapSort(Blackhole bh) {
-//        bh.consume(Sorts.heapSort(array));
-//    }
-//
-//    @Benchmark
-//    public void insertionSort(Blackhole bh) {
-//        bh.consume(Sorts.insertionSort(array));
-//    }
+    @Benchmark
+    public void mergeSort(Blackhole bh) {
+        bh.consume(Sorts.mergeSort(array));
+    }
+
+    @Benchmark
+    public void quickSort(Blackhole bh) {
+        bh.consume(Sorts.quickSort(array));
+    }
+
+    @Benchmark
+    public void heapSort(Blackhole bh) {
+        bh.consume(Sorts.heapSort(array));
+    }
+
+    @Benchmark
+    public void insertionSort(Blackhole bh) {
+        bh.consume(Sorts.insertionSort(array));
+    }
 
     @Benchmark
     public void improvedInsertionSort(Blackhole bh) {
