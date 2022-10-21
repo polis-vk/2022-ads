@@ -1,5 +1,5 @@
-| Benchmark | (arraySize) | Mode | Cnt | Score | Error | Units |
-|---|---|---|---|---|---|---|
+| **Benchmark** | **(arraySize)** | **Mode** | **Cnt** | **Score** | **Error** | **Units** |
+|---|---|---|---|---|---|---|s
 
 Benchmark                         (arraySize)  Mode  Cnt       Score        Error  Units
 
