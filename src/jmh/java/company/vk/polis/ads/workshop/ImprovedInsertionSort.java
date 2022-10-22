@@ -1,5 +1,6 @@
 package company.vk.polis.ads.workshop;
 
+
 public final class ImprovedInsertionSort {
     public static <E extends Comparable<E>> void sort(E[] array) {
         sort(array, 0, array.length);
@@ -18,7 +19,7 @@ public final class ImprovedInsertionSort {
         }
     }
 
-    public static <E extends Comparable<E>> int findPos(E[] array, E val, int fromInclusive, int toExclusive) {
+    private static <E extends Comparable<E>> int findPos(E[] array, E val, int fromInclusive, int toExclusive) {
         int l = fromInclusive;
         int r = toExclusive;
         while (l != r) {
