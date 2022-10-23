@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Queue implementation based on fixed size circular buffer.
@@ -22,9 +20,9 @@ public final class CircularBufferQueue<E> extends AbstractQueue<E> implements Qu
         array = (E[]) new Object[maxCapacity];
     }
 
-    @Contract(value = " -> new", pure = true)
+
     @Override
-    public @NotNull Iterator<E> iterator() {
+    public Iterator<E> iterator() {
         return new CircularBufferIterator();
     }
 
