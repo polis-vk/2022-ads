@@ -23,10 +23,10 @@ import java.util.stream.IntStream;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
-public class SortBench{
+public class SortBench {
 
 
-    @Param({"100000"})
+    @Param({"1000"})
     private long dataLength;
 
     private Integer[] inpArray;
@@ -38,29 +38,43 @@ public class SortBench{
     }
 
     @Benchmark
-    public void improvedInsertionSort(Blackhole bh){
+    public void improvedInsertionSort(Blackhole bh) {
         ImprovedInsertionSort.sort(inpArray);
         bh.consume(inpArray);
         bh.consume(inpArray[0]);
-        bh.consume(inpArray[inpArray.length-1]);
+        bh.consume(inpArray[inpArray.length - 1]);
     }
 
     @Benchmark
-    public void insertionSort(Blackhole bh){
+    public void insertionSort(Blackhole bh) {
         ImprovedInsertionSort.sort(inpArray);
         bh.consume(inpArray);
         bh.consume(inpArray[0]);
-        bh.consume(inpArray[inpArray.length-1]);
+        bh.consume(inpArray[inpArray.length - 1]);
     }
 
     @Benchmark
-    public void mergeSort(Blackhole bh){
+    public void heapSort(Blackhole bh) {
+        HeapSort.sort(inpArray);
+        bh.consume(inpArray);
+        bh.consume(inpArray[0]);
+        bh.consume(inpArray[inpArray.length - 1]);
+    }
+    @Benchmark
+    public void mergeSort(Blackhole bh) {
         var res = MergeSort.sort(inpArray);
         bh.consume(res);
         bh.consume(res[0]);
-        bh.consume(res[res.length-1]);
+        bh.consume(res[res.length - 1]);
     }
 
+    @Benchmark
+    public void quickSort(Blackhole bh) {
+        QuickSort.sort(inpArray);
+        bh.consume(inpArray);
+        bh.consume(inpArray[0]);
+        bh.consume(inpArray[inpArray.length - 1]);
+    }
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
