@@ -15,29 +15,56 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
+
+import company.vk.polis.ads.workshop.sorts.HeapSort;
+import company.vk.polis.ads.workshop.sorts.ImproveInsSort;
+import company.vk.polis.ads.workshop.sorts.InsertionSort;
+import company.vk.polis.ads.workshop.sorts.MergeSort;
+import company.vk.polis.ads.workshop.sorts.QuickSort;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
 public class SampleBench {
-    @Param({"45"})
+    @Param({"100", "1000", "10000", "100000"})
     private int dataLength;
 
-    @Setup(value = Level.Invocation)
-    public void setUpInvocation() {
-        // Generate input data
+    private Integer[] array;
+
+    @Setup(value = Level.Iteration)
+    public void setUpIteration() {
+        array = IntStream.generate(() ->
+                ThreadLocalRandom.current().nextInt()).limit(dataLength).boxed().toArray(Integer[]::new);
     }
 
     @Benchmark
-    public void measureFibClassic(Blackhole bh) {
-        bh.consume(Fib.fibClassic(dataLength));
+    public void heapSort(Blackhole bh) {
+        bh.consume(HeapSort.heapSort(array));
     }
 
     @Benchmark
-    public void measureFibTailRec(Blackhole bh) {
-        bh.consume(Fib.tailRecFib(dataLength));
+    public void improvedInsertionSort(Blackhole bh) {
+        bh.consume(ImproveInsSort.improveInsSort(array));
     }
+
+    @Benchmark
+    public void insertionSort(Blackhole bh) {
+        bh.consume(InsertionSort.insertionSort(array));
+    }
+
+    @Benchmark
+    public void mergeSort(Blackhole bh) {
+        bh.consume(MergeSort.mergeSort(array));
+    }
+
+    @Benchmark
+    public void quickSort(Blackhole bh) {
+        bh.consume(QuickSort.quickSort(array));
+    }
+
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()

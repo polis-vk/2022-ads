@@ -1,11 +1,13 @@
-package company.vk.polis.ads.workshop;
+package company.vk.polis.ads.workshop.sorts;
 
-public final class ImprovedInsertionSort {
-    public static <E extends Comparable<E>> void sort(E[] array) {
-        sort(array, 0, array.length);
+public final class ImproveInsSort {
+
+    public static <E extends Comparable<E>> E[] improveInsSort(E[] array) {
+        improveInsSort(array, 0, array.length);
+        return array;
     }
 
-    public static <E extends Comparable<E>> void sort(E[] array, int fromInclusive, int toExclusive) {
+    public static <E extends Comparable<E>> void improveInsSort(E[] array, int fromInclusive, int toExclusive) {
         for (int i = fromInclusive + 1; i < toExclusive; i++) {
             E key = array[i];
             if (array[i - 1].compareTo(key) <= 0) {
