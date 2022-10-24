@@ -12,6 +12,8 @@ import java.util.StringTokenizer;
  *
  * @author Dmitry Schitinin
  */
+
+// submission url: https://www.eolymp.com/ru/submissions/11916551
 public final class EOlymp1087Rework{
     private EOlymp1087Rework() {
         // Should not be instantiated
@@ -45,10 +47,11 @@ public final class EOlymp1087Rework{
                 default:
                     cache[fromInc][toExc] = String.valueOf(inp.charAt(fromInc));
             }
-        } else if (isFriendly(inp.charAt(fromInc), inp.charAt(toExc-1))) {
-            cache[fromInc][toExc] = inp.charAt(fromInc) + fixParentheses(inp, fromInc+1, toExc-1, cache) + inp.charAt(toExc-1);
         } else {
             String ans = null;
+            if (isFriendly(inp.charAt(fromInc), inp.charAt(toExc-1))) {
+                ans = inp.charAt(fromInc) + fixParentheses(inp, fromInc+1, toExc-1, cache) + inp.charAt(toExc-1);
+            }
             for (int i = fromInc + 1; i < toExc; i++) {
                 String leftPartFix = fixParentheses(inp, fromInc, i, cache);
                 String rightPartFix = fixParentheses(inp, i, toExc, cache);
