@@ -3,10 +3,10 @@ package company.vk.polis.ads.workshop;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayDeque;
+import java.util.Iterator;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CircularBufferQueueTest {
     @Test
@@ -39,6 +39,19 @@ public class CircularBufferQueueTest {
         actualIter = actual.iterator();
         while (expectedIter.hasNext() && actualIter.hasNext()) {
             assertEquals(expectedIter.next(), actualIter.next());
+        }
+    }
+
+    @Test
+    public void iteratorTest() {
+        var actual = new CircularBufferQueue<Integer>(10);
+        IntStream.range(0, 10).forEach(actual::offer);
+        Iterator<Integer> myIter = actual.iterator();
+        int prevElem = -1;
+        while (myIter.hasNext()) {
+            int currElem = myIter.next();
+            assertTrue(prevElem < currElem);
+            prevElem = currElem;
         }
     }
 }
