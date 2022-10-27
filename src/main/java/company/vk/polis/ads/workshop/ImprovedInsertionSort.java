@@ -27,7 +27,7 @@ public final class ImprovedInsertionSort {
             final var cmp = el.compareTo(key);
             if (cmp > 0) {
                 r = mid;
-            } else if(cmp < 0) {
+            } else if (cmp < 0) {
                 l = mid + 1;
             } else {
                 return mid;
