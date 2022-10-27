@@ -10,32 +10,43 @@ import java.util.StringTokenizer;
  *
  * @author Dmitry Schitinin
  */
-public final class Main {
-    private Main() {
+// https://www.eolymp.com/ru/submissions/11958816
+public final class Ropes {
+    private Ropes() {
         // Should not be instantiated
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
         int n = in.nextInt();
         int k = in.nextInt();
-        int[] len = new int[n];
-        int sum = 0;
-        for (int i = 0; i < len.length; i++) {
-            len[i] = in.nextInt();
-            sum += len[i];
+        int[] ropes = new int[n];
+        long sum = 0;
+        for (int i = 0; i < ropes.length; i++) {
+            int rope = in.nextInt();
+            ropes[i] = rope;
+            sum += rope;
         }
-        int m = sum / k;
-        while (m != 0) {
-            sum = 0;
-            for (int e : len) {
-                sum += e / m;
-            }
-            if (sum == k) {
-                break;
-            }
-            m--;
+
+        if (sum < k) {
+            out.println(0);
+            return;
         }
-        out.println(m);
+        long l = 1;
+        long r = sum / k + 1;
+        while (l < r - 1) {
+            long mid = (l + r) >>> 1;
+            int houseCount = 0;
+            for (int length : ropes) {
+                long cnt = length / mid;
+                houseCount += cnt;
+            }
+            if (houseCount < k) {
+                r = mid;
+            } else {
+                l = mid;
+            }
+        }
+        out.println(l);
     }
 
     private static final class FastScanner {
