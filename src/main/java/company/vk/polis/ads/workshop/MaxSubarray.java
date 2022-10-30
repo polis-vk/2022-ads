@@ -15,7 +15,7 @@ public final class MaxSubarray {
         int mid = (l + r) >>> 1;
         Res left = maxSubarray(array, l, mid);
         Res right = maxSubarray(array, mid, r);
-        var cross = maxSubarrayCross(array,l,mid,r);
+        Res cross = maxSubarrayCross(array,l,mid,r);
         if (left.sum >= right.sum && left.sum >= cross.sum){
             return left;
         }else if (right.sum >= left.sum && right.sum >= cross.sum){
@@ -31,7 +31,7 @@ public final class MaxSubarray {
         for (int i = m - 1; i >= l; i--) {
             sum += array[i];
             if (sum > leftMaxSum) {
-                leftPosition = sum;
+                leftMaxSum = sum;
                 leftPosition = i;
             }
         }
