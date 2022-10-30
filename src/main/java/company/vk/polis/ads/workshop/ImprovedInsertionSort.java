@@ -5,6 +5,11 @@ public final class ImprovedInsertionSort {
         sort(array, 0, array.length);
     }
 
+    public static <E extends Comparable<E>> E[] sort1(E[] array) {
+        sort(array, 0, array.length);
+        return array;
+    }
+
     public static <E extends Comparable<E>> void sort(E[] array, int fromInclusive, int toExclusive) {
         for (int i = fromInclusive + 1; i < toExclusive; ++i) {
             E key = array[i];

@@ -1,5 +1,6 @@
 package company.vk.polis.ads.workshop;
 
+import org.junit.jupiter.api.IndicativeSentencesGeneration;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Level;
@@ -15,34 +16,34 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
-public class SampleBench {
-    @Param({"45"})
+public class InsertionSortBench {
+    @Param({"100", "1000", "10000"})
     private int dataLength;
+    private Integer[] array;
 
     @Setup(value = Level.Invocation)
     public void setUpInvocation() {
         // Generate input data
+        array = IntStream.generate(() -> ThreadLocalRandom.current().nextInt()).limit(dataLength).boxed().toArray(Integer[]::new);
+
 
     }
 
     @Benchmark
-    public void measureFibClassic(Blackhole bh) {
-        bh.consume(Fib.fibClassic(dataLength));
-    }
-
-    @Benchmark
-    public void measureFibTailRec(Blackhole bh) {
-        bh.consume(Fib.tailRecFib(dataLength));
+    public void measureSort(Blackhole bh) {
+        bh.consume(ImprovedInsertionSort.sort1(array));
     }
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(SampleBench.class.getSimpleName())
+                .include(InsertionSortBench.class.getSimpleName())
                 .forks(1)
                 .jvmArgs("-Xms1G", "-Xmx1G")
                 .warmupIterations(3)
@@ -52,3 +53,4 @@ public class SampleBench {
         new Runner(opt).run();
     }
 }
+
