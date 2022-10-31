@@ -1,6 +1,5 @@
 package company.vk.polis.ads.workshop;
 
-import org.junit.jupiter.api.IndicativeSentencesGeneration;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Level;
@@ -32,12 +31,10 @@ public class InsertionSortBench {
     public void setUpInvocation() {
         // Generate input data
         array = IntStream.generate(() -> ThreadLocalRandom.current().nextInt()).limit(dataLength).boxed().toArray(Integer[]::new);
-
-
     }
 
     @Benchmark
-    public void measureSort(Blackhole bh) {
+    public void measureImprovedInsertionSort(Blackhole bh) {
         bh.consume(ImprovedInsertionSort.sort1(array));
     }
 
