@@ -68,8 +68,8 @@ public class SortsBench {
                 .include(SortsBench.class.getSimpleName())
                 .forks(1)
                 .jvmArgs("-Xms1G", "-Xmx1G")
-                .warmupIterations(2)
-                .measurementIterations(2)
+                .warmupIterations(3)
+                .measurementIterations(3)
                 .build();
 
         new Runner(opt).run();

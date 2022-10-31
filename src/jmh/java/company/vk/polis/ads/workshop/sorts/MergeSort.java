@@ -2,7 +2,7 @@ package company.vk.polis.ads.workshop.sorts;
 
 import java.util.Arrays;
 
-public final class MergeSort {
+public class MergeSort {
     public static <E extends Comparable<E>> E[] sort(E[] array) {
         mergeSort(array,0,array.length);
         return array;
