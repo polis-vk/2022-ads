@@ -98,10 +98,4 @@ public class Sorts {
         swap(array, rand, fromInclusive);
         return partition(array, fromInclusive, toExclusive);
     }
-
-    public static void main(String[] args) {
-        Integer[] arr = {0, 5, 4, 3, 2, 1};
-        HeapSort.heapSort(arr);
-        System.out.println(Arrays.toString(arr));
-    }
 }
