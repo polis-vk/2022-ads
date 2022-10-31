@@ -22,25 +22,48 @@ import java.util.stream.IntStream;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
-public class InsertionSortBench {
-    @Param({"100", "1000", "10000"})
+public class SortsBench {
+    @Param({"100", "1000", "10000", "100000"})
     private int dataLength;
     private Integer[] array;
 
     @Setup(value = Level.Invocation)
     public void setUpInvocation() {
         // Generate input data
-        array = IntStream.generate(() -> ThreadLocalRandom.current().nextInt()).limit(dataLength).boxed().toArray(Integer[]::new);
+        array = IntStream.generate(() -> ThreadLocalRandom.current().nextInt())
+                .limit(dataLength)
+                .boxed()
+                .toArray(Integer[]::new);
     }
 
-    @Benchmark
+    /*@Benchmark
+    public void measureHeapSort(Blackhole bh) {
+        bh.consume(HeapSort.heapSort(array));
+    }*/
+
+    /*@Benchmark
+    public void measureInsertionSort(Blackhole bh) {
+        bh.consume(InsertionSort.insertionSort(array));
+    }*/
+
+    /*@Benchmark
     public void measureImprovedInsertionSort(Blackhole bh) {
         bh.consume(ImprovedInsertionSort.sort1(array));
+    }*/
+
+    /*@Benchmark
+    public void measureMergeSort(Blackhole bh) {
+        bh.consume(MergeSort.mergeSort(array));
+    }*/
+
+    @Benchmark
+    public void measureQuickSort(Blackhole bh) {
+        bh.consume(QuickSort.quickSort(array));
     }
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(InsertionSortBench.class.getSimpleName())
+                .include(SortsBench.class.getSimpleName())
                 .forks(1)
                 .jvmArgs("-Xms1G", "-Xmx1G")
                 .warmupIterations(3)

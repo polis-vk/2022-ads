@@ -1,6 +1,7 @@
 package company.vk.polis.ads.workshop;
 
 public class HeapSort {
+
     static void makeHeap(Integer[] a) {
         int n = a.length - 1;
         for (int k = n / 2; k >= 1; k--) {
@@ -8,7 +9,7 @@ public class HeapSort {
         }
     }
 
-    static void heapSort(Integer[] a) {
+    static Integer[] heapSort(Integer[] a) {
         int n = a.length - 1;
         for (int k = n / 2; k >= 1; k--) {
             sink(a, k, n);
@@ -17,6 +18,8 @@ public class HeapSort {
             swap(a, 1, n--);
             sink(a, 1, n);
         }
+
+        return a;
     }
 
     public static void sink(Integer[] a, int k, int n) {
