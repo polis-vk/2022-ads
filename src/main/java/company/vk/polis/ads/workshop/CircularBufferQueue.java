@@ -2,6 +2,7 @@ package company.vk.polis.ads.workshop;
 
 import java.util.AbstractQueue;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 
 /**
@@ -10,34 +11,72 @@ import java.util.Queue;
  * @param <E> type of elements
  */
 public final class CircularBufferQueue<E> extends AbstractQueue<E> implements Queue<E> {
+    private final E[] array ;
+    private int size;
+    private int tail = -1;
+    private int head;
+
+    @SuppressWarnings("unchecked")
     public CircularBufferQueue(int maxCapacity) {
-        throw new UnsupportedOperationException();
+        array = (E[]) new Object[maxCapacity];
     }
 
     @Override
     public Iterator<E> iterator() {
-        throw new UnsupportedOperationException();
+        return new Iterator<>() {
+            private int iterHead = head;
+            @Override
+            public boolean hasNext() {
+                return iterHead <= tail;
+            }
+
+            @Override
+            public E next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                var el = array[iterHead];
+                iterHead++;
+                iterHead %= array.length;
+                return el;
+            }
+        };
     }
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     @Override
     public boolean offer(E e) {
-        throw new UnsupportedOperationException();
-
+        if (size == array.length) {
+            return false;
+        }
+        size++;
+        tail++;
+        tail %= array.length;
+        array[tail] = e;
+        return true;
     }
 
     @Override
     public E poll() {
-        throw new UnsupportedOperationException();
-
+        if (isEmpty()) {
+            return null;
+        }
+        var el = array[head];
+        head++;
+        head %= array.length;
+        size--;
+        return el;
     }
 
     @Override
     public E peek() {
-        throw new UnsupportedOperationException();
+        if (isEmpty()) {
+            return null;
+        }
+        return array[head];
     }
 }
