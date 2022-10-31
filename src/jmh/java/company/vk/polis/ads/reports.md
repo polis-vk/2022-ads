@@ -1,4 +1,4 @@
-#Benchmarks for sorts
+# Benchmarks for sorts
 
 ### Benchmark for Improved Insertion Sort
 | Benchmark                  | (dataLength) | Mode | Cnt | Score with Error | Units |
@@ -42,5 +42,7 @@
 
 ## Results
 > As we can see, Qsort and MergeSort are the best ways to sort array with any amount of elements, because it is the fastest sort in every situation, except case in what we can already sorted array => we need to use insertionSort for O(n)
+
 > HeapSort showed itself not bad, but if we have more that 100_000 elements, it will lose in speed to Qsort and MergeSort
+
 > Also we can see, that Improved Insertion Sort gave us good results in comparison with clasic insertionSort. It's clearly seen in tests with big length (100_000 elements)
