@@ -14,21 +14,18 @@ public class Ropes {
         int n = in.nextInt();
         int k = in.nextInt();
         int[] ropes = new int[n];
-        int sum = 0;
+        int max = Integer.MIN_VALUE;
 
         for (int i = 0; i < n; i++) {
             int rope = in.nextInt();
             ropes[i] = rope;
-            sum += rope;
+            if (max < rope) {
+                max = rope;
+            }
         }
 
-        if (k > sum) {
-            out.println(0);
-            return;
-        }
-
-        int l = 1;
-        int r = sum / k + 1;
+        int l = 0;
+        int r = max + 1;
 
         while (l < r - 1) {
             int mid = (l + r) >>> 1;
