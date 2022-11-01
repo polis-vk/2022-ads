@@ -21,20 +21,21 @@ public final class Ropes {
         int n = in.nextInt(); // веревочки
         int k = in.nextInt(); // домики
         int sum = 0;
+        int maxRope = Integer.MIN_VALUE;
         int[] ropes = new int[n];
         for (int i = 0; i < n; i++) {
             int rope = in.nextInt();
             ropes[i] = rope;
-            sum += rope;
+            maxRope = Math.max(maxRope, rope);
         }
 
-        int l = 1;
-        int r = sum / k + 1;
+        int l = 0;
+        int r = maxRope + 1;
 
-        while (l < r) {
+        while (l < r - 1) {
             int mid = (l + r) >>> 1;
             int houseCount = 0;
-            for (var length: ropes) {
+            for (int length: ropes) {
                 houseCount += length / mid;
             }
 
