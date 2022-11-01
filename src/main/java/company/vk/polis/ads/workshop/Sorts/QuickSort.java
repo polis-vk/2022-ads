@@ -14,7 +14,7 @@ public class QuickSort {
         }
 
         int mid = partitionArray(array, fromInclusive, toExclusive);
-        sort(array, mid, toExclusive);
+        sort(array, mid + 1, toExclusive);
         sort(array, fromInclusive, mid);
     }
 

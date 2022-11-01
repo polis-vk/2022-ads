@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SortsTest {
     private final List<Integer> array = IntStream.generate(() -> new Random().nextInt())
-            .limit(100_100).boxed().toList();
+            .limit(100_000).boxed().toList();
     private final Integer[] expected = array.stream().sorted().toArray(Integer[]::new);
 
     @Test
