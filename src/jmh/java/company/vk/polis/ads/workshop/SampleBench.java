@@ -17,11 +17,12 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.util.concurrent.TimeUnit;
 
+
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
 public class SampleBench {
-    @Param({"45"})
+    @Param({"10"})
     private int dataLength;
 
     @Setup(value = Level.Invocation)

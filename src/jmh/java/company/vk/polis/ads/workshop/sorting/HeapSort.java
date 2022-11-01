@@ -46,4 +46,8 @@ public class HeapSort {
             sink(mas, i, length);
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 020c8f5ca24b8046f661c9a88d1f806157ab3698
