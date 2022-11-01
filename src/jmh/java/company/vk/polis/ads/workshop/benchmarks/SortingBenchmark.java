@@ -1,0 +1,76 @@
+package company.vk.polis.ads.workshop.benchmarks;
+
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Level;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Param;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.infra.Blackhole;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
+
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
+
+import company.vk.polis.ads.workshop.sortings.*;
+
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@State(Scope.Thread)
+public class SortingBenchmark {
+    private Integer[] array;
+    @Param({"100", "1000", "10000", "100000"})
+    private int dataLength;
+
+    @Setup(value = Level.Invocation)
+    public void setUpInvocation() {
+        array = IntStream.generate(() -> ThreadLocalRandom.current().nextInt())
+                .limit(dataLength)
+                .boxed()
+                .toArray(Integer[]::new);
+    }
+
+    @Benchmark
+    public void measureInsertionSort(Blackhole bh) {
+        bh.consume(InsertionSort.sort(array));
+    }
+
+    @Benchmark
+    public void measureImprovedInsertionSort(Blackhole bh) {
+        bh.consume(ImprovedInsertionSort.sort(array));
+    }
+
+    @Benchmark
+    public void measureMergeSort(Blackhole bh) {
+        bh.consume(MergeSort.sort(array));
+    }
+
+    @Benchmark
+    public void measureQuickSort(Blackhole bh) {
+        bh.consume(QuickSort.sort(array));
+    }
+
+    @Benchmark
+    public void measureHeapSort(Blackhole bh) {
+        bh.consume(HeapSort.sort(array));
+    }
+
+    public static void main(String[] args) throws RunnerException {
+        Options opt = new OptionsBuilder()
+                .include(SortingBenchmark.class.getSimpleName())
+                .forks(1)
+                .jvmArgs("-Xms1G", "-Xmx1G")
+                .warmupIterations(3)
+                .measurementIterations(3)
+                .build();
+
+        new Runner(opt).run();
+    }
+}
