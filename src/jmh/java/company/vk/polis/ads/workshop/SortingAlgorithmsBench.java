@@ -17,7 +17,7 @@ import company.vk.polis.ads.workshop.Sorts.*;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
 public class SortingAlgorithmsBench {
-    @Param({ "100", "1000" })
+    @Param({ "100", "1000", "10000", "100000", "1000000" })
     private int dataLength;
     private Integer[] array;
 
@@ -44,12 +44,12 @@ public class SortingAlgorithmsBench {
 
     @Benchmark
     public void measureQuickSort(Blackhole bh) {
-        bh.consume(ImprovedInsertionSort.sortReturn(array));
+        bh.consume(QuickSort.sort(array));
     }
 
     @Benchmark
     public void measureHeapSort(Blackhole bh) {
-        bh.consume(ImprovedInsertionSort.sortReturn(array));
+        bh.consume(HeapSort.sort(array));
     }
 
     public static void main(String[] args) throws RunnerException {
