@@ -1,4 +1,4 @@
-package company.vk.polis.ads.workshop;
+package company.vk.polis.ads.workshop.sorting;
 
 public final class ImprovedInsertionSort {
     public static <E extends Comparable<E>> E[] sort(E[] array) {
