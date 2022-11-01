@@ -1,14 +1,14 @@
 package company.vk.polis.ads.workshop;
 
 public final class ImprovedInsertionSort {
-    public static <E extends Comparable<E>> void sort(E[] array) {
-        sort(array, 0, array.length);
+    public static void sort(Integer[] array) {
+        improvedInsertionSort(array, 0, array.length);
     }
 
-    public static <E extends Comparable<E>> void sort(E[] array, int fromInclusive, int toExclusive) {
+    public static void improvedInsertionSort(Integer[] array, int fromInclusive, int toExclusive) {
         for (int i = fromInclusive + 1; i < toExclusive; i++) {
-            E key = array[i];
-            if (key.compareTo(array[i - 1]) >= 0) {
+            Integer key = array[i];
+            if (key >= array[i - 1]) {
                 continue;
             }
             int insertionPosition = insertionPosition(array, key, fromInclusive, i);

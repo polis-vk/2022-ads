@@ -15,28 +15,51 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
 public class SampleBench {
-    @Param({"45"})
+    @Param({"100","1000","10000","100000"})
     private int dataLength;
+    private Integer[] array;
 
     @Setup(value = Level.Invocation)
     public void setUpInvocation() {
-        // Generate input data
+        array = IntStream.generate(() -> ThreadLocalRandom.current().nextInt()).limit(dataLength).boxed().toArray(Integer[]::new);
     }
 
     @Benchmark
-    public void measureFibClassic(Blackhole bh) {
-        bh.consume(Fib.fibClassic(dataLength));
+    public void measureInsertionSort(Blackhole bh) {
+        InsertionSort.sort(array);
+        bh.consume(array);
     }
 
     @Benchmark
-    public void measureFibTailRec(Blackhole bh) {
-        bh.consume(Fib.tailRecFib(dataLength));
+    public void measureImprovedInsertionSort(Blackhole bh) {
+        ImprovedInsertionSort.sort(array);
+        bh.consume(array);
+    }
+
+    @Benchmark
+    public void measureMergeSort(Blackhole bh) {
+        MergeSort.sort(array);
+        bh.consume(array);
+    }
+
+    @Benchmark
+    public void measureQuickSort(Blackhole bh) {
+        QuickSort.sort(array);
+        bh.consume(array);
+    }
+
+    @Benchmark
+    public void measureHeapSort(Blackhole bh) {
+        HeapSort.sort(array);
+        bh.consume(array);
     }
 
     public static void main(String[] args) throws RunnerException {
