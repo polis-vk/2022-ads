@@ -112,10 +112,11 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         if (x == null) {
             return null;
         }
-        if (key.compareTo(x.key) < 0) {
+        int cmp = key.compareTo(x.key);
+        if (cmp < 0) {
             return get(x.left, key);
         }
-        if (key.compareTo(x.key) > 0) {
+        if (cmp > 0) {
             return get(x.right, key);
         }
         return x.value;
@@ -137,9 +138,10 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
             size++;
             return new Node(key, value, 1);
         }
-        if (key.compareTo(x.key) < 0) {
+        int cmp = key.compareTo(x.key);
+        if (cmp < 0) {
             x.left = put(x.left, key, value);
-        } else if (key.compareTo(x.key) > 0) {
+        } else if (cmp > 0) {
             x.right = put(x.right, key, value);
         } else {
             x.value = value;
@@ -230,13 +232,14 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         if (x == null) {
             return null;
         }
-        if (key.compareTo(x.key) < 0) {
+        int cmp = key.compareTo(x.key);
+        if (cmp < 0) {
             x.left = delete(x.left, key);
         }
-        if (key.compareTo(x.key) > 0) {
+        if (cmp > 0) {
             x.right = delete(x.right, key);
         }
-        if (key.compareTo(x.key) == 0) {
+        if (cmp == 0) {
             size--;
             x = innerDelete(x);
         }
@@ -259,10 +262,11 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         if (x == null) {
             return null;
         }
-        if (key.compareTo(x.key) == 0) {
+        int cmp = key.compareTo(x.key);
+        if (cmp == 0) {
             return x;
         }
-        if (key.compareTo(x.key) < 0) {
+        if (cmp < 0) {
             return floor(x.left, key);
         }
         Node t = floor(x.right, key);
@@ -273,10 +277,11 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         if (x == null) {
             return null;
         }
-        if (key.compareTo(x.key) == 0) {
+        int cmp = key.compareTo(x.key);
+        if (cmp == 0) {
             return x;
         }
-        if (key.compareTo(x.key) > 0) {
+        if (cmp > 0) {
             return ceil(x.right, key);
         }
         Node t = ceil(x.left, key);
