@@ -1,24 +1,25 @@
 package company.vk.polis.ads.workshop;
 
-public final class ImprovedInsertionSort {
-    public static <E extends Comparable<E>> void sort(E[] array) {
-        sort(array, 0, array.length);
+public class ImprovedInsertionSort {
+    public static Integer[] improvedInsertionSort(Integer[] array) {
+        sort(array, array.length);
+        return array;
     }
 
-    public static <E extends Comparable<E>> void sort(E[] array, int fromInclusive, int toExclusive) {
-        for (int i = fromInclusive + 1; i < toExclusive; i++) {
-            E key = array[i];
-            if (key.compareTo(array[i - 1]) >= 0) {
+    private static void sort(Integer[] array, int toExclusive) {
+        for (int i = 1; i < toExclusive; i++) {
+            Integer key = array[i];
+            if (key >= array[i - 1]) {
                 continue;
             }
-            int insertionPosition = insertPosition(array, key, fromInclusive, i);
+            int insertionPosition = insertPosition(array, key, i);
             System.arraycopy(array, insertionPosition, array, insertionPosition + 1, i - insertionPosition);
             array[insertionPosition] = key;
         }
     }
 
-    public static <E extends Comparable<E>> int insertPosition(E[] array, E key, int fromInclusive, int toExclusive) {
-        int l = fromInclusive;
+    private static int insertPosition(Integer[] array, Integer key, int toExclusive) {
+        int l = 0;
         int r = toExclusive;
         while (l < r) {
             int mid = (l + r) >>> 1;
