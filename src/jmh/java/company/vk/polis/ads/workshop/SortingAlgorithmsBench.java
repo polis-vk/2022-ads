@@ -34,7 +34,7 @@ public class SortingAlgorithmsBench {
 
     @Benchmark
     public void measureInsertionSort(Blackhole bh) {
-        bh.consume(ImprovedInsertionSort.sortReturn(array));
+        bh.consume(InsertionSort.sort(array));
     }
 
     @Benchmark

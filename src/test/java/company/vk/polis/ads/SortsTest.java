@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SortsTest {
     private final List<Integer> array = IntStream.generate(() -> new Random().nextInt())
-            .limit(10).boxed().toList();
+            .limit(100_100).boxed().toList();
     private final Integer[] expected = array.stream().sorted().toArray(Integer[]::new);
 
     @Test
@@ -22,7 +22,7 @@ public class SortsTest {
 
     @Test
     void testInsertionSort() {
-        assertArrayEquals(expected, ImprovedInsertionSort.sortReturn(array.toArray(Integer[]::new)));
+        assertArrayEquals(expected, InsertionSort.sort(array.toArray(Integer[]::new)));
     }
 
     @Test
@@ -32,11 +32,11 @@ public class SortsTest {
 
     @Test
     void testQuickSort() {
-        assertArrayEquals(expected, ImprovedInsertionSort.sortReturn(array.toArray(Integer[]::new)));
+        assertArrayEquals(expected, QuickSort.sort(array.toArray(Integer[]::new)));
     }
 
     @Test
     void testHeapSort() {
-        assertArrayEquals(expected, ImprovedInsertionSort.sortReturn(array.toArray(Integer[]::new)));
+        assertArrayEquals(expected, HeapSort.sort(array.toArray(Integer[]::new)));
     }
 }
