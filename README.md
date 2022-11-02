@@ -119,11 +119,11 @@ $ git checkout -b <my-branch-for-part3> b759305df2f671fba410b8bd21d40d8eeb6d2701
 
 ## ДЗ 6. Binary Search Tree, AVL-tree. Дедлайн 08.11.2022 18:29:59
 
-‼️ Ветка с решением должна ответвляться от коммита [9c0ee5d2f2af5fd274901e45288daf7120e04853](https://github.com/polis-vk/2022-ads/commit/9c0ee5d2f2af5fd274901e45288daf7120e04853):
+‼️ Ветка с решением должна ответвляться от коммита [fe2f22405db89b95bf9b5a034f95daf4c61e29ab](https://github.com/polis-vk/2022-ads/commit/fe2f22405db89b95bf9b5a034f95daf4c61e29ab):
 
 ```bash
 $ git fetch upstream
-$ git checkout -b <my-branch-for-part6> 9c0ee5d2f2af5fd274901e45288daf7120e04853
+$ git checkout -b <my-branch-for-part6> fe2f22405db89b95bf9b5a034f95daf4c61e29ab
 ```
 
 Реализовать АВЛ-дерево в `company.vk.polis.ads.bst.AvlBinarySearchTree`, чтобы выполнялись тесты `company.vk.polis.ads.bst.AvlBinarySearchTreeTest`.
