@@ -44,7 +44,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
     @Override
     public Value get(@NotNull Key key) {
         Node node = get(root, key);
-        if(node == null){
+        if (node == null) {
             return null;
         }
         return node.value;
@@ -174,8 +174,8 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         return result.value;
     }
 
-    private Node min(Node x){
-        if(x == null){
+    private Node min(Node x) {
+        if (x == null) {
             return null;
         }
 
@@ -188,16 +188,26 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
 
     @Override
     public Key min() {
-        return min(root).key;
+        Node tmp = min(root);
+        if(tmp == null){
+            return null;
+        }
+
+        return tmp.key;
     }
 
     @Override
     public Value minValue() {
-        return max(root).value;
+        Node tmp = min(root);
+        if(tmp == null){
+            return null;
+        }
+
+        return tmp.value;
     }
 
-    private Node max(Node x){
-        if(x == null){
+    private Node max(Node x) {
+        if (x == null) {
             return null;
         }
 
@@ -210,12 +220,22 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
 
     @Override
     public Key max() {
-        return max(root).key;
+        Node tmp = max(root);
+        if(tmp == null){
+            return null;
+        }
+
+        return tmp.key;
     }
 
     @Override
     public Value maxValue() {
-        return max(root).value;
+        Node tmp = max(root);
+        if(tmp == null){
+            return null;
+        }
+
+        return tmp.value;
     }
 
     private Node getFloor(Node x, Key key) {
