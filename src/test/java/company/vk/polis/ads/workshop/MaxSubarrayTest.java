@@ -1,11 +1,13 @@
 package company.vk.polis.ads.workshop;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled("Disabled since 6th homework released")
 class MaxSubarrayTest {
     private int[] generateArray(int length) {
         int[] array = new int[length];
