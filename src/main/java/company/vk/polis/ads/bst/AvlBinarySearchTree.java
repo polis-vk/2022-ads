@@ -108,7 +108,49 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
 
     @Override
     public Value remove(@NotNull Key key) {
-        throw new UnsupportedOperationException("Implement me");
+        Value result = get(key);
+        root = delete(root, key);
+        return result;
+    }
+
+    private Node delete(Node x, Key key) {
+        if (x == null) {
+            return null;
+        }
+        int cmp = key.compareTo(x.key);
+        if (cmp < 0) {
+            x.left = delete(x.left, key);
+        }
+        if (cmp > 0) {
+            x.right = delete(x.right, key);
+        }
+        if (cmp == 0) {
+            size--;
+            x = innerDelete(x);
+        }
+        return x;
+    }
+
+    private Node innerDelete(Node x) {
+        if (x.right == null) {
+            return x.left;
+        }
+        if (x.left == null) {
+            return x.right;
+        }
+        Node tempNode = x;
+        x = min(tempNode.right);
+        x.right = deleteMin(tempNode.right);
+        x.left = tempNode.left;
+        return x;
+    }
+
+    private Node deleteMin(Node x) {
+        if (x.left == null) {
+            return x.right;
+        }
+        x.left = deleteMin(x.left);
+        return x;
     }
 
     @Override
