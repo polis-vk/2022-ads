@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements BinarySearchTree<Key, Value> {
     private Node root;
     private int size;
-    private Node lastRemoved;
 
     private class Node {
         Key key;
@@ -60,63 +59,6 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         return rebalance(node);
     }
 
-    /*    @Override
-        public Value remove(@NotNull Key key) {
-            root = remove(root, key);
-            if (lastRemoved != null) {
-                Value value = lastRemoved.value;
-                lastRemoved = null;
-                return value;
-            }
-            return null;
-        }
-
-        private Node remove(Node node, Key key) {
-            if (node == null) {
-                return null;
-            }
-
-            int cmpResult = key.compareTo(node.key);
-            if (cmpResult < 0) {
-                node.left = remove(node.left, key);
-            } else if (cmpResult > 0) {
-                node.right = remove(node.right, key);
-            } else {
-                lastRemoved = node;
-                node = innerRemove(node);
-                size--;
-            }
-            fixHeight(node);
-            node = rebalance(node);
-            return node;
-        }
-
-        private Node innerRemove(Node node) {
-            if (node.left == null) {
-                return node.right;
-            }
-            if (node.right == null) {
-                return node.left;
-            }
-
-            Node temp = node;
-            node = min(temp.right);
-            node.right = removeMin(temp.right);
-            node.left = temp.left;
-            fixHeight(node);
-            node = rebalance(node);
-            return node;
-        }
-
-        private Node removeMin(Node node) {
-            if (node.left == null) {
-                return node.right;
-            }
-            node.left = removeMin(node.left);
-            fixHeight(node);
-            node = rebalance(node);
-            return node;
-        }*/
     @Override
     public Value remove(@NotNull Key key) {
         Value result = get(key, root);
