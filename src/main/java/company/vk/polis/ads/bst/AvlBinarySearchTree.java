@@ -92,10 +92,11 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
             return null;
         }
 
-        if (key.compareTo(node.key) < 0) {
+        int cmpResult = key.compareTo(node.key);
+        if (cmpResult < 0) {
             return get(node.left, key);
         }
-        if (key.compareTo(node.key) > 0) {
+        if (cmpResult > 0) {
             return get(node.right, key);
         }
         return node.value;
