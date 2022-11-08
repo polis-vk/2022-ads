@@ -230,6 +230,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         } else {
             x.value = value;
         }
+        fixHeight(x);
         x = balance(x);
         return x;
     }
@@ -270,6 +271,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         } else {
             x = innerDelete(x);
         }
+        fixHeight(x);
         x = balance(x);
         return x;
     }
