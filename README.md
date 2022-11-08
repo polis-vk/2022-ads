@@ -155,11 +155,11 @@ $ git checkout -b <my-branch-for-part6> fe2f22405db89b95bf9b5a034f95daf4c61e29ab
 
 ## ДЗ 7. RB-tree. Дедлайн 15.11.2022 18:29:59
 
-‼️ Ветка с решением должна ответвляться от коммита [TODO](https://github.com/polis-vk/2022-ads/commit/TODO):
+‼️ Ветка с решением должна ответвляться от коммита [0831f19beb82ce628e4f7284f8c02ce994dd0eb5](https://github.com/polis-vk/2022-ads/commit/0831f19beb82ce628e4f7284f8c02ce994dd0eb5):
 
 ```bash
 $ git fetch upstream
-$ git checkout -b <my-branch-for-part7> TODO
+$ git checkout -b <my-branch-for-part7> 0831f19beb82ce628e4f7284f8c02ce994dd0eb5
 ```
 
 Реализовать Left-Leaning Red-Black Tree в `company.vk.polis.ads.bst.RedBlackBinarySearchTree`, чтобы выполнялись тесты `company.vk.polis.ads.bst.RedBlackBinarySearchTreeTest`.
