@@ -242,7 +242,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         return height(node.left) - height(node.right);
     }
 
-    Node rotateLeft(Node node) {
+    private Node rotateLeft(Node node) {
         Node rightNode = node.right;
         node.right = rightNode.left;
         rightNode.left = node;
@@ -251,7 +251,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         return rightNode;
     }
 
-    Node rotateRight(Node node) {
+    private Node rotateRight(Node node) {
         Node leftNode = node.left;
         node.left = leftNode.right;
         leftNode.right = node;
