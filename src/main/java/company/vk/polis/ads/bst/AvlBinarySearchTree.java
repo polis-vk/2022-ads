@@ -28,7 +28,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         if (oldValue == null) {
             size++;
         }
-        root = balance(put(root, key, value));
+        root = put(root, key, value);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         if (oldValue == null) {
             return null;
         }
-        root = balance(delete(root, key));
+        root = delete(root, key);
         size--;
         return oldValue;
     }
@@ -230,7 +230,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         } else {
             x.value = value;
         }
-        fixHeight(x);
+        x = balance(x);
         return x;
     }
 
@@ -270,7 +270,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         } else {
             x = innerDelete(x);
         }
-        fixHeight(x);
+        x = balance(x);
         return x;
     }
 }
