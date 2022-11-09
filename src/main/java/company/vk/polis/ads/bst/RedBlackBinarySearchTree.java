@@ -9,10 +9,10 @@ import org.jetbrains.annotations.Nullable;
 public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         implements BinarySearchTree<Key, Value> {
 
-    private Node root = null;
-    private int size = 0;
     private static final boolean BLACK = false;
     private static final boolean RED = true;
+    private Node root = null;
+    private int size = 0;
 
     private class Node {
         Key key;
@@ -28,30 +28,119 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         }
     }
 
-    boolean isRed(Node x) {
-        return x != null && x.color == RED;
-    }
-
-    private Value get(Node x, Key key) {
-        if (x == null) {
-            return null;
-        }
-        if (key.compareTo(x.key) < 0) {
-            return get(x.left, key);
-        }
-        if (key.compareTo(x.key) > 0) {
-            return get(x.right, key);
-        }
-        return x.value;
-    }
-
     @Nullable
     @Override
     public Value get(@NotNull Key key) {
         return get(root, key);
     }
 
-    Node rotateLeft(Node x) {
+    @Override
+    public void put(@NotNull Key key, @NotNull Value value) {
+        root = put(root, key, value);
+        root.color = BLACK;
+    }
+
+    @Nullable
+    @Override
+    public Value remove(@NotNull Key key) {
+        Value result = get(key);
+        if (result == null) {
+            return null;
+        }
+        root = delete(root, key);
+        size--;
+        return result;
+    }
+
+    @Nullable
+    @Override
+    public Key min() {
+        Node minNode = min(root);
+        if (minNode == null) {
+            return null;
+        }
+        return minNode.key;
+    }
+
+    @Nullable
+    @Override
+    public Value minValue() {
+        Node minNode = min(root);
+        if (minNode == null) {
+            return null;
+        }
+        return minNode.value;
+    }
+
+    @Nullable
+    @Override
+    public Key max() {
+        Node maxNode = max(root);
+        if (maxNode == null) {
+            return null;
+        }
+        return maxNode.key;
+    }
+
+    @Nullable
+    @Override
+    public Value maxValue() {
+        Node maxNode = max(root);
+        if (maxNode == null) {
+            return null;
+        }
+        return maxNode.value;
+    }
+
+    @Nullable
+    @Override
+    public Key floor(@NotNull Key key) {
+        Node floorNode = floor(root, key);
+        if (floorNode == null) {
+            return null;
+        }
+        return floorNode.key;
+    }
+
+    @Nullable
+    @Override
+    public Key ceil(@NotNull Key key) {
+        Node ceilNode = ceil(root, key);
+        if (ceilNode == null) {
+            return null;
+        }
+        return ceilNode.key;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    /**
+     * Только для тестов
+     * Саму высоту хранить не обязательно, достаточно сделать рекурсивное вычисление
+     */
+    @Override
+    public int height() {
+        return height(root);
+    }
+
+    public void deleteMin() {
+        root = deleteMin(root);
+        root.color = BLACK;
+    }
+
+    public void deleteMax() {
+        root = deleteMax(root);
+        root.color = BLACK;
+    }
+
+    private boolean isRed(Node x) {
+        return x != null && x.color == RED;
+    }
+
+    private Node rotateLeft(Node x) {
         Node y = x.right;
         x.right = y.left;
         y.left = x;
@@ -60,7 +149,7 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         return y;
     }
 
-    Node rotateRight(Node y) {
+    private Node rotateRight(Node y) {
         Node x = y.left;
         y.left = x.right;
         x.right = y;
@@ -69,14 +158,14 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         return x;
     }
 
-    Node flipColors(Node x) {
+    private Node flipColors(Node x) {
         x.color = !x.color;
         x.left.color = !x.left.color;
         x.right.color = !x.right.color;
         return x;
     }
 
-    Node fixUp(Node x) {
+    private Node fixUp(Node x) {
         if (isRed(x.right) && !isRed(x.left)) {
             x = rotateLeft(x);
         }
@@ -89,7 +178,7 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         return x;
     }
 
-    Node put(Node x, Key key, Value value) {
+    private Node put(Node x, Key key, Value value) {
         if (x == null) {
             size++;
             return new Node(key, value, RED);
@@ -104,13 +193,7 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         return fixUp(x);
     }
 
-    @Override
-    public void put(@NotNull Key key, @NotNull Value value) {
-        root = put(root, key, value);
-        root.color = BLACK;
-    }
-
-    Node moveRedLeft(Node x) {
+    private Node moveRedLeft(Node x) {
         flipColors(x);
         if (isRed(x.right.left)) {
             x.right = rotateRight(x.right);
@@ -120,7 +203,7 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         return x;
     }
 
-    Node deleteMin(Node x) {
+    private Node deleteMin(Node x) {
         if (x.left == null) {
             return null;
         }
@@ -131,12 +214,7 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         return fixUp(x);
     }
 
-    void deleteMin() {
-        root = deleteMin(root);
-        root.color = BLACK;
-    }
-
-    Node moveRedRight(Node x) {
+    private Node moveRedRight(Node x) {
         flipColors(x);
         if (isRed(x.left.left)) {
             x = rotateRight(x);
@@ -145,7 +223,7 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         return x;
     }
 
-    Node deleteMax(Node x) {
+    private Node deleteMax(Node x) {
         if (isRed(x.left)) {
             x = rotateRight(x);
         }
@@ -159,12 +237,7 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         return fixUp(x);
     }
 
-    void deleteMax() {
-        root = deleteMax(root);
-        root.color = BLACK;
-    }
-
-    Node delete(Node x, Key key) {
+    private Node delete(Node x, Key key) {
         if (x == null) {
             return null;
         }
@@ -198,16 +271,17 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         return fixUp(x);
     }
 
-    @Nullable
-    @Override
-    public Value remove(@NotNull Key key) {
-        Value result = get(key);
-        if (result == null) {
+    private Value get(Node x, Key key) {
+        if (x == null) {
             return null;
         }
-        root = delete(root, key);
-        size--;
-        return result;
+        if (key.compareTo(x.key) < 0) {
+            return get(x.left, key);
+        }
+        if (key.compareTo(x.key) > 0) {
+            return get(x.right, key);
+        }
+        return x.value;
     }
 
     private Node min(Node x) {
@@ -220,26 +294,6 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         return min(x.left);
     }
 
-    @Nullable
-    @Override
-    public Key min() {
-        Node minNode = min(root);
-        if (minNode == null) {
-            return null;
-        }
-        return minNode.key;
-    }
-
-    @Nullable
-    @Override
-    public Value minValue() {
-        Node minNode = min(root);
-        if (minNode == null) {
-            return null;
-        }
-        return minNode.value;
-    }
-
     private Node max(Node x) {
         if (x == null) {
             return null;
@@ -248,26 +302,6 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
             return x;
         }
         return max(x.right);
-    }
-
-    @Nullable
-    @Override
-    public Key max() {
-        Node maxNode = max(root);
-        if (maxNode == null) {
-            return null;
-        }
-        return maxNode.key;
-    }
-
-    @Nullable
-    @Override
-    public Value maxValue() {
-        Node maxNode = max(root);
-        if (maxNode == null) {
-            return null;
-        }
-        return maxNode.value;
     }
 
     private Node floor(Node x, Key key) {
@@ -284,16 +318,6 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         return (t == null || t.key.compareTo(key) > 0) ? x : t;
     }
 
-    @Nullable
-    @Override
-    public Key floor(@NotNull Key key) {
-        Node floorNode = floor(root, key);
-        if (floorNode == null) {
-            return null;
-        }
-        return floorNode.key;
-    }
-
     private Node ceil(Node x, Key key) {
         if (x == null) {
             return null;
@@ -306,30 +330,6 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         }
         Node t = ceil(x.left, key);
         return (t == null || t.key.compareTo(key) < 0) ? x : t;
-    }
-
-    @Nullable
-    @Override
-    public Key ceil(@NotNull Key key) {
-        Node ceilNode = ceil(root, key);
-        if (ceilNode == null) {
-            return null;
-        }
-        return ceilNode.key;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    /**
-     * Только для тестов
-     * Саму высоту хранить не обязательно, достаточно сделать рекурсивное вычисление
-     */
-    @Override
-    public int height() {
-        return height(root);
     }
 
     private int height(Node x) {
