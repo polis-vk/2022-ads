@@ -1,6 +1,5 @@
 package company.vk.polis.ads.bst;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,16 +10,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Basic binary search tree invariants.
  */
-@Disabled("Disabled since 7th homework released")
-class AvlBinarySearchTreeTest {
+class RedBlackBinarySearchTreeTest {
 
-    BinarySearchTree<String, String> newAvlBst() {
-        return new AvlBinarySearchTree<>();
+    BinarySearchTree<String, String> newRedBlackBst() {
+        return new RedBlackBinarySearchTree<>();
     }
 
     @Test
     void emptyBst() {
-        BinarySearchTree<String, String> bst = newAvlBst();
+        BinarySearchTree<String, String> bst = newRedBlackBst();
         assertNull(bst.get(""));
         assertNull(bst.get("some key"));
         assertEquals(0, bst.size());
@@ -29,7 +27,7 @@ class AvlBinarySearchTreeTest {
 
     @Test
     void orderedOnEmpty() {
-        BinarySearchTree<String, String> bst = newAvlBst();
+        BinarySearchTree<String, String> bst = newRedBlackBst();
         assertNull(bst.ceil("some key"));
         assertNull(bst.floor("some key"));
 
@@ -42,7 +40,7 @@ class AvlBinarySearchTreeTest {
 
     @Test
     void put() {
-        BinarySearchTree<String, String> bst = newAvlBst();
+        BinarySearchTree<String, String> bst = newRedBlackBst();
         bst.put("foo", "bar");
 
         assertEquals("bar", bst.get("foo"));
@@ -53,7 +51,7 @@ class AvlBinarySearchTreeTest {
 
     @Test
     void replace() {
-        BinarySearchTree<String, String> bst = newAvlBst();
+        BinarySearchTree<String, String> bst = newRedBlackBst();
         bst.put("foo", "bar");
         bst.put("foo", "bee");
 
@@ -65,7 +63,7 @@ class AvlBinarySearchTreeTest {
 
     @Test
     void morePut() {
-        BinarySearchTree<String, String> bst = newAvlBst();
+        BinarySearchTree<String, String> bst = newRedBlackBst();
 
         int size = 0;
         assertEquals(bst.size(), size);
@@ -113,7 +111,7 @@ class AvlBinarySearchTreeTest {
 
     @Test
     void remove() {
-        BinarySearchTree<String, String> bst = newAvlBst();
+        BinarySearchTree<String, String> bst = newRedBlackBst();
         assertNull(bst.remove("case when bst is empty"));
         assertTrue(bst.isEmpty());
 
@@ -161,7 +159,7 @@ class AvlBinarySearchTreeTest {
 
     @Test
     void max() {
-        BinarySearchTree<String, String> bst = newAvlBst();
+        BinarySearchTree<String, String> bst = newRedBlackBst();
 
         assertNull(bst.max());
         assertNull(bst.maxValue());
@@ -209,7 +207,7 @@ class AvlBinarySearchTreeTest {
 
     @Test
     void min() {
-        BinarySearchTree<String, String> bst = newAvlBst();
+        BinarySearchTree<String, String> bst = newRedBlackBst();
 
         assertNull(bst.min());
         assertNull(bst.minValue());
@@ -257,7 +255,7 @@ class AvlBinarySearchTreeTest {
 
     @Test
     void contains() {
-        BinarySearchTree<String, String> bst = newAvlBst();
+        BinarySearchTree<String, String> bst = newRedBlackBst();
 
         assertFalse(bst.containsKey("testStringKey"));
         assertFalse(bst.containsKey("testStringKey1"));
@@ -281,7 +279,7 @@ class AvlBinarySearchTreeTest {
 
     @Test
     void empty() {
-        BinarySearchTree<String, String> bst = newAvlBst();
+        BinarySearchTree<String, String> bst = newRedBlackBst();
 
         assertTrue(bst.isEmpty());
 
@@ -300,7 +298,7 @@ class AvlBinarySearchTreeTest {
 
     @Test
     void ceil() {
-        BinarySearchTree<String, String> bst = newAvlBst();
+        BinarySearchTree<String, String> bst = newRedBlackBst();
 
         bst.put("1", "testStringValue3");
         bst.put("3", "testStringValue4");
@@ -322,7 +320,7 @@ class AvlBinarySearchTreeTest {
 
     @Test
     void floor() {
-        BinarySearchTree<String, String> bst = newAvlBst();
+        BinarySearchTree<String, String> bst = newRedBlackBst();
 
         bst.put("1", "testStringValue3");
         bst.put("3", "testStringValue4");
@@ -344,7 +342,7 @@ class AvlBinarySearchTreeTest {
 
     @Test
     void moreReplace() {
-        BinarySearchTree<String, String> bst = newAvlBst();
+        BinarySearchTree<String, String> bst = newRedBlackBst();
 
         assertNull(bst.get("1"));
 
