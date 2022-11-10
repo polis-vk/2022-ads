@@ -3,8 +3,6 @@ package company.vk.polis.ads.bst;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
 /**
  * LLRB implementation of binary search tree.
  */
@@ -303,7 +301,11 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         }
 
         Node nodeFloor = floor(node.right, key);
-        return Objects.requireNonNullElse(nodeFloor, node);
+        if(nodeFloor != null){
+            return nodeFloor;
+        }else{
+            return node;
+        }
     }
 
     @Nullable
