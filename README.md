@@ -195,3 +195,12 @@ $ git checkout -b <my-branch-for-part7> 0831f19beb82ce628e4f7284f8c02ce994dd0eb5
 ```commandline
 ./gradlew test
 ```
+
+## ДЗ 8. Hash tables. Дедлайн 22.11.2022 18:29:59
+
+* Реализовать в `company.vk.polis.ads.hash.SeparateChainingMap` и `company.vk.polis.ads.hash.DoubleHashingMap` методы, чтобы выполнялись все тесты в `company.vk.polis.ads.hash.MapTest`
+
+Локально запускать тесты можно через
+```commandline
+./gradlew test
+```
