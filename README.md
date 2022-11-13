@@ -100,6 +100,13 @@ $ git checkout -b <my-branch-for-part3> b759305df2f671fba410b8bd21d40d8eeb6d2701
 
 ## Семинар. Дедлайн 01.11.2022 18:29:59
 
+‼️ Ветка с решением должна ответвляться от коммита [92a1d8e0e5aa598991459d52947f90ca50b14b45](https://github.com/polis-vk/2022-ads/commit/92a1d8e0e5aa598991459d52947f90ca50b14b45):
+
+```bash
+$ git fetch upstream
+$ git checkout -b <my-branch-for-workshop> 92a1d8e0e5aa598991459d52947f90ca50b14b45
+```
+
 * Реализовать в `company.vk.polis.ads.workshop.CircularBufferQueue` методы, чтобы выполнялись все тесты в `company.vk.polis.ads.workshop.CircularBufferQueueTest`
 
 * Реализовать в `company.vk.polis.ads.workshop.ImprovedInsertionSort` алгоритм "улучшенной" сортировки вставками, в котором позиция вставки находится с помощью бинарного поиска, а сдвиг элементов выполняется не по одному, а с помощью `java.lang.System#arraycopy`. Решение должно проходить тесты в `company.vk.polis.ads.workshop.ImprovedInsertionSortTest`.
