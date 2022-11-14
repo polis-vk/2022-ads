@@ -28,132 +28,6 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         }
     }
 
-    private boolean isRed(Node node) {
-        return node != null && node.color == RED;
-    }
-
-
-    private Node rotateLeft(Node xNode) {
-        Node yNode = xNode.right;
-        xNode.right = yNode.left;
-        yNode.left = xNode;
-        yNode.color = xNode.color;
-        xNode.color = RED;
-        return yNode;
-    }
-
-    private Node rotateRight(Node yNode) {
-        Node xNode = yNode.left;
-        yNode.left = xNode.right;
-        xNode.right = yNode;
-        xNode.color = yNode.color;
-        yNode.color = RED;
-        return xNode;
-    }
-
-    private Node flipColors(Node node) {
-        node.color = !node.color;
-        node.left.color = !node.left.color;
-        node.right.color = !node.right.color;
-        return node;
-    }
-
-    private Node fixUp(Node node) {
-        if (isRed(node.right) && !isRed(node.left)) {
-            node = rotateLeft(node);
-        }
-        if (isRed(node.left) && isRed(node.left.left)) {
-            node = rotateRight(node);
-        }
-        if (isRed(node.left) && isRed(node.right)) {
-            flipColors(node);
-        }
-        return node;
-    }
-
-    private Node moveRedLeft(Node node) {
-        flipColors(node);
-        if (isRed(node.right.left)) {
-            node.right = rotateRight(node);
-            node = rotateLeft(node);
-            flipColors(node);
-        }
-        return node;
-    }
-
-    private Node moveRedRight(Node node) {
-        flipColors(node);
-        if (isRed(node.left.left)) {
-            node.right = rotateRight(node);
-            node = rotateRight(node);
-            flipColors(node);
-        }
-        return node;
-    }
-
-    private Node deleteMin(Node node) {
-        if (node.left == null) {
-            return null;
-        }
-        if (!isRed(node.left) && !isRed(node.left.left)) {
-            node = moveRedLeft(node);
-        }
-        node.left = deleteMin(node.left);
-        return fixUp(node);
-    }
-
-    private Node deleteMax(Node node) {
-        if (isRed(node.left)) {
-            node = rotateRight(node);
-        }
-        if (node.right == null) {
-            return null;
-        }
-        if (!isRed(node.right) && !isRed(node.right.left)) {
-            node = moveRedRight(node);
-        }
-        node.right = deleteMax(node.right);
-        return fixUp(node);
-    }
-
-    public void deleteMin() {
-        root = deleteMin(root);
-        root.color = BLACK;
-    }
-
-    public void deleteMax() {
-        root = deleteMax(root);
-        root.color = BLACK;
-    }
-
-    private Node findMin(Node node) {
-        return node.left == null ? node : findMin(node.left);
-    }
-
-    private Node findMax(Node node) {
-        return node.right == null ? node : findMax(node.right);
-    }
-
-    @Nullable
-    @Override
-    public Value get(@NotNull Key key) {
-        return get(root, key);
-    }
-
-    private Value get(Node node, Key key) {
-        if (node == null) {
-            return null;
-        }
-        if (node.key == key) {
-            return node.value;
-        }
-        if (key.compareTo(node.key) < 0) {
-            return get(node.left, key);
-        } else {
-            return get(node.right, key);
-        }
-    }
-
     @Override
     public void put(@NotNull Key key, @NotNull Value value) {
         Value oldValue = get(key);
@@ -164,14 +38,13 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         root.color = BLACK;
     }
 
-    Node put(Node node, Key key, Value value) {
+    private Node put(Node node, Key key, Value value) {
         if (node == null) {
             return new Node(key, value, RED);
         }
         if (key.compareTo(node.key) < 0) {
             node.left = put(node.left, key, value);
-        }
-        if (key.compareTo(node.key) > 0) {
+        } else if (key.compareTo(node.key) > 0) {
             node.right = put(node.right, key, value);
         } else {
             node.value = value;
@@ -182,7 +55,7 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
     @Nullable
     @Override
     public Value remove(@NotNull Key key) {
-        Value oldValue = get(root, key);
+        Value oldValue = get(key);
         if (oldValue != null) {
             root = remove(root, key);
             size--;
@@ -318,6 +191,129 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
         return height(root);
     }
 
+    private boolean isRed(Node node) {
+        return node != null && node.color == RED;
+    }
+
+
+    private Node rotateLeft(Node xNode) {
+        Node yNode = xNode.right;
+        xNode.right = yNode.left;
+        yNode.left = xNode;
+        yNode.color = xNode.color;
+        xNode.color = RED;
+        return yNode;
+    }
+
+    private Node rotateRight(Node yNode) {
+        Node xNode = yNode.left;
+        yNode.left = xNode.right;
+        xNode.right = yNode;
+        xNode.color = yNode.color;
+        yNode.color = RED;
+        return xNode;
+    }
+
+    private Node flipColors(Node node) {
+        node.color = !node.color;
+        node.left.color = !node.left.color;
+        node.right.color = !node.right.color;
+        return node;
+    }
+
+    private Node fixUp(Node node) {
+        if (isRed(node.right) && !isRed(node.left)) {
+            node = rotateLeft(node);
+        }
+        if (isRed(node.left) && isRed(node.left.left)) {
+            node = rotateRight(node);
+        }
+        if (isRed(node.left) && isRed(node.right)) {
+            flipColors(node);
+        }
+        return node;
+    }
+
+    private Node moveRedLeft(Node node) {
+        flipColors(node);
+        if (isRed(node.right.left)) {
+            node.right = rotateRight(node.right);
+            node = rotateLeft(node);
+            flipColors(node);
+        }
+        return node;
+    }
+
+    private Node moveRedRight(Node node) {
+        flipColors(node);
+        if (isRed(node.left.left)) {
+            node = rotateRight(node);
+            flipColors(node);
+        }
+        return node;
+    }
+
+    private Node deleteMin(Node node) {
+        if (node.left == null) {
+            return null;
+        }
+        if (!isRed(node.left) && !isRed(node.left.left)) {
+            node = moveRedLeft(node);
+        }
+        node.left = deleteMin(node.left);
+        return fixUp(node);
+    }
+
+    private Node deleteMax(Node node) {
+        if (isRed(node.left)) {
+            node = rotateRight(node);
+        }
+        if (node.right == null) {
+            return null;
+        }
+        if (!isRed(node.right) && !isRed(node.right.left)) {
+            node = moveRedRight(node);
+        }
+        node.right = deleteMax(node.right);
+        return fixUp(node);
+    }
+
+    public void deleteMin() {
+        root = deleteMin(root);
+        root.color = BLACK;
+    }
+
+    public void deleteMax() {
+        root = deleteMax(root);
+        root.color = BLACK;
+    }
+
+    private Node findMin(Node node) {
+        return node.left == null ? node : findMin(node.left);
+    }
+
+    private Node findMax(Node node) {
+        return node.right == null ? node : findMax(node.right);
+    }
+
+    @Nullable
+    @Override
+    public Value get(@NotNull Key key) {
+        return get(root, key);
+    }
+
+    private Value get(Node node, Key key) {
+        if (node == null) {
+            return null;
+        }
+        if (key.compareTo(node.key) < 0) {
+            return get(node.left, key);
+        } else if (key.compareTo(node.key) > 0) {
+            return get(node.right, key);
+        }
+        return node.value;
+    }
+
     private int height(Node node) {
         if (node == null) {
             return 0;
@@ -325,4 +321,6 @@ public class RedBlackBinarySearchTree<Key extends Comparable<Key>, Value>
             return Math.max(height(node.left), height(node.right)) + 1;
         }
     }
+
+
 }
