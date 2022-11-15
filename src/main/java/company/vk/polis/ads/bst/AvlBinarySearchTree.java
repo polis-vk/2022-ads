@@ -80,15 +80,14 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         }
         if (key.compareTo(node.key) < 0) {
             node.left = delete(node.left, key);
-        }
-        if (key.compareTo(node.key) > 0) {
+        } else if (key.compareTo(node.key) > 0) {
             node.right = delete(node.right, key);
-        }
-        if (key == node.key) {
+        } else {
             size--;
             node = innerDelete(node);
         }
-        return node;
+        fixHeight(node);
+        return balance(node);
     }
 
     private Node innerDelete(Node node) {
@@ -164,6 +163,9 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         if (root == null) {
             return null;
         }
+        if(containsKey(key)){
+            return key;
+        }
         Node curNode = root;
         while (curNode != null) {
             if (key.compareTo(curNode.key) < 0) {
@@ -184,6 +186,9 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
     public Key ceil(@NotNull Key key) {
         if (root == null) {
             return null;
+        }
+        if(containsKey(key)){
+            return key;
         }
         Node curNode = root;
         while (curNode != null) {
@@ -216,9 +221,11 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
     }
 
     private void fixHeight(Node node) {
-        node.height = 1 +
-                Math.max(height(node.left),
-                        height(node.right));
+        if (node != null) {
+            node.height = 1 +
+                    Math.max(height(node.left),
+                            height(node.right));
+        }
     }
 
     private Node rotateRight(Node y) {
@@ -244,6 +251,9 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
     }
 
     private Node balance(Node node) {
+        if (node == null) {
+            return null;
+        }
         if (factor(node) == 2) {
             if (factor(node.left) < 0) {
                 node.left = rotateLeft(node.left);
@@ -253,8 +263,8 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         if (factor(node) == -2) {
             if (factor(node.right) > 0) {
                 node.right = rotateRight(node.right);
-                return rotateLeft(node);
             }
+            return rotateLeft(node);
         }
         return node;
     }
