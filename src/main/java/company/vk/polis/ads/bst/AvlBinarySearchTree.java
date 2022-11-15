@@ -43,7 +43,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
     }
 
     private int factor(Node x) {
-        return height(x.left) - height(x.right);
+        return x == null ? 0 : height(x.left) - height(x.right);
     }
 
     private int max(int height, int height1) {
@@ -113,7 +113,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         return result;
     }
 
-    private Node delete(Node x, Key key) {
+    private Node delete(Node x,@NotNull Key key) {
         if (x == null) {
             return null;
         }
@@ -128,6 +128,8 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
             size--;
             x = innerDelete(x);
         }
+        fixHeight(x);
+        x = balance(x);
         return x;
     }
 
@@ -258,6 +260,8 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
     }
 
     private void fixHeight(Node x) {
-        x.height = 1 + max(height(x.left), height(x.right));
+        if (x != null) {
+            x.height = 1 + max(height(x.left), height(x.right));
+        }
     }
 }
