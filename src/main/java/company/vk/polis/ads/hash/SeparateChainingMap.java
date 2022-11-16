@@ -69,7 +69,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        if (size == Math.round(loadFactor * array.length)) {
+        if (size / (double) array.length > loadFactor) {
             size = 0;
             Node<K, V>[] temp = array;
             array = allocate(2 * array.length);
@@ -144,7 +144,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     }
 
     private int getIndex(K key) {
-        return (Objects.hashCode(key) & 0x7fffffff) % array.length;
+        return Objects.hashCode(key) & (array.length - 1);
     }
 
     private static final class Node<K, V> {
