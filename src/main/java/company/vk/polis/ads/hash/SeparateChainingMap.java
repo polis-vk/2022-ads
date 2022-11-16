@@ -1,8 +1,9 @@
 package company.vk.polis.ads.hash;
 
-import java.util.function.BiConsumer;
-
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.function.BiConsumer;
 
 /**
  * Map implementation with separate chaining collision resolution approach
@@ -13,6 +14,8 @@ import org.jetbrains.annotations.Nullable;
 public final class SeparateChainingMap<K, V> implements Map<K, V> {
     // Do not edit this field!!!
     private Node<K, V>[] array;
+    private final float loadFactor;
+    private int size;
 
     /**
      * Создает новый ассоциативный массив в соответствии с expectedMaxSize и loadFactor.
@@ -25,24 +28,38 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
      * @param loadFactor      отношение количества элементов к размеру массива связных списков
      */
     public SeparateChainingMap(int expectedMaxSize, float loadFactor) {
-        array = allocate(0);
-        throw new UnsupportedOperationException();
+        array = allocate(expectedMaxSize);
+        this.loadFactor = loadFactor;
     }
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     @Override
     public boolean containsKey(K key) {
-        throw new UnsupportedOperationException();
+        Node<K, V> head = array[getIndex(key)];
+
+        while (head != null) {
+            if (head.key.equals(key))
+                return true;
+            head = head.next;
+        }
+        return false;
     }
 
     @Nullable
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        Node<K, V> head = array[getIndex(key)];
+
+        while (head != null) {
+            if (head.key.equals(key))
+                return head.value;
+            head = head.next;
+        }
+        return null;
     }
 
     /**
@@ -52,23 +69,82 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        throw new UnsupportedOperationException();
+        if (size == Math.round(loadFactor * array.length)) {
+            size = 0;
+            Node<K, V>[] temp = array;
+            array = allocate(2 * array.length);
+            for (Node<K, V> node : temp) {
+                while (node != null) {
+                    put(node.key, node.value);
+                    node = node.next;
+                }
+            }
+        }
+
+        final int currIndex = getIndex(key);
+        Node<K, V> currNode = array[currIndex];
+        while (currNode != null) {
+            if (currNode.key.equals(key)) {
+                final V oldValue = currNode.value;
+                currNode.value = value;
+                return oldValue;
+            }
+            currNode = currNode.next;
+        }
+
+        currNode = array[currIndex];
+        Node<K, V> newNode = new Node<>(key, value);
+        if (currNode != null) {
+            currNode.prev = newNode;
+        }
+        newNode.next = currNode;
+        array[currIndex] = newNode;
+        size++;
+        return null;
     }
 
     @Nullable
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        final int currIndex = getIndex(key);
+        Node<K, V> currNode = array[currIndex];
+        Node<K, V> prevNode = null;
+        while (currNode != null) {
+            if (currNode.key.equals(key))
+                break;
+            prevNode = currNode;
+            currNode = currNode.next;
+        }
+
+        if (currNode == null) {
+            return null;
+        }
+        if (prevNode != null) {
+            prevNode.next = currNode.next;
+        } else {
+            array[currIndex] = currNode.next;
+        }
+        size--;
+        return currNode.value;
     }
 
     @Override
     public void forEach(BiConsumer<K, V> consumer) {
-        throw new UnsupportedOperationException();
+        for (Node<K, V> node : array) {
+            while (node != null) {
+                consumer.accept(node.key, node.value);
+                node = node.next;
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
     private static <K, V> Node<K, V>[] allocate(int capacity) {
         return (Node<K, V>[]) new Node[capacity];
+    }
+
+    private int getIndex(K key) {
+        return (Objects.hashCode(key) & 0x7fffffff) % array.length;
     }
 
     private static final class Node<K, V> {
