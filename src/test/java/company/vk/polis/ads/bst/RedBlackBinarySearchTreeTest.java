@@ -1,5 +1,6 @@
 package company.vk.polis.ads.bst;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Basic binary search tree invariants.
  */
+@Disabled("Disabled since 8th homework released")
 class RedBlackBinarySearchTreeTest {
 
     BinarySearchTree<String, String> newRedBlackBst() {
