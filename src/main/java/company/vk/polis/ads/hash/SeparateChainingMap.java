@@ -12,6 +12,8 @@ import java.util.function.BiConsumer;
  * @param <V> value
  */
 public final class SeparateChainingMap<K, V> implements Map<K, V> {
+    private final static int GROW_FACTOR = 2;
+
     // Do not edit this field!!!
     private Node<K, V>[] array;
     private final float loadFactor;
@@ -39,13 +41,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean containsKey(K key) {
-        Node<K, V> head = array[getIndex(key)];
-        while (head != null) {
-            if (head.key.equals(key))
-                return true;
-            head = head.next;
-        }
-        return false;
+        return get(key) != null;
     }
 
     @Nullable
@@ -53,8 +49,9 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     public V get(K key) {
         Node<K, V> head = array[getIndex(key)];
         while (head != null) {
-            if (head.key.equals(key))
+            if (head.key.equals(key)) {
                 return head.value;
+            }
             head = head.next;
         }
         return null;
@@ -70,7 +67,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
         if ((1.0f * size) / array.length >= loadFactor) {
             size = 0;
             Node<K, V>[] temp = array;
-            array = allocate(2 * array.length);
+            array = allocate(array.length * GROW_FACTOR);
             for (Node<K, V> node : temp) {
                 while (node != null) {
                     put(node.key, node.value);
@@ -108,8 +105,9 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
         Node<K, V> currNode = array[currIndex];
         Node<K, V> prevNode = null;
         while (currNode != null) {
-            if (currNode.key.equals(key))
+            if (currNode.key.equals(key)) {
                 break;
+            }
             prevNode = currNode;
             currNode = currNode.next;
         }

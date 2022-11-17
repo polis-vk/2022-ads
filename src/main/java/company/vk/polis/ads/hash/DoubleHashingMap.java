@@ -12,7 +12,8 @@ import java.util.function.BiConsumer;
  * @param <V> value
  */
 public final class DoubleHashingMap<K, V> implements Map<K, V> {
-    private final static int STEP_INIT = 1;
+    private final static int STEP_INIT_VALUE = 0;
+    private final static int GROW_FACTOR = 2;
 
     // Do not edit these 3 instance fields!!!
     private K[] keys;
@@ -46,22 +47,14 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean containsKey(K key) {
-        int step = STEP_INIT;
-        int currIndex = getIndex(key);
-        while (keys[currIndex] != null) {
-            if (keys[currIndex].equals(key) && !removed[currIndex]) {
-                return true;
-            }
-            currIndex = getIndex(key, step++);
-        }
-        return false;
+        return get(key) != null;
     }
 
     @Nullable
     @Override
     public V get(K key) {
-        int step = STEP_INIT;
-        int currIndex = getIndex(key);
+        int step = STEP_INIT_VALUE;
+        int currIndex = getIndex(key, step++);
         while (keys[currIndex] != null) {
             if (keys[currIndex].equals(key) && !removed[currIndex]) {
                 return values[currIndex];
@@ -83,14 +76,14 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
             K[] temporaryKeys = keys;
             V[] temporaryValues = values;
             boolean[] temporaryFlags = removed;
-            keys = allocate(2 * keys.length);
-            values = allocate(2 * values.length);
-            removed = new boolean[2 * removed.length];
+            keys = allocate(keys.length * GROW_FACTOR);
+            values = allocate(values.length * GROW_FACTOR);
+            removed = new boolean[removed.length * GROW_FACTOR];
             copyEntry(temporaryKeys, temporaryValues, temporaryFlags);
         }
 
-        int step = STEP_INIT;
-        int currIndex = getIndex(key);
+        int step = STEP_INIT_VALUE;
+        int currIndex = getIndex(key, step++);
         while (keys[currIndex] != null) {
             if (removed[currIndex]) {
                 keys[currIndex] = key;
@@ -119,21 +112,15 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V remove(K key) {
-        int step = STEP_INIT;
-        int currIndex = getIndex(key);
-        boolean founded = false;
+        int step = STEP_INIT_VALUE;
+        int currIndex = getIndex(key, step++);
         while (keys[currIndex] != null) {
             if (keys[currIndex].equals(key)) {
-                founded = true;
-                break;
+                size--;
+                removed[currIndex] = true;
+                return values[currIndex];
             }
             currIndex = getIndex(key, step++);
-        }
-
-        if (founded) {
-            size--;
-            removed[currIndex] = true;
-            return values[currIndex];
         }
         return null;
     }
@@ -141,7 +128,7 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     @Override
     public void forEach(BiConsumer<K, V> consumer) {
         for (int i = 0; i < keys.length; i++) {
-            if (keys[i] != null && values[i] != null && !removed[i]) {
+            if (keys[i] != null && !removed[i]) {
                 consumer.accept(keys[i], values[i]);
             }
         }
@@ -150,10 +137,6 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     @SuppressWarnings("unchecked")
     private static <T> T[] allocate(int capacity) {
         return (T[]) new Object[capacity];
-    }
-
-    private int getIndex(K key) {
-        return getIndex(key, 0);
     }
 
     private int getIndex(K key, int step) {
@@ -167,8 +150,8 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     private void copyEntry(K[] fromKeys, V[] fromValues, boolean[] fromFlags) {
         K currKey;
         V currValue;
-        int step = STEP_INIT;
         int currIndex;
+        int step = STEP_INIT_VALUE;
         for (int i = 0; i < fromKeys.length; i++) {
             currKey = fromKeys[i];
             currValue = fromValues[i];
@@ -178,7 +161,7 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
         }
 
         for (int i = 0; i < fromFlags.length; i++) {
-            currIndex = getIndex(keys[i]);
+            currIndex = getIndex(keys[i], step++);
             while (removed[currIndex]) {
                 currIndex = getIndex(keys[i], step++);
             }
