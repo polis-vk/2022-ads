@@ -28,7 +28,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
      * @param loadFactor      отношение количества элементов к размеру массива связных списков
      */
     public SeparateChainingMap(int expectedMaxSize, float loadFactor) {
-        array = allocate(expectedMaxSize);
+        array = allocate((int) (expectedMaxSize / loadFactor));
         this.loadFactor = loadFactor;
     }
 
@@ -40,7 +40,6 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Override
     public boolean containsKey(K key) {
         Node<K, V> head = array[getIndex(key)];
-
         while (head != null) {
             if (head.key.equals(key))
                 return true;
@@ -53,7 +52,6 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Override
     public V get(K key) {
         Node<K, V> head = array[getIndex(key)];
-
         while (head != null) {
             if (head.key.equals(key))
                 return head.value;
@@ -69,7 +67,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        if (size / (double) array.length > loadFactor) {
+        if ((1.0f * size) / array.length >= loadFactor) {
             size = 0;
             Node<K, V>[] temp = array;
             array = allocate(2 * array.length);
@@ -159,3 +157,4 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
         }
     }
 }
+
