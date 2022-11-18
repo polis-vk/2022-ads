@@ -12,7 +12,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class SeparateChainingMap<K, V> implements Map<K, V> {
     // Do not edit this field!!!
+    private static final int GROW_FACTOR = 2;
+
     private Node<K, V>[] array;
+    private final double loadFactor;
+    private int capacity;
+    private int size;
 
     /**
      * Создает новый ассоциативный массив в соответствии с expectedMaxSize и loadFactor.
@@ -25,24 +30,34 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
      * @param loadFactor      отношение количества элементов к размеру массива связных списков
      */
     public SeparateChainingMap(int expectedMaxSize, float loadFactor) {
-        array = allocate(0);
-        throw new UnsupportedOperationException();
+        this.loadFactor = loadFactor;
+        capacity = (int) (expectedMaxSize / loadFactor);
+        array = allocate(capacity);
     }
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     @Override
     public boolean containsKey(K key) {
-        throw new UnsupportedOperationException();
+        return get(key) != null;
     }
 
     @Nullable
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        int hash = hash(key);
+        int index = getIndex(hash);
+        Node<K, V> node = array[index];
+        while (node != null) {
+            if (key.equals(node.key)) {
+                return node.value;
+            }
+            node = node.next;
+        }
+        return null;
     }
 
     /**
@@ -52,18 +67,87 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        throw new UnsupportedOperationException();
+        if ((float) size / capacity >= loadFactor) {
+            resize();
+        }
+        int hash = hash(key);
+        int index = getIndex(hash);
+        Node<K, V> node = array[index];
+        Node<K, V> prevNode = node;
+        if (node == null) {
+            array[index] = new Node<>(key, value);
+            size++;
+            return null;
+        }
+        while (node != null) {
+            if (key.equals(node.key)) {
+                V prevValue = node.value;
+                node.value = value;
+                return prevValue;
+            }
+            prevNode = node;
+            node = node.next;
+        }
+        prevNode.next = new Node<>(key, value);
+        size++;
+        return null;
     }
 
     @Nullable
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        int hash = hash(key);
+        int index = getIndex(hash);
+        Node<K, V> node = array[index];
+        Node<K, V> prevNode = null;
+        while (node != null) {
+            if (key.equals(node.key)) {
+                if (prevNode == null) {
+                    array[index] = node.next;
+                } else {
+                    prevNode.next = node.next;
+                }
+                size--;
+                return node.value;
+            }
+            prevNode = node;
+            node = node.next;
+        }
+        return null;
     }
 
     @Override
     public void forEach(BiConsumer<K, V> consumer) {
-        throw new UnsupportedOperationException();
+        for (Node<K, V> node : array) {
+            while (node != null) {
+                consumer.accept(node.key, node.value);
+                node = node.next;
+            }
+        }
+    }
+
+    private int hash(K key) {
+        int hash;
+        return (hash = key.hashCode()) ^ (hash >>> 16);
+    }
+
+    private int getIndex(int hash) {
+        return hash & (capacity - 1);
+    }
+
+    private void resize() {
+        capacity = capacity * GROW_FACTOR;
+        Node<K, V>[] newArray = array;
+        array = allocate(capacity);
+        size = 0;
+
+        for (Node<K, V> node : newArray) {
+            Node<K, V> head = node;
+            while (head != null) {
+                put(head.key, head.value);
+                head = head.next;
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
