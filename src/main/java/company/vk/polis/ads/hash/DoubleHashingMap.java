@@ -71,15 +71,8 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        if ((1.0f * size) / keys.length >= loadFactor) {
-            size = 0;
-            K[] temporaryKeys = keys;
-            V[] temporaryValues = values;
-            boolean[] temporaryFlags = removed;
-            keys = allocate(keys.length * GROW_FACTOR);
-            values = allocate(values.length * GROW_FACTOR);
-            removed = new boolean[removed.length * GROW_FACTOR];
-            copyEntry(temporaryKeys, temporaryValues, temporaryFlags);
+        if ((float) size / keys.length >= loadFactor) {
+            resize();
         }
 
         int step = STEP_INIT_VALUE;
@@ -101,7 +94,6 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
             }
             currIndex = getIndex(key, step++);
         }
-
         keys[currIndex] = key;
         values[currIndex] = value;
         removed[currIndex] = false;
@@ -147,25 +139,30 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
         return Objects.hashCode(key) % (keys.length - 1) + 1;
     }
 
-    private void copyEntry(K[] fromKeys, V[] fromValues, boolean[] fromFlags) {
+    private void resize() {
+        size = 0;
+        K[] temporaryKeys = keys;
+        V[] temporaryValues = values;
+        boolean[] temporaryFlags = removed;
+        keys = allocate(keys.length * GROW_FACTOR);
+        values = allocate(values.length * GROW_FACTOR);
+        removed = new boolean[removed.length * GROW_FACTOR];
+
         K currKey;
         V currValue;
         int currIndex;
         int step = STEP_INIT_VALUE;
-        for (int i = 0; i < fromKeys.length; i++) {
-            currKey = fromKeys[i];
-            currValue = fromValues[i];
+        for (int i = 0; i < temporaryKeys.length; i++) {
+            currKey = temporaryKeys[i];
+            currValue = temporaryValues[i];
             if (currKey != null && currValue != null) {
                 put(currKey, currValue);
             }
-        }
 
-        for (int i = 0; i < fromFlags.length; i++) {
-            currIndex = getIndex(keys[i], step++);
-            while (removed[currIndex]) {
+            do {
                 currIndex = getIndex(keys[i], step++);
-            }
-            removed[currIndex] = fromFlags[i];
+            } while (removed[currIndex]);
+            removed[currIndex] = temporaryFlags[i];
         }
     }
 }

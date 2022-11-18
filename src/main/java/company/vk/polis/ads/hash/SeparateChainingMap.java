@@ -64,16 +64,8 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        if ((1.0f * size) / array.length >= loadFactor) {
-            size = 0;
-            Node<K, V>[] temp = array;
-            array = allocate(array.length * GROW_FACTOR);
-            for (Node<K, V> node : temp) {
-                while (node != null) {
-                    put(node.key, node.value);
-                    node = node.next;
-                }
-            }
+        if ((float) size / array.length >= loadFactor) {
+            resize();
         }
 
         final int currIndex = getIndex(key);
@@ -141,6 +133,18 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
 
     private int getIndex(K key) {
         return Objects.hashCode(key) & (array.length - 1);
+    }
+
+    private void resize() {
+        size = 0;
+        Node<K, V>[] temp = array;
+        array = allocate(array.length * GROW_FACTOR);
+        for (Node<K, V> node : temp) {
+            while (node != null) {
+                put(node.key, node.value);
+                node = node.next;
+            }
+        }
     }
 
     private static final class Node<K, V> {
