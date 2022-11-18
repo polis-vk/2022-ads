@@ -22,7 +22,6 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     private V[] values;
     private boolean[] removed;
     private final double loadFactor;
-    private final int expectedMaxSize;
     private int indexOfPrimeCapacity;
     private int capacity;
     private int size;
@@ -38,7 +37,6 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
      * @param loadFactor      отношение количества элементов к размеру массивов
      */
     public DoubleHashingMap(int expectedMaxSize, float loadFactor) {
-        this.expectedMaxSize = expectedMaxSize;
         this.loadFactor = loadFactor;
         capacity = (int) (expectedMaxSize / loadFactor);
         indexOfPrimeCapacity = Math.abs(Arrays.binarySearch(PRIME_CAPACITY, capacity));
@@ -62,13 +60,11 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     public V get(K key) {
         int hash1 = firstHash(key);
         int hash2 = secondHash(key);
-        int i = getIndex(hash1);
         int iter = 0;
-        while (keys[i] != null) {
+        for (int i = getIndex(hash1); keys[i] != null; i = getIndex(hash1 + (++iter) * hash2)) {
             if (keys[i].equals(key) && !removed[i]) {
                 return values[i];
             }
-            i = getIndex(hash1 + (++iter) * hash2);
         }
         return null;
     }
