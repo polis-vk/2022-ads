@@ -1,8 +1,6 @@
 package company.vk.polis.ads.hash;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.BiConsumer;
 
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
  * @param <V> value
  */
 public final class DoubleHashingMap<K, V> implements Map<K, V> {
-   private static final int EXPANSION_COEFFICIENT = 2;
+    private static final int EXPANSION_COEFFICIENT = 2;
     private final float loadFactor;
     private final int expectedMaxSize;
     private int size;
@@ -79,7 +77,6 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
             return null;
         }
         if (removed[keyIndex]) {
-            // TODO: remove
             keys[keyIndex] = key;
             values[keyIndex] = value;
             removed[keyIndex] = false;
@@ -99,9 +96,10 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
             return null;
         }
         removed[keyIndex] = true;
+        V oldValue = values[keyIndex];
+        values[keyIndex] = null;
         size--;
-        // TODO: delete value
-        return values[keyIndex];
+        return oldValue;
     }
 
     @Override
@@ -138,9 +136,10 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
 
     private int getIndex(K key) {
         int tempIndex = hashIndex(key.hashCode(), keys.length);
+        int i = 1;
         while (keys[tempIndex] != null && !keys[tempIndex].equals(key)) {
-            // TODO: change step
-            tempIndex = hashIndex(tempIndex + hash2(keys[tempIndex]), keys.length);
+            tempIndex = hashIndex(key.hashCode() + i * hash2(key), keys.length);
+            i++;
         }
         if (keys[tempIndex] == null) {
             return -1;
@@ -150,17 +149,18 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
 
     private void put(K[] keys, V[] values, boolean[] removed, K key, V value) {
         int tempIndex = hashIndex(key.hashCode(), keys.length);
+        int i = 1;
         while (keys[tempIndex] != null && !removed[tempIndex]) {
-            tempIndex = hashIndex(tempIndex + hash2(keys[tempIndex]), keys.length);
+            tempIndex = hashIndex(key.hashCode() + i * hash2(key), keys.length);
+            i++;
         }
         keys[tempIndex] = key;
         values[tempIndex] = value;
         removed[tempIndex] = false;
     }
 
-    private Set<Integer> indexes = new HashSet<>();
-
     private int hash2(K key) {
-        return 1;
+        int defaultHash = Objects.hash(key.hashCode());
+        return defaultHash + defaultHash % 2 + 1;
     }
 }

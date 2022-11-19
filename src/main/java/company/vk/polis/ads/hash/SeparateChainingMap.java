@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class SeparateChainingMap<K, V> implements Map<K, V> {
     private static final int EXPANSION_COEFFICIENT = 2;
+    private static final int INITIAL_LENGTH = 16;
     private final float loadFactor;
     private final int expectedMaxSize;
     private int size;
@@ -32,7 +33,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     public SeparateChainingMap(int expectedMaxSize, float loadFactor) {
         this.expectedMaxSize = expectedMaxSize;
         this.loadFactor = loadFactor;
-        array = allocate((int) (expectedMaxSize / loadFactor));
+        array = allocate(INITIAL_LENGTH);
         size = 0;
     }
 
