@@ -161,7 +161,7 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
         keys = allocate(capacity);
         values = allocate(capacity);
         removed = new boolean[capacity];
-        int iter = 0;
+        int iter;
         int index;
         size = 0;
 
@@ -174,17 +174,15 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
                 int hash1 = firstHash(newKeys[i]);
                 int hash2 = secondHash(newKeys[i]);
                 index = getIndex(firstHash(newKeys[i]));
-                while (keys[i] != null) {
-                    if (newKeys[i].equals(keys[i])) {
-                        removed[i] = tempRemoved[i];
-                        break;
-                    }
-                    if (removed[index]) {
-                        removed[i] = tempRemoved[i];
+                iter = 0;
+                while (keys[index] != null) {
+                    if (newKeys[i].equals(keys[i]) || removed[index]) {
+                        removed[index] = tempRemoved[i];
                         break;
                     }
                     index = getIndex(hash1 + ((++iter)) * hash2);
                 }
+                removed[index] = tempRemoved[i];
             }
             if (newKeys[i] != null) {
                 put(newKeys[i], newValues[i]);
