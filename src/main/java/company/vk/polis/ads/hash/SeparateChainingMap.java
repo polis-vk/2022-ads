@@ -13,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 public final class SeparateChainingMap<K, V> implements Map<K, V> {
     // Do not edit this field!!!
     private Node<K, V>[] array;
-
     private int capacity;
     private int size = 0;
     private final float loadFactor;
@@ -31,8 +30,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     public SeparateChainingMap(int expectedMaxSize, float loadFactor) {
         this.loadFactor = loadFactor;
         this.capacity = (int) (expectedMaxSize / loadFactor);
-
-        array = allocate(capacity);
+        this.array = allocate(capacity);
     }
 
     @Override
@@ -42,9 +40,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean containsKey(K key) {
-        int index = getIndex(key);
-
-        Node<K, V> curNode = array[index];
+        Node<K, V> curNode = array[getIndex(key)];
 
         while (curNode != null) {
             if (curNode.key.equals(key)) {
@@ -59,9 +55,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V get(K key) {
-        int index = getIndex(key);
-
-        Node<K, V> curNode = array[index];
+        Node<K, V> curNode = array[getIndex(key)];
 
         while (curNode != null) {
             if (curNode.key.equals(key)) {
@@ -81,14 +75,11 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Override
     public V put(K key, V value) {
         resizeIfNeed();
-
         int index = getIndex(key);
-
         Node<K, V> curNode = array[index];
 
         if (curNode == null) {
-            Node<K, V> newNode = new Node<>(key, value);
-            array[index] = newNode;
+            array[index] = new Node<>(key, value);
             size++;
             return null;
         }
@@ -99,7 +90,6 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
                 curNode.value = value;
                 return result;
             }
-
             curNode = curNode.next;
         }
 
@@ -120,7 +110,6 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Override
     public V remove(K key) {
         int index = getIndex(key);
-
         Node<K, V> curNode = array[index];
 
         while (curNode != null) {
@@ -130,18 +119,15 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
                         curNode.next.prev = null;
                     }
                     array[index] = curNode.next;
-                    size--;
-                    return curNode.value;
                 } else {
                     if (curNode.next != null) {
                         curNode.next.prev = curNode.prev;
                     }
                     curNode.prev.next = curNode.next;
-                    size--;
-                    return curNode.value;
                 }
+                size--;
+                return curNode.value;
             }
-
             curNode = curNode.next;
         }
 
@@ -150,8 +136,8 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
 
     @Override
     public void forEach(BiConsumer<K, V> consumer) {
-        for (Node<K, V> node : array) {
-            Node<K, V> curNode = node;
+        for (Node<K, V> bucket : array) {
+            Node<K, V> curNode = bucket;
 
             while (curNode != null) {
                 consumer.accept(curNode.key, curNode.value);
@@ -177,13 +163,8 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
         }
     }
 
-    /**
-     * Получить степень двойки, которая больше или равна заданному числу n.
-     */
-
     private int getIndex(K key) {
-        int hash = key.hashCode();
-        return Math.abs(hash) % capacity;
+        return Math.abs(key.hashCode()) % capacity;
     }
 
     private void resizeIfNeed() {
@@ -192,16 +173,14 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
         }
 
         capacity *= 2;
-
+        size = 0;
         Node<K, V>[] oldArray = array;
         array = allocate(capacity);
-        size = 0;
 
         for (Node<K, V> bucket : oldArray) {
             Node<K, V> curNode = bucket;
             while (curNode != null) {
                 put(curNode.key, curNode.value);
-
                 curNode = curNode.next;
             }
         }
