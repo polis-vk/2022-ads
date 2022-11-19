@@ -103,6 +103,12 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
             curNode = curNode.next;
         }
 
+        if (curNode.key.equals(key)) {
+            V result = curNode.value;
+            curNode.value = value;
+            return result;
+        }
+
         Node<K, V> newNode = new Node<>(key, value);
         newNode.prev = curNode;
         curNode.next = newNode;
@@ -120,7 +126,9 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
         while (curNode != null) {
             if (curNode.key.equals(key)) {
                 if (curNode.prev == null) {
-                    curNode.next.prev = null;
+                    if (curNode.next != null) {
+                        curNode.next.prev = null;
+                    }
                     array[index] = curNode.next;
                     size--;
                     return curNode.value;
@@ -189,7 +197,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
         array = allocate(capacity);
         size = 0;
 
-        for (Node <K, V> bucket : oldArray) {
+        for (Node<K, V> bucket : oldArray) {
             Node<K, V> curNode = bucket;
             while (curNode != null) {
                 put(curNode.key, curNode.value);
