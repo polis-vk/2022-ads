@@ -104,13 +104,11 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
                 if (tmp.next != null) {
                     tmp.next.prev = tmp.prev;
                 }
-
                 if (prev == null) {
                     array[inx] = tmp.next;
                 } else {
                     prev.next = tmp.next;
                 }
-
                 size--;
                 return tmp.value;
             }
