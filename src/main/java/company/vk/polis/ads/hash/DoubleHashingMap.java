@@ -153,16 +153,16 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
         int currIndex;
         int step = STEP_INIT_VALUE;
         for (int i = 0; i < temporaryKeys.length; i++) {
+            do {
+                currIndex = getIndex(keys[i], step++);
+            } while (removed[currIndex]);
+            removed[currIndex] = temporaryFlags[i];
+
             currKey = temporaryKeys[i];
             currValue = temporaryValues[i];
             if (currKey != null && currValue != null) {
                 put(currKey, currValue);
             }
-
-            do {
-                currIndex = getIndex(keys[i], step++);
-            } while (removed[currIndex]);
-            removed[currIndex] = temporaryFlags[i];
         }
     }
 }
