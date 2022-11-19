@@ -44,11 +44,9 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean containsKey(K key) {
-        int hash = hash(key);
-        int hash2 = hash2(key);
         int i = 0;
 
-        for (int index = getIndex(hash, hash2, i++); keys[index] != null; index = getIndex(hash, hash2, i++)) {
+        for (int index = getIndex(key, i++); keys[index] != null; index = getIndex(key, i++)) {
             if (!removed[index] && keys[index].equals(key)) {
                 return true;
             }
@@ -59,11 +57,9 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V get(K key) {
-        int hash = hash(key);
-        int hash2 = hash2(key);
         int i = 0;
 
-        for (int index = getIndex(hash, hash2, i++); keys[index] != null; index = getIndex(hash, hash2, i++)) {
+        for (int index = getIndex(key, i++); keys[index] != null; index = getIndex(key, i++)) {
             if (!removed[index] && keys[index].equals(key)) {
                 return values[index];
             }
@@ -80,12 +76,10 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     public V put(K key, V value) {
         resizeIfNeed();
 
-        int hash = hash(key);
-        int hash2 = hash2(key);
         int i = 0;
 
         int index;
-        for (index = getIndex(hash, hash2, i++); keys[index] != null; index = getIndex(hash, hash2, i++)) {
+        for (index = getIndex(key, i++); keys[index] != null; index = getIndex(key, i++)) {
             if (!removed[index] && keys[index].equals(key)) {
                 V result = values[index];
                 values[index] = value;
@@ -103,11 +97,9 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V remove(K key) {
-        int hash = hash(key);
-        int hash2 = hash2(key);
         int i = 0;
 
-        for (int index = getIndex(hash, hash2, i++); keys[index] != null; index = getIndex(hash, hash2, i++)) {
+        for (int index = getIndex(key, i++); keys[index] != null; index = getIndex(key, i++)) {
             if (!removed[index] && keys[index].equals(key)) {
                 size--;
                 removed[index] = true;
@@ -136,7 +128,7 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     }
 
     private int hash2(K key) {
-        int hashCode = key.hashCode() & 0x7fffffff ;
+        int hashCode = key.hashCode() & 0x7fffffff;
         hashCode %= 12317;
         if (hashCode == 0) {
             hashCode++;
@@ -144,7 +136,10 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
         return capacity % (hashCode % 12317) + 1;
     }
 
-    private int getIndex(int hash, int hash2, int i) {
+    private int getIndex(K key, int i) {
+        int hash = hash(key);
+        int hash2 = hash2(key);
+
         return ((hash + i * hash2) & 0x7fffffff) % capacity;
     }
 
