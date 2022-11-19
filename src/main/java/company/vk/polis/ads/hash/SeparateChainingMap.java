@@ -13,6 +13,10 @@ import org.jetbrains.annotations.Nullable;
 public final class SeparateChainingMap<K, V> implements Map<K, V> {
     // Do not edit this field!!!
     private Node<K, V>[] array;
+    private int size;
+    private int capacity;
+    private final float loadFactor;
+
 
     /**
      * Создает новый ассоциативный массив в соответствии с expectedMaxSize и loadFactor.
@@ -25,24 +29,34 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
      * @param loadFactor      отношение количества элементов к размеру массива связных списков
      */
     public SeparateChainingMap(int expectedMaxSize, float loadFactor) {
-        array = allocate(0);
-        throw new UnsupportedOperationException();
+        capacity = (int) (expectedMaxSize / loadFactor);
+        array = allocate(capacity);
+        this.loadFactor = loadFactor;
+        size = 0;
     }
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     @Override
     public boolean containsKey(K key) {
-        throw new UnsupportedOperationException();
+        return get(key) != null;
     }
 
     @Nullable
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        int inx = getInxOnHash(key);
+        var tmp = array[inx];
+        while (tmp != null) {
+            if (tmp.key.equals(key)) {
+                return tmp.value;
+            }
+            tmp = tmp.next;
+        }
+        return null;
     }
 
     /**
@@ -52,18 +66,69 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        throw new UnsupportedOperationException();
+        if (Math.ceil(capacity * loadFactor) == size) {
+            array = doublingCapacity();
+        }
+        int inx = getInxOnHash(key);
+        var start = array[inx];
+        if (start == null) {
+            array[inx] = new Node<>(key, value);
+        } else {
+            while (start.next != null) {
+                if (start.key.equals(key)) {
+                    V val = start.value;
+                    start.value = value;
+                    return val;
+                }
+                start = start.next;
+            }
+            if (start.key.equals(key)) {
+                V val = start.value;
+                start.value = value;
+                return val;
+            }
+            start.next = new Node<>(key, value);
+        }
+        size++;
+        return null;
     }
 
     @Nullable
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        int inx = getInxOnHash(key);
+        Node<K, V> prev = null;
+        var tmp = array[inx];
+        while (tmp != null) {
+            if (tmp.key.equals(key)) {
+                if (tmp.next != null) {
+                    tmp.next.prev = tmp.prev;
+                }
+
+                if (prev == null) {
+                    array[inx] = tmp.next;
+                } else {
+                    prev.next = tmp.next;
+                }
+
+                size--;
+                return tmp.value;
+            }
+            prev = tmp;
+            tmp = tmp.next;
+        }
+        return null;
     }
 
     @Override
     public void forEach(BiConsumer<K, V> consumer) {
-        throw new UnsupportedOperationException();
+        for (int i = 0; i < capacity; ++i) {
+            var tmp = array[i];
+            while (tmp != null) {
+                consumer.accept(tmp.key, tmp.value);
+                tmp = tmp.next;
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -81,5 +146,22 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
             this.key = key;
             this.value = value;
         }
+    }
+
+    private Node<K, V>[] doublingCapacity() {
+        Node<K, V>[] copy = allocate(capacity * 2);
+        capacity *= 2;
+        System.arraycopy(array, 0, copy, 0, size);
+        return copy;
+    }
+
+    private int hash(Object key) {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+    }
+
+    private int getInxOnHash(Object key) {
+        int h = hash(key);
+        return h & (capacity - 1);
     }
 }
