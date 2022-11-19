@@ -132,11 +132,11 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     }
 
     private int hash(K key) {
-        return key.hashCode();
+        return (key.hashCode() >> 4) % capacity + 1;
     }
 
     private int hash2(K key) {
-        return (key.hashCode() >>> 12) & key.hashCode();
+        return key.hashCode() % getNextPrime(capacity);
     }
 
     private int getIndex(int hash, int hash2, int i) {
