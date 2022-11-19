@@ -1,8 +1,6 @@
 package company.vk.polis.ads.hash;
 
 import java.util.Arrays;
-import java.util.Objects;
-import java.util.Random;
 import java.util.function.BiConsumer;
 
 import org.jetbrains.annotations.Nullable;
@@ -15,7 +13,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class DoubleHashingMap<K, V> implements Map<K, V> {
     // Do not edit these 3 instance fields!!!
-    private final static int[] PRIME_CAPACITY = {3, 7, 13, 29, 59, 113, 227, 457, 911, 1823, 3643, 7283, 14563, 29123, 58243, 116483, 232963};
+
+    // Массив CAPACITY - простые числа, каждое следующее примерно в 2 раза больше предыдущего. Последнее число - степень двойки(2^21)
+    private final static int[] CAPACITY = {3, 7, 13, 29, 59, 113, 227, 457, 911, 1823, 3643, 7283, 14563, 29123, 58243,
+            116_483, 232_963, 465_929, 931_859, 2_097_152};
     private static final int GROW_FACTOR = 2;
 
     private K[] keys;
@@ -39,7 +40,7 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     public DoubleHashingMap(int expectedMaxSize, float loadFactor) {
         this.loadFactor = loadFactor;
         capacity = (int) (expectedMaxSize / loadFactor);
-        indexOfPrimeCapacity = Math.abs(Arrays.binarySearch(PRIME_CAPACITY, capacity));
+        indexOfPrimeCapacity = Math.abs(Arrays.binarySearch(CAPACITY, capacity));
         keys = allocate(capacity);
         values = allocate(capacity);
         removed = new boolean[capacity];
@@ -128,31 +129,63 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
 
     private int firstHash(K key) {
         int hash = key.hashCode();
-        return (hash ^ (hash >>> 16)) % capacity;
+        return hash ^ (hash >>> 16);
     }
 
+    /*
+     * Поскольку capacity либо простое число, либо степень двойки,
+     * хотим всегда получать нечетный второй хеш, чтобы он был взаимно простым с capacity.
+     */
     private int secondHash(K key) {
-        return capacity - key.hashCode();
+        int hash = capacity - key.hashCode();
+        return hash % 2 == 0 ? ++hash : capacity - key.hashCode();
     }
 
     private int getIndex(int hash) {
         return (hash & 0x7fffffff) % capacity;
     }
 
+    /*
+     * Исходим из предположения, что начальное значение capacity попадет в наш диапазон чисел.
+     * Если выйдем за диапазон массива - пойдем по схеме capacity * GROW_FACTOR, тогда capacity всегда степеь двойки.
+     */
     private void resize() {
-        if (indexOfPrimeCapacity == PRIME_CAPACITY.length) {
+        if (indexOfPrimeCapacity > CAPACITY.length) {
             capacity = capacity * GROW_FACTOR;
         } else {
-            capacity = PRIME_CAPACITY[indexOfPrimeCapacity++];
+            capacity = CAPACITY[indexOfPrimeCapacity++];
         }
         K[] newKeys = keys;
         V[] newValues = values;
+        boolean[] tempRemoved = removed;
         keys = allocate(capacity);
         values = allocate(capacity);
         removed = new boolean[capacity];
+        int iter = 0;
+        int index;
         size = 0;
 
         for (int i = 0; i < newKeys.length; i++) {
+            /* Нам надо перезаписать флаги уже под новыми индексами(т.к хеши и, соответсвенно, индексы зависят от capacity)
+            * т.к индекс флага должен соответсвовать индексу его пары, нам нужно найти индекс по алгоритму put,
+            * ведь именно по нему в следующем if мы положим пару
+            */
+            if (tempRemoved[i]){
+                int hash1 = firstHash(newKeys[i]);
+                int hash2 = secondHash(newKeys[i]);
+                index = getIndex(firstHash(newKeys[i]));
+                while (keys[i] != null) {
+                    if (newKeys[i].equals(keys[i])) {
+                        removed[i] = tempRemoved[i];
+                        break;
+                    }
+                    if (removed[index]) {
+                        removed[i] = tempRemoved[i];
+                        break;
+                    }
+                    index = getIndex(hash1 + ((++iter)) * hash2);
+                }
+            }
             if (newKeys[i] != null) {
                 put(newKeys[i], newValues[i]);
             }
