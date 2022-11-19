@@ -138,7 +138,6 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     public void forEach(BiConsumer<K, V> consumer) {
         for (Node<K, V> bucket : array) {
             Node<K, V> curNode = bucket;
-
             while (curNode != null) {
                 consumer.accept(curNode.key, curNode.value);
                 curNode = curNode.next;
