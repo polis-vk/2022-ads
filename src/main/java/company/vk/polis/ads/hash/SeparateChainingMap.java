@@ -163,7 +163,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     }
 
     private int getIndex(K key) {
-        return Math.abs(key.hashCode()) % capacity;
+        return (key.hashCode() & 0x7ffffff) % capacity;
     }
 
     private void resizeIfNeed() {
@@ -171,9 +171,10 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
             return;
         }
 
+        Node<K, V>[] oldArray = array;
+
         capacity *= 2;
         size = 0;
-        Node<K, V>[] oldArray = array;
         array = allocate(capacity);
 
         for (Node<K, V> bucket : oldArray) {
