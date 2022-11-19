@@ -14,6 +14,10 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     // Do not edit this field!!!
     private Node<K, V>[] array;
 
+    private int capacity;
+    private int size = 0;
+    private final float loadFactor;
+
     /**
      * Создает новый ассоциативный массив в соответствии с expectedMaxSize и loadFactor.
      * Сразу выделяет начальное количество памяти на основе expectedMaxSize и loadFactor.
@@ -25,24 +29,48 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
      * @param loadFactor      отношение количества элементов к размеру массива связных списков
      */
     public SeparateChainingMap(int expectedMaxSize, float loadFactor) {
-        array = allocate(0);
-        throw new UnsupportedOperationException();
+        this.loadFactor = loadFactor;
+        this.capacity = (int) (expectedMaxSize / loadFactor);
+
+        array = allocate(capacity);
     }
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     @Override
     public boolean containsKey(K key) {
-        throw new UnsupportedOperationException();
+        int index = getIndex(key);
+
+        Node<K, V> curNode = array[index];
+
+        while (curNode != null) {
+            if (curNode.key.equals(key)) {
+                return true;
+            }
+            curNode = curNode.next;
+        }
+
+        return false;
     }
 
     @Nullable
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        int index = getIndex(key);
+
+        Node<K, V> curNode = array[index];
+
+        while (curNode != null) {
+            if (curNode.key.equals(key)) {
+                return curNode.value;
+            }
+            curNode = curNode.next;
+        }
+
+        return null;
     }
 
     /**
@@ -52,18 +80,76 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        throw new UnsupportedOperationException();
+        resizeIfNeed();
+
+        int index = getIndex(key);
+
+        Node<K, V> curNode = array[index];
+
+        if (curNode == null) {
+            Node<K, V> newNode = new Node<>(key, value);
+            array[index] = newNode;
+            size++;
+            return null;
+        }
+
+        while (curNode.next != null) {
+            if (curNode.key.equals(key)) {
+                V result = curNode.value;
+                curNode.value = value;
+                return result;
+            }
+
+            curNode = curNode.next;
+        }
+
+        Node<K, V> newNode = new Node<>(key, value);
+        newNode.prev = curNode;
+        curNode.next = newNode;
+        size++;
+        return null;
     }
 
     @Nullable
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        int index = getIndex(key);
+
+        Node<K, V> curNode = array[index];
+
+        while (curNode != null) {
+            if (curNode.key.equals(key)) {
+                if (curNode.prev == null) {
+                    curNode.next.prev = null;
+                    array[index] = curNode.next;
+                    size--;
+                    return curNode.value;
+                } else {
+                    if (curNode.next != null) {
+                        curNode.next.prev = curNode.prev;
+                    }
+                    curNode.prev.next = curNode.next;
+                    size--;
+                    return curNode.value;
+                }
+            }
+
+            curNode = curNode.next;
+        }
+
+        return null;
     }
 
     @Override
     public void forEach(BiConsumer<K, V> consumer) {
-        throw new UnsupportedOperationException();
+        for (Node<K, V> node : array) {
+            Node<K, V> curNode = node;
+
+            while (curNode != null) {
+                consumer.accept(curNode.key, curNode.value);
+                curNode = curNode.next;
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -80,6 +166,36 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
         Node(K key, V value) {
             this.key = key;
             this.value = value;
+        }
+    }
+
+    /**
+     * Получить степень двойки, которая больше или равна заданному числу n.
+     */
+
+    private int getIndex(K key) {
+        int hash = key.hashCode();
+        return Math.abs(hash) % capacity;
+    }
+
+    private void resizeIfNeed() {
+        if (capacity * loadFactor > size) {
+            return;
+        }
+
+        capacity *= 2;
+
+        Node<K, V>[] oldArray = array;
+        array = allocate(capacity);
+        size = 0;
+
+        for (Node <K, V> bucket : oldArray) {
+            Node<K, V> curNode = bucket;
+            while (curNode != null) {
+                put(curNode.key, curNode.value);
+
+                curNode = curNode.next;
+            }
         }
     }
 }
