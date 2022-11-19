@@ -136,7 +136,7 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     }
 
     private int hash2(K key) {
-        return key.hashCode();
+        return (key.hashCode() >>> 12) & key.hashCode();
     }
 
     private int getIndex(int hash, int hash2, int i) {
@@ -159,7 +159,7 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
         removed = new boolean[capacity];
 
         for (int i = 0; i < oldCapacity; i++) {
-            if (oldKeys[i] != null) {
+            if (!removed[i] && oldKeys[i] != null) {
                 put(oldKeys[i], oldValues[i]);
             }
         }
