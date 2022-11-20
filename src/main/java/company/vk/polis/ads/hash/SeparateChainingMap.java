@@ -87,7 +87,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
         }
         size++;
         prev.next = new Node<>(key, value);
-        prev.next.prev = prev; // то есть у prev.next обнови поле .prev на prev, т к было null
+        prev.next.prev = prev;
         return null;
     }
 
@@ -101,8 +101,8 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
             if (current.key.equals(key)) {
                 break;
             }
-            current = current.next;
             prev = current;
+            current = current.next;
         }
         if (current == null) {
             return null;
@@ -140,13 +140,13 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     }
 
     private int hashToIndex(K key) {
-        return (key.hashCode() & 0x7ffffff) % array.length; // key == null?
+        return (key.hashCode() & 0x7ffffff) % array.length;
     }
 
     private void needMoreCapacity() {
         Node<K, V>[] old = array;
-        array = allocate(array.length * INCREASE_FACTOR); // check if it doesn't work
-        System.arraycopy(old, 0, array, 0, old.length); // maybe don't work
+        array = allocate(array.length * INCREASE_FACTOR);
+        System.arraycopy(old, 0, array, 0, old.length);
     }
 
     private static final class Node<K, V> {
