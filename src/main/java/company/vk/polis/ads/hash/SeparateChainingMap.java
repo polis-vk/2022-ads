@@ -48,7 +48,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V get(K key) {
-        int inx = getInxOnHash(key);
+        int inx = getInxOnKey(key);
         var tmp = array[inx];
         while (tmp != null) {
             if (tmp.key.equals(key)) {
@@ -69,7 +69,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
         if (Math.ceil(capacity * loadFactor) == size) {
             array = doublingCapacity();
         }
-        int inx = getInxOnHash(key);
+        int inx = getInxOnKey(key);
         var start = array[inx];
         if (start == null) {
             array[inx] = new Node<>(key, value);
@@ -96,7 +96,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V remove(K key) {
-        int inx = getInxOnHash(key);
+        int inx = getInxOnKey(key);
         Node<K, V> prev = null;
         var tmp = array[inx];
         while (tmp != null) {
@@ -158,7 +158,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
         return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
     }
 
-    private int getInxOnHash(Object key) {
+    private int getInxOnKey(Object key) {
         int h = hash(key);
         return h & (capacity - 1);
     }
