@@ -14,12 +14,12 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     // Do not edit this field!!!
     private Node<K, V>[] array;
     private final float loadFactor;
+    private final int expectedMaxSize;
     private int size;
     private V oldValue;
     private static final int[] primes = new int[]{ 2, 5, 11, 17, 37, 67, 131, 257, 521, 1031, 2053, 4099, 8209, 16411,
             32771, 65537, 131101, 262147, 524309, 1048583, 2097169, 4194319, 8388617, 16777259, 33554467, 67108879,
             134217757, 268435459, 536870923, 1073741827 };
-    private int primeIndex;
 
     /**
      * Создает новый ассоциативный массив в соответствии с expectedMaxSize и loadFactor.
@@ -33,8 +33,8 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
      */
     public SeparateChainingMap(int expectedMaxSize, float loadFactor) {
         this.loadFactor = loadFactor;
-        array = allocate(Math.round(expectedMaxSize / loadFactor));
-        updatePrimeIndex();
+        this.expectedMaxSize = expectedMaxSize;
+        array = allocate(getPrimeBefore(Math.round(expectedMaxSize / loadFactor)));
     }
 
     @Override
@@ -71,7 +71,9 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        if (Math.round(array.length * loadFactor) == size()) {
+        if (expectedMaxSize == size()) {
+            resize();
+        } else if (size() > expectedMaxSize && Math.round(array.length * loadFactor) == size()) {
             resize();
         }
         oldValue = null;
@@ -106,8 +108,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
 
     private void resize() {
         Node<K, V>[] oldArray = array;
-        array = allocate(array.length << 1);
-        updatePrimeIndex();
+        array = allocate(getNextCapacity());
         size = 0;
         for (Node<K, V> n : oldArray) {
             while (n != null) {
@@ -118,17 +119,35 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     }
 
     private int getHash(K key) {
-        return (key.hashCode() & 0x7fffffff) % primes[primeIndex] % array.length;
+        return (key.hashCode() & 0x7fffffff) % array.length;
     }
 
-    private void updatePrimeIndex() {
+    private int getNextCapacity() {
         int a = 1;
         int pow = 0;
         while (a < array.length) {
             a <<= 1;
             pow++;
         }
-        primeIndex = pow - 1;
+        return primes[pow - 1];
+    }
+
+    private static boolean isPrime(int a) {
+        for (int i = 2; i <= Math.sqrt(a); i++) {
+            if (a % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static int getPrimeBefore(int a) {
+        for (int n = a; n >= 2; n--) {
+            if (isPrime(n)) {
+                return n;
+            }
+        }
+        return 1;
     }
 
     private Node<K, V> insert(Node<K, V> n, K key, V value) {
