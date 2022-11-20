@@ -1,8 +1,8 @@
 package company.vk.polis.ads.hash;
 
-import java.util.function.BiConsumer;
-
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.BiConsumer;
 
 /**
  * Map implementation with double hashing collision resolution approach
@@ -16,6 +16,9 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     private V[] values;
     private boolean[] removed;
 
+    private int size = 0;
+    private final float loadFactor;
+
     /**
      * Создает новый ассоциативный массив в соответствии с expectedMaxSize и loadFactor.
      * Сразу выделяет начальное количество памяти на основе expectedMaxSize и loadFactor.
@@ -27,25 +30,69 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
      * @param loadFactor      отношение количества элементов к размеру массивов
      */
     public DoubleHashingMap(int expectedMaxSize, float loadFactor) {
-        keys = allocate(0);
-        values = allocate(0);
-        removed = new boolean[0];
+        this.loadFactor = loadFactor;
+        int capacity = (int) (expectedMaxSize / loadFactor);
+
+        this.keys = allocate(capacity);
+        this.values = allocate(capacity);
+        this.removed = new boolean[capacity];
+    }
+
+    private int getIndex(K key, int step) {
+        int hash = key.hashCode() % (keys.length - 1) + 1;
+        int hash2 = key.hashCode();
+        return Math.abs(((hash + step * hash2 + 1)) % keys.length);
     }
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     @Override
     public boolean containsKey(K key) {
-        throw new UnsupportedOperationException();
+        int round = 0;
+        int index = getIndex(key, round++);
+
+        while (keys[index] != null) {
+            if (key.equals(keys[index]) && !removed[index]) {
+                return true;
+            }
+            index = getIndex(key, round++);
+        }
+        return false;
     }
 
     @Nullable
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        int round = 0;
+        int index = getIndex(key, round++);
+
+        while (keys[index] != null) {
+            if (key.equals(keys[index]) && !removed[index]) {
+                return values[index];
+            }
+            index = getIndex(key, round++);
+        }
+        return null;
+    }
+
+    private void resize() {
+        K[] tmpkeys = keys;
+        V[] tmpvals = values;
+        boolean[] tmpremoved = removed;
+
+        keys = allocate(2 * tmpkeys.length);
+        values = allocate(2 * tmpvals.length);
+        removed = new boolean[2 * tmpremoved.length];
+        size = 0;
+
+        for (int i = 0; i < tmpkeys.length; i++) {
+            if (tmpkeys[i] != null) {
+                put(tmpkeys[i], tmpvals[i]);
+            }
+        }
     }
 
     /**
@@ -55,18 +102,62 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        throw new UnsupportedOperationException();
+        if (keys.length * loadFactor <= size()) {
+            resize();
+        }
+
+        int round = 0;
+        int index = getIndex(key, round++);
+
+        while (keys[index] != null) {
+            if (removed[index]) {
+                keys[index] = key;
+                values[index] = value;
+                removed[index] = false;
+                size++;
+                return null;
+            }
+
+            if (key.equals(keys[index]) && !removed[index]) {
+                V tmp = values[index];
+                values[index] = value;
+                removed[index] = false;
+                return tmp;
+            }
+            index = getIndex(key, round++);
+        }
+
+        keys[index] = key;
+        values[index] = value;
+        removed[index] = false;
+        size++;
+        return null;
     }
 
     @Nullable
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        int round = 0;
+        int index = getIndex(key, round++);
+
+        while (keys[index] != null) {
+            if (key.equals(keys[index]) && !removed[index]) {
+                removed[index] = true;
+                size--;
+                return values[index];
+            }
+            index = getIndex(key, round++);
+        }
+        return null;
     }
 
     @Override
     public void forEach(BiConsumer<K, V> consumer) {
-        throw new UnsupportedOperationException();
+        for (int i = 0; i < keys.length; i++) {
+            if (keys[i] != null && !removed[i]) {
+                consumer.accept(keys[i], values[i]);
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")

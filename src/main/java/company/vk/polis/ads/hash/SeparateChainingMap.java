@@ -1,8 +1,8 @@
 package company.vk.polis.ads.hash;
 
-import java.util.function.BiConsumer;
-
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.BiConsumer;
 
 /**
  * Map implementation with separate chaining collision resolution approach
@@ -13,6 +13,8 @@ import org.jetbrains.annotations.Nullable;
 public final class SeparateChainingMap<K, V> implements Map<K, V> {
     // Do not edit this field!!!
     private Node<K, V>[] array;
+    private int size = 0;
+    private final float loadFactor;
 
     /**
      * Создает новый ассоциативный массив в соответствии с expectedMaxSize и loadFactor.
@@ -25,45 +27,144 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
      * @param loadFactor      отношение количества элементов к размеру массива связных списков
      */
     public SeparateChainingMap(int expectedMaxSize, float loadFactor) {
-        array = allocate(0);
-        throw new UnsupportedOperationException();
+        array = allocate((int) (expectedMaxSize / loadFactor));
+        this.loadFactor = loadFactor;
+    }
+
+    private int getIndex(K key) {
+        return Math.abs(key.hashCode() % array.length);
     }
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     @Override
     public boolean containsKey(K key) {
-        throw new UnsupportedOperationException();
+        int index = getIndex(key);
+
+        Node<K, V> tmp = array[index];
+        while (tmp != null) {
+            if (tmp.key.equals(key)) {
+                return true;
+            }
+            tmp = tmp.next;
+        }
+
+        return false;
     }
 
     @Nullable
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        int index = getIndex(key);
+
+        Node<K, V> tmp = array[index];
+        while (tmp != null) {
+            if (tmp.key.equals(key)) {
+                return tmp.value;
+            }
+            tmp = tmp.next;
+        }
+
+        return null;
+    }
+
+    private void resize() {
+        if (array.length * loadFactor > size()) {
+            return;
+        }
+
+        Node<K, V>[] tmp = array;
+        array = allocate(2 * tmp.length);
+        size = 0;
+        for (Node<K, V> node : tmp) {
+            while (node != null) {
+                put(node.key, node.value);
+                node = node.next;
+            }
+        }
     }
 
     /**
      * Если capacity * loadFactor == size() и будет добавлен новый ключ,
      * то нужно выполнить расширение массивов
      */
+
     @Nullable
     @Override
     public V put(K key, V value) {
-        throw new UnsupportedOperationException();
+        resize();
+        size++;
+
+        int index = getIndex(key);
+        if (array[index] == null) {
+            array[index] = new Node<K, V>(key, value);
+            return null;
+        }
+
+        Node<K, V> node = array[index];
+        while (node.next != null && !node.key.equals(key)) {
+            node = node.next;
+        }
+
+        if (node.next == null && !node.key.equals(key)) {
+            node.next = new Node<K, V>(key, value);
+            node.next.prev = node;
+            return null;
+        }
+
+        V tmp = node.value;
+        node.value = value;
+        size--;
+        return tmp;
     }
 
     @Nullable
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        int index = getIndex(key);
+        if (array[index] == null) {
+            return null;
+        }
+
+        Node<K, V> node = array[index];
+        while (node != null && !node.key.equals(key)) {
+            node = node.next;
+        }
+
+        if (node == null) {
+            return null;
+        }
+
+        V value = node.value;
+        if (node.prev == null) {
+            array[index] = node.next;
+            if (node.next != null) {
+                array[index].prev = null;
+            }
+        } else {
+            Node<K, V> tmp = node.next;
+            if (tmp == null) {
+                node.prev.next = null;
+            } else {
+                tmp.prev = node.prev;
+                node.prev.next = tmp;
+            }
+        }
+        size--;
+        return value;
     }
 
     @Override
     public void forEach(BiConsumer<K, V> consumer) {
-        throw new UnsupportedOperationException();
+        for (Node<K, V> node : array) {
+            while (node != null) {
+                consumer.accept(node.key, node.value);
+                node = node.next;
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
