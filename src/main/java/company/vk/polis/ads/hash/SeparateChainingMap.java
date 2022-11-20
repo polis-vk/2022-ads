@@ -65,7 +65,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Override
     public V put(K key, V value) {
         if (size >= loadFactor * array.length) { // >
-            needMoreCapacity();
+            resize();
         }
 
         int index = hashToIndex(key);
@@ -143,7 +143,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
         return (key.hashCode() & 0x7ffffff) % array.length;
     }
 
-    private void needMoreCapacity() {
+    private void resize() {
         Node<K, V>[] old = array;
         array = allocate(array.length * INCREASE_FACTOR);
         System.arraycopy(old, 0, array, 0, old.length);
