@@ -1,6 +1,7 @@
 package company.vk.polis.ads.hash;
 
 import java.util.function.BiConsumer;
+import java.util.stream.IntStream;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -11,6 +12,11 @@ import org.jetbrains.annotations.Nullable;
  * @param <V> value
  */
 public final class DoubleHashingMap<K, V> implements Map<K, V> {
+
+    private static final int INCREASE_FACTOR = 2;
+
+    private final float loadFactor;
+    private int size;
     // Do not edit these 3 instance fields!!!
     private K[] keys;
     private V[] values;
@@ -27,25 +33,36 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
      * @param loadFactor      отношение количества элементов к размеру массивов
      */
     public DoubleHashingMap(int expectedMaxSize, float loadFactor) {
-        keys = allocate(0);
-        values = allocate(0);
-        removed = new boolean[0];
+        this.loadFactor = loadFactor;
+        final int capacity = (int) (expectedMaxSize / loadFactor);
+        keys = allocate(capacity);
+        values = allocate(capacity);
+        removed = new boolean[capacity];
     }
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     @Override
     public boolean containsKey(K key) {
-        throw new UnsupportedOperationException();
+        return get(key) != null;
     }
 
     @Nullable
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        int hash1 = hash1(key);
+        int hash2 = hash2(key);
+        int i;
+        int j = 0;
+        for (i = hashToIndex(hash1); keys[i] != null; i = hashToIndex(hash1 + (++j) * hash2)) { // dont work
+            if (!removed[i] && keys[i].equals(key)) {
+                return values[i];
+            }
+        }
+        return null;
     }
 
     /**
@@ -55,22 +72,84 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        throw new UnsupportedOperationException();
+        resizeIfNeed();
+
+        int hash1 = hash1(key);
+        int hash2 = hash2(key);
+        int i;
+        int j = 0;
+        // removed condition works?
+        for (i = hashToIndex(hash1); keys[i] != null; i = hashToIndex(hash1 + (++j) * hash2)) {
+            if (!removed[i] && keys[i].equals(key)) {
+                V oldVal = values[i];
+                values[i] = value;
+                return oldVal;
+            }
+        }
+        size++;
+        keys[i] = key;
+        values[i] = value;
+        return null;
     }
 
     @Nullable
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        int hash1 = hash1(key);
+        int hash2 = hash2(key);
+        int i;
+        int j = 0;
+        for (i = hashToIndex(hash1); keys[i] != null; i = hashToIndex(hash1 + (++j) * hash2)) {
+            if (!removed[i] && keys[i].equals(key)) {
+                removed[i] = true;
+                size--;
+                return values[i];
+            }
+        }
+        return null;
     }
 
     @Override
     public void forEach(BiConsumer<K, V> consumer) {
-        throw new UnsupportedOperationException();
+        for (int i = 0; i < keys.length; i++) {
+            if (keys[i] != null && !removed[i]) {
+                consumer.accept(keys[i], values[i]);
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
     private static <T> T[] allocate(int capacity) {
         return (T[]) new Object[capacity];
+    }
+
+    private void resizeIfNeed() {
+        if (size >= loadFactor * keys.length) {
+            K[] oldKeys = keys;
+            V[] oldValues = values;
+            boolean[] oldRemoved = removed;
+            int length = keys.length;
+            keys = allocate(length * INCREASE_FACTOR);
+            values = allocate(length * INCREASE_FACTOR);
+            removed = new boolean[length * INCREASE_FACTOR];
+            System.arraycopy(oldKeys, 0, keys, 0, length);
+            System.arraycopy(oldValues, 0, values, 0, length);
+            System.arraycopy(oldRemoved, 0, removed, 0, length);
+        }
+    }
+
+    private int hash1(K key) {
+        int hash;
+        return (hash = key.hashCode()) ^ (hash >>> 16); // javadoc
+    }
+
+    private int hash2(K key) {
+        int len = keys.length;
+        int hash = len - key.hashCode();
+        return hash % 2 == 0 ? ++hash : hash;
+    }
+
+    private int hashToIndex(int hash) {
+        return (hash & 0x7ffffff) % keys.length;
     }
 }
