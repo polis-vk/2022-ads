@@ -72,10 +72,6 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     }
 
     private void resize() {
-        if (array.length * loadFactor > size()) {
-            return;
-        }
-
         Node<K, V>[] tmp = array;
         array = allocate(2 * tmp.length);
         size = 0;
@@ -95,7 +91,9 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        resize();
+        if (array.length * loadFactor <= size()) {
+            resize();
+        }
         size++;
 
         int index = getIndex(key);
