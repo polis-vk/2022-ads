@@ -11,6 +11,11 @@ import org.jetbrains.annotations.Nullable;
  * @param <V> value
  */
 public final class SeparateChainingMap<K, V> implements Map<K, V> {
+
+    private static final int INCREASE_FACTOR = 2;
+
+    private final float loadFactor;
+    private int size;
     // Do not edit this field!!!
     private Node<K, V>[] array;
 
@@ -25,24 +30,31 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
      * @param loadFactor      отношение количества элементов к размеру массива связных списков
      */
     public SeparateChainingMap(int expectedMaxSize, float loadFactor) {
-        array = allocate(0);
-        throw new UnsupportedOperationException();
+        this.loadFactor = loadFactor;
+        array = allocate((int) (expectedMaxSize / loadFactor));
     }
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     @Override
     public boolean containsKey(K key) {
-        throw new UnsupportedOperationException();
+        return get(key) != null;
     }
 
     @Nullable
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        Node<K, V> current = array[hashToIndex(key)];
+        while (current != null) {
+            if (current.key.equals(key)) {
+                return current.value;
+            }
+            current = current.next;
+        }
+        return null;
     }
 
     /**
@@ -52,23 +64,89 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        throw new UnsupportedOperationException();
+        if (size >= loadFactor * array.length) { // >
+            needMoreCapacity();
+        }
+
+        int index = hashToIndex(key);
+        Node<K, V> current = array[index];
+        if (current == null) {
+            array[index] = new Node<>(key, value);
+            size++;
+            return null;
+        }
+        Node<K, V> prev = null;
+        while (current != null) {
+            if (current.key.equals(key)) {
+                V oldVal = current.value;
+                current.value = value;
+                return oldVal;
+            }
+            prev = current;
+            current = current.next;
+        }
+        size++;
+        prev.next = new Node<>(key, value);
+        prev.next.prev = prev; // то есть у prev.next обнови поле .prev на prev, т к было null
+        return null;
     }
 
     @Nullable
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        final int index = hashToIndex(key);
+        Node<K, V> current = array[index];
+        Node<K, V> prev = null;
+        while (current != null) {
+            if (current.key.equals(key)) {
+                break;
+            }
+            current = current.next;
+            prev = current;
+        }
+        if (current == null) {
+            return null;
+        }
+        V oldVal = current.value;
+        if (prev == null) {
+            array[index] = current.next;
+            if (current.next != null) {
+                current.next.prev = null;
+            }
+        } else if (current.next == null) {
+            current.prev.next = null;
+        } else {
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
+        }
+        size--;
+        return oldVal;
     }
 
     @Override
     public void forEach(BiConsumer<K, V> consumer) {
-        throw new UnsupportedOperationException();
+        for (Node<K, V> kvNode : array) {
+            Node<K, V> current = kvNode;
+            while (current != null) {
+                consumer.accept(current.key, current.value);
+                current = current.next;
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
     private static <K, V> Node<K, V>[] allocate(int capacity) {
         return (Node<K, V>[]) new Node[capacity];
+    }
+
+    private int hashToIndex(K key) {
+        return (key.hashCode() & 0x7ffffff) % array.length; // key == null?
+    }
+
+    private void needMoreCapacity() {
+        Node<K, V>[] old = array;
+        array = allocate(array.length * INCREASE_FACTOR); // check if it doesn't work
+        System.arraycopy(old, 0, array, 0, old.length); // maybe don't work
     }
 
     private static final class Node<K, V> {
