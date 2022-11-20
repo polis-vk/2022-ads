@@ -64,9 +64,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        if (size >= loadFactor * array.length) { // >
-            resize();
-        }
+        resizeIfNeed();
 
         int index = hashToIndex(key);
         Node<K, V> current = array[index];
@@ -125,8 +123,8 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
 
     @Override
     public void forEach(BiConsumer<K, V> consumer) {
-        for (Node<K, V> kvNode : array) {
-            Node<K, V> current = kvNode;
+        for (Node<K, V> head : array) {
+            Node<K, V> current = head;
             while (current != null) {
                 consumer.accept(current.key, current.value);
                 current = current.next;
@@ -143,10 +141,12 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
         return (key.hashCode() & 0x7ffffff) % array.length;
     }
 
-    private void resize() {
-        Node<K, V>[] old = array;
-        array = allocate(array.length * INCREASE_FACTOR);
-        System.arraycopy(old, 0, array, 0, old.length);
+    private void resizeIfNeed() {
+        if (size >= loadFactor * array.length) {
+            Node<K, V>[] old = array;
+            array = allocate(array.length * INCREASE_FACTOR);
+            System.arraycopy(old, 0, array, 0, old.length);
+        }
     }
 
     private static final class Node<K, V> {
