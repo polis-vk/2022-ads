@@ -13,6 +13,9 @@ import org.jetbrains.annotations.Nullable;
 public final class SeparateChainingMap<K, V> implements Map<K, V> {
     // Do not edit this field!!!
     private Node<K, V>[] array;
+    private int capacity;
+    private int size;
+    private final float loadFactor;
 
     /**
      * Создает новый ассоциативный массив в соответствии с expectedMaxSize и loadFactor.
@@ -25,24 +28,39 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
      * @param loadFactor      отношение количества элементов к размеру массива связных списков
      */
     public SeparateChainingMap(int expectedMaxSize, float loadFactor) {
-        array = allocate(0);
-        throw new UnsupportedOperationException();
+        this.loadFactor = loadFactor;
+        this.capacity = (int) (expectedMaxSize / loadFactor);
+        this.array = allocate(capacity);
     }
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     @Override
     public boolean containsKey(K key) {
-        throw new UnsupportedOperationException();
+        Node<K,V> temp = array[getIndex(key)];
+        while (temp != null) {
+            if (temp.key.equals(key)) {
+                return true;
+            }
+            temp = temp.next;
+        }
+        return false;
     }
 
     @Nullable
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        Node<K,V> temp = array[getIndex(key)];
+        while (temp != null) {
+            if (temp.key.equals(key)) {
+                return temp.value;
+            }
+            temp = temp.next;
+        }
+        return null;
     }
 
     /**
@@ -52,7 +70,7 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     @Nullable
@@ -81,5 +99,9 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
             this.key = key;
             this.value = value;
         }
+    }
+
+    private int getIndex(K key){
+        return (key.hashCode() & 0x7fffff) % capacity;
     }
 }

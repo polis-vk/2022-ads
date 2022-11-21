@@ -15,6 +15,11 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     private K[] keys;
     private V[] values;
     private boolean[] removed;
+    private final float loadFactor;
+
+    private int size = 0;
+    private int capacity;
+
 
     /**
      * Создает новый ассоциативный массив в соответствии с expectedMaxSize и loadFactor.
@@ -27,14 +32,16 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
      * @param loadFactor      отношение количества элементов к размеру массивов
      */
     public DoubleHashingMap(int expectedMaxSize, float loadFactor) {
-        keys = allocate(0);
-        values = allocate(0);
-        removed = new boolean[0];
+        this.capacity = (int) (expectedMaxSize / loadFactor);
+        keys = allocate(capacity);
+        values = allocate(capacity);
+        removed = new boolean[capacity];
+        this.loadFactor = loadFactor;
     }
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size();
     }
 
     @Override
