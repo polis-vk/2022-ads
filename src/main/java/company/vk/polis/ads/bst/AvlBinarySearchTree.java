@@ -159,8 +159,11 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
             size--;
             x = innerDelete(x);
         }
-        fixHeight(x);
-        x = balance(x);
+        
+        if (x != null) {
+            fixHeight(x);
+            x = balance(x);
+        }
         return x;
     }
 
