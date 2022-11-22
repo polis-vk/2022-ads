@@ -40,6 +40,7 @@ class MapTest {
         testLoadFactorAndCapacity(SeparateChainingMap::new, loadFactor, MapTest::separateChainingMapCapacity);
     }
 
+    @Disabled
     @ParameterizedTest
     @MethodSource("loadFactors")
     void testDoubleHashingLoadFactorAndCapacity(double loadFactor) {
