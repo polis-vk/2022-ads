@@ -1,5 +1,6 @@
 package company.vk.polis.ads.hash;
 
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
 import org.jetbrains.annotations.Nullable;
@@ -15,6 +16,9 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     private K[] keys;
     private V[] values;
     private boolean[] removed;
+    private final float loadFactor;
+    private int capacity;
+    private int size;
 
     /**
      * Создает новый ассоциативный массив в соответствии с expectedMaxSize и loadFactor.
@@ -27,25 +31,36 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
      * @param loadFactor      отношение количества элементов к размеру массивов
      */
     public DoubleHashingMap(int expectedMaxSize, float loadFactor) {
-        keys = allocate(0);
-        values = allocate(0);
-        removed = new boolean[0];
+        this.loadFactor = loadFactor;
+        capacity = (int) (expectedMaxSize / loadFactor);
+        keys = allocate(capacity);
+        values = allocate(capacity);
+        removed = new boolean[capacity];
     }
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     @Override
     public boolean containsKey(K key) {
-        throw new UnsupportedOperationException();
+        return get(key) != null;
     }
 
     @Nullable
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        int index = getIndex(key, 0);
+        int i = 0;
+        while (keys[index] != null) {
+            if (keys[index].equals(key)) {
+                return values[index];
+            }
+            i++;
+            index = getIndex(key, i);
+        }
+        return null;
     }
 
     /**
@@ -55,22 +70,105 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        throw new UnsupportedOperationException();
+        if (capacity * loadFactor <= size()) {
+            resize();
+        }
+        int index = getIndex(key, 0);
+        int i = 0;
+        while (keys[index] != null) {
+            if (keys[index].equals(key) && !removed[index]) {
+                V oldValue = values[index];
+                values[index] = value;
+                return oldValue;
+            }
+            i++;
+            index = getIndex(key, i);
+        }
+        keys[index] = key;
+        values[index] = value;
+        removed[index] = false;
+        size++;
+        return null;
     }
 
     @Nullable
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        int index = getIndex(key, 0);
+        int i = 0;
+        while (keys[index] != null) {
+            if (keys[index].equals(key) && !removed[index]) {
+                removed[index] = true;
+                size--;
+                return values[index];
+            }
+            i++;
+            index = getIndex(key, i);
+        }
+        return null;
     }
 
     @Override
     public void forEach(BiConsumer<K, V> consumer) {
-        throw new UnsupportedOperationException();
+        for (int i = 0; i < keys.length; i++) {
+            if (keys[i] != null && !removed[i]) {
+                consumer.accept(keys[i], values[i]);
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
     private static <T> T[] allocate(int capacity) {
         return (T[]) new Object[capacity];
+    }
+
+    private int hash1(K key) {
+        return Objects.hashCode(key) & 0x7fffffff;
+    }
+
+    private int hash2(K key) {
+        // HashMap
+        int h;
+        return (h = key.hashCode()) ^ h >>> 16;
+    }
+
+    private int getIndex(K key, int i) {
+        return ((hash1(key) + i * hash2(key)) & 0x7fffffff) % capacity;
+    }
+
+    private void resize() {
+        K[] oldKeys = keys;
+        V[] oldValues = values;
+        size = 0;
+        capacity = getPrime(capacity);
+        keys = allocate(capacity);
+        values = allocate(capacity);
+        removed = new boolean[capacity];
+        for (int i = 0; i < oldKeys.length; i++) {
+            if (oldKeys[i] != null && !removed[i]) {
+                put(oldKeys[i], oldValues[i]);
+            }
+        }
+    }
+
+    private boolean isPrime(int n) {
+        if (n <= 1) {
+            return false;
+        }
+        int limit = (int) Math.sqrt(n);
+        for (int i = 2; i < limit; i++) {
+            if (n % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private int getPrime(int n) {
+        int num = n;
+        while (!isPrime(num)) {
+            num++;
+        }
+        return num;
     }
 }
