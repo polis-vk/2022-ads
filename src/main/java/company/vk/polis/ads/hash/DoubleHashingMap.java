@@ -164,8 +164,7 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     // Since the capacity of array is even (we always double capacity when expanding)
     // Our hash needs to be an odd value
     private int secondHash(int objectHash) {
-        int hash = Math.abs(primeNumber - (objectHash % primeNumber));
-        return hash % 2 == 0 ? hash + 1 : hash;
+        return Math.abs(2 * (primeNumber - (objectHash % primeNumber)) + 1);
     }
 
     private int getNextIndex(int i, int hash1, int hash2) {
