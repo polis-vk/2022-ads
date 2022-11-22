@@ -24,11 +24,9 @@ public final class ShortestWay {
   private static class Graph {
 
     List<List<Integer>> vertexes;
-    int n;
 
     Graph(int size) {
-      n = size + 1;
-      vertexes = new ArrayList<>(n);
+      vertexes = new ArrayList<>(size + 1);
       for (int i = 0; i <= size; ++i) {
         vertexes.add(new ArrayList<>());
       }
@@ -40,19 +38,19 @@ public final class ShortestWay {
     }
 
     void shortestWay(int start, int end) {
-      List<Integer> parent = Stream.generate(() -> -1).limit(n).collect(Collectors.toCollection(ArrayList::new));
-      List<Integer> dist = Stream.generate(() -> -1).limit(n).collect(Collectors.toCollection(ArrayList::new));
+      List<Integer> parent = Stream.generate(() -> -1).limit(vertexes.size() + 1).collect(Collectors.toCollection(ArrayList::new));
+      List<Integer> dist = Stream.generate(() -> -1).limit(vertexes.size() + 1).collect(Collectors.toCollection(ArrayList::new));
       dist.set(start, 0);
       parent.set(start, -1);
-      Deque<Integer> queue = new ArrayDeque<>();
-      queue.push(start);
+
+      Queue<Integer> queue = new ArrayDeque<>();
+      queue.add(start);
       while (!queue.isEmpty()) {
-        int v = queue.peek();
-        queue.pop();
+        int v = queue.poll();
         for (int to : vertexes.get(v)) {
           if (dist.get(to) == -1) {
             dist.set(to, dist.get(v) + 1);
-            queue.push(to);
+            queue.add(to);
             parent.set(to, v);
           }
         }
@@ -70,11 +68,8 @@ public final class ShortestWay {
           path.add(end);
         }
 
-
-        for (int i = path.size() - 1; i >= 0; i--) {
-          System.out.print(path.get(i) + " ");
-        }
-        System.out.println();
+        Collections.reverse(path);
+        path.forEach(v -> System.out.print(v + " "));
       }
     }
 
