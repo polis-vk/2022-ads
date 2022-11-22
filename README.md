@@ -211,3 +211,12 @@ $ git checkout -b <my-branch-for-part8> 90e687c4e6e9d32e992c5c11b58940a6bd9fcf11
 ```commandline
 ./gradlew test
 ```
+
+## ДЗ 9. Графы 1. Дедлайн 29.11.2022 18:29:59
+
+Задачки с e-olymp:
+
+* https://www.eolymp.com/ru/problems/4853 - Кратчайший путь
+* https://www.eolymp.com/ru/problems/1948 - Топологическая сортировка
+* https://www.eolymp.com/ru/problems/2022 - Циклы в графе
+* https://www.eolymp.com/ru/problems/1947 - Конденсация графа
