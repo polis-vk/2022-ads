@@ -23,7 +23,7 @@ public final class ShortestWay {
 
   private static class Graph {
 
-    List<List<Integer>> vertexes;
+    private List<List<Integer>> vertexes;
 
     Graph(int size) {
       vertexes = new ArrayList<>(size + 1);
