@@ -2,6 +2,8 @@ package company.vk.polis.ads.bst;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * AVL implementation of binary search tree.
  */
@@ -93,6 +95,10 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         }
         if (key == node.key) {
             node = innerRemove(node);
+        }
+        if (Objects.nonNull(node)) {
+            fixHeight(node);
+            node = balance(node);
         }
         return node;
     }
