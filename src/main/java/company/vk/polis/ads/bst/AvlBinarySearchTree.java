@@ -39,7 +39,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
     @Override
     public Value remove(@NotNull Key key) {
         root = delete(root, key);
-        if (lastRemoved != null){
+        if (lastRemoved != null) {
             Value deleteValue = lastRemoved.value;
             lastRemoved = null;
             size--;
@@ -152,7 +152,8 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
             lastRemoved = node;
             node = innerDelete(node);
         }
-        return node;
+        fixHeight(node);
+        return balance(node);
     }
 
     private Node innerDelete(Node node) {
@@ -166,7 +167,8 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         node = min(node.right);
         node.right = deleteMin(tempNode.right);
         node.left = tempNode.left;
-        return node;
+        fixHeight(node);
+        return balance(node);
     }
 
     private Node deleteMin(Node node) {
@@ -174,7 +176,8 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
             return node.right;
         }
         node.left = deleteMin(node.left);
-        return node;
+        fixHeight(node);
+        return balance(node);
     }
 
     private Node min(Node node) {
@@ -235,10 +238,16 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
     }
 
     private void fixHeight(Node node) {
+        if (node == null) {
+            return;
+        }
         node.height = 1 + Math.max(height(node.left), height(node.right));
     }
 
     private int balanceFactor(Node node) {
+        if (node == null) {
+            return Integer.MAX_VALUE;
+        }
         return height(node.left) - height(node.right);
     }
 
