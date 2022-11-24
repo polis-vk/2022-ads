@@ -1,4 +1,4 @@
-package company.vk.polis.ads.part9.vspochernin.task3;
+package company.vk.polis.ads.part9.vspochernin.task2;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,8 +12,8 @@ import java.util.StringTokenizer;
 
 /**
  * Problem solution template.
- *
- * https://www.eolymp.com/ru/submissions/12272132
+ * <p>
+ * https://www.eolymp.com/ru/submissions/12273762
  *
  * @author Dmitry Schitinin
  */
@@ -23,7 +23,6 @@ public final class Main {
 
     private enum Color {
         WHITE,
-        RED,
         GRAY,
         BLACK
     }
