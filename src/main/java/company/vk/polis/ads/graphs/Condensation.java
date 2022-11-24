@@ -19,123 +19,101 @@ public final class Condensation {
     // Should not be instantiated
   }
 
-  private static class Graph {
+  private static List<List<Integer>> graph;
+  private static List<List<Integer>> invertedGraph;
 
-    List<List<Integer>> vertexes;
-    private boolean[] used;
-    private List<Integer> sorted;
+  private static boolean [] used;
 
-    Graph(int size) {
-      vertexes = new ArrayList<>(size + 1);
-      for (int i = 0; i <= size; ++i) {
-        vertexes.add(new ArrayList<>());
+  private static List<Integer> order;
+  private static int [] component;
+
+  private static void dfs1(int v) {
+    used[v] = true;
+    for (int u : graph.get(v)) {
+      if (!used[u]) {
+        dfs1(u);
       }
-      used = new boolean[size + 1];
-      sorted = new ArrayList<>(size + 1);
     }
-
-    void addEdge(int l, int r) {
-      vertexes.get(l).add(r);
-    }
-
-    void dfs(int v) {
-      used[v] = true;
-      for (int u : vertexes.get(v)) {
-        if (!used[u]) {
-          dfs(u);
-        }
-      }
-      sorted.add(v);
-    }
-
-    void topologicalSort() {
-      for (int v = 1; v < vertexes.size(); ++v) {
-        if (!used[v]) {
-          dfs(v);
-        }
-      }
-      Collections.reverse(sorted);
-    }
+    order.add(v);
   }
 
-  private static class ReversedGraph {
-    List<List<Integer>> vertexes;
-    private int[] color;
-
-    ReversedGraph(int size) {
-      vertexes = new ArrayList<>(size + 1);
-      for (int i = 0; i <= size; ++i) {
-        vertexes.add(new ArrayList<>());
-      }
-      color = new int[size + 1];
-    }
-
-    void addEdge(int l, int r) {
-      vertexes.get(l).add(r);
-    }
-
-    void dfs(int v, int c) {
-      color[v] = c;
-      for (int u : vertexes.get(v)) {
-        if (color[u] == -1) {
-          dfs(u, c);
-        }
+  private static void dfs2(int v, int c) {
+    used[v] = true;
+    component[v] = c;
+    for (int u : invertedGraph.get(v)) {
+      if (!used[u]) {
+        dfs2(u, c);
       }
     }
 
-    void paintVertexes(Graph graph) {
-      Arrays.fill(color, -1);
-      int c = 0;
-      for (int v : graph.sorted) {
-        if (color[v] == -1) {
-          dfs(v, c++);
-        }
-      }
-    }
   }
 
-  private static class Edge implements Comparable<Edge> {
 
+  static class Edge implements Comparable<Edge>
+  {
     int a, b;
-    Edge(int a, int b) {
+
+    Edge(int a, int b)
+    {
       this.a = a;
       this.b = b;
     }
+
     @Override
-    public int compareTo(Edge e) {
+    public int compareTo(Edge e)
+    {
       if (a == e.a) return b - e.b;
       return a - e.a;
     }
-  }
 
+  }
   private static void solve(final FastScanner in, final PrintWriter out) {
     int n = in.nextInt();
     int m = in.nextInt();
 
+    graph = new ArrayList<>(n + 1);
+    invertedGraph = new ArrayList<>(n + 1);
 
-    Graph graph = new Graph(n);
-    ReversedGraph reversedGraph = new ReversedGraph(n);
+    for (int i = 0; i <= n; ++i) {
+      graph.add(new ArrayList<>());
+      invertedGraph.add(new ArrayList<>());
+    }
+
     for (int i = 0; i < m; ++i) {
       int l = in.nextInt();
       int r = in.nextInt();
-      graph.addEdge(l, r);
-      reversedGraph.addEdge(r, l);
+      graph.get(l).add(r);
+      invertedGraph.get(r).add(l);
     }
 
-    graph.topologicalSort();
-    reversedGraph.paintVertexes(graph);
-
-
-    Set<Edge> set = new HashSet<>();
+    used = new boolean[n + 1];
+    order = new ArrayList<>(n + 1);
     for (int v = 1; v <= n; ++v) {
-      for (int to : graph.vertexes.get(v)) {
-        if (reversedGraph.color[v] != reversedGraph.color[to]) {
-          set.add(new Edge(reversedGraph.color[v], reversedGraph.color[to]));
+      if (!used[v]) {
+        dfs1(v);
+      }
+    }
+
+    Arrays.fill(used, false);
+    component = new int [n + 1];
+    int c = 1;
+    for (int i = 0; i < n; ++i) {
+      int v = order.get(n - 1 - i);
+      if (!used[v]) {
+        dfs2(v, c++);
+      }
+    }
+
+    Set<Edge> s = new TreeSet<>();
+    for(int v = 1; v <= n; ++v) {
+      for (int u : graph.get(v)) {
+        if (component[v] != component[u]) {
+          s.add(new Edge(component[v], component[u]));
         }
       }
     }
-    out.print(set.size());
 
+    out.print(s.size());
   }
 
   private static final class FastScanner {
