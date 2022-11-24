@@ -16,15 +16,16 @@ import java.util.StringTokenizer;
 
 /**
  * Problem solution template.
- *
- * https://www.eolymp.com/ru/submissions/12273572
+ * <p>
+ * https://www.eolymp.com/ru/submissions/12273806
  *
  * @author Dmitry Schitinin
  */
 public final class Main {
 
-    private static List<Integer> toplogSort = new ArrayList<>();
-    private static Map<Integer, Integer> components = new HashMap<>();
+    private static final List<Integer> topologicalSort = new ArrayList<>();
+    private static final Map<Integer, Integer> components = new HashMap<>(); // Отображение номера узла на номер компоненты
+    // связности.
 
     private enum Color {
         WHITE,
@@ -75,10 +76,10 @@ public final class Main {
             dfs1(v);
         }
 
-        Collections.reverse(toplogSort);
+        Collections.reverse(topologicalSort);
 
-        int curGroupNumber = 0;
-        for (Integer vertexNumber : toplogSort) {
+        int curGroupNumber = 0; // Номер компоненты связности.
+        for (Integer vertexNumber : topologicalSort) {
             Vertex v = transposedGraph.get(vertexNumber);
             if (v.num == 0 || v.color != Color.WHITE) {
                 continue;
@@ -88,10 +89,11 @@ public final class Main {
             dfs2(v, curGroupNumber);
         }
 
-        Set<String> uniqueRoutes = new HashSet<>();
+        Set<String> uniqueRoutes = new HashSet<>(); // Уникальные пути (ребра) между компонентами связности.
         for (Vertex v : graph) {
             for (Vertex x : v.paths) {
-                if (!components.get(v.num).equals(components.get(x.num))) {
+                if (!components.get(v.num).equals(components.get(x.num))) { // Если соседи из разных компонент...
+                    // Обрабатываем эту пару.
                     uniqueRoutes.add(components.get(v.num).toString() + " " + components.get(x.num).toString());
                 }
             }
@@ -111,7 +113,8 @@ public final class Main {
             }
         }
 
-        toplogSort.add(v.num);
+        topologicalSort.add(v.num);
+        v.color = Color.BLACK;
     }
 
     private static void dfs2(Vertex v, int groupNumber) {
