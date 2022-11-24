@@ -224,7 +224,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
     }
 
     private int height(Node x) {
-        return x == null ? 0 : root.height;
+        return x == null ? 0 : x.height;
     }
 
     private Node floor(Node x, Key key) {
