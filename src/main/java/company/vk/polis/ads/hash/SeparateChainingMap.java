@@ -13,6 +13,9 @@ import org.jetbrains.annotations.Nullable;
 public final class SeparateChainingMap<K, V> implements Map<K, V> {
     // Do not edit this field!!!
     private Node<K, V>[] array;
+    private int capacity;
+    private int size;
+    private final float loadFactor;
 
     /**
      * Создает новый ассоциативный массив в соответствии с expectedMaxSize и loadFactor.
@@ -25,24 +28,32 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
      * @param loadFactor      отношение количества элементов к размеру массива связных списков
      */
     public SeparateChainingMap(int expectedMaxSize, float loadFactor) {
-        array = allocate(0);
-        throw new UnsupportedOperationException();
+        this.loadFactor = loadFactor;
+        this.capacity = (int) (expectedMaxSize / loadFactor);
+        this.array = allocate(capacity);
     }
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     @Override
     public boolean containsKey(K key) {
-        throw new UnsupportedOperationException();
+        return get(key) != null;
     }
 
     @Nullable
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        Node<K, V> current = array[indexOf(key)];
+        while (current != null) {
+            if (current.key.equals(key)) {
+                return current.value;
+            }
+            current = current.next;
+        }
+        return null;
     }
 
     /**
@@ -52,23 +63,101 @@ public final class SeparateChainingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        throw new UnsupportedOperationException();
+        if (capacity * loadFactor <= size) {
+            expandArray();
+        }
+
+        int index = indexOf(key);
+        Node<K, V> node = new Node<>(key, value);
+        Node<K, V> current = array[index];
+        Node<K, V> prev = null;
+
+        if (current == null) {
+            array[index] = node;
+            size++;
+            return null;
+        }
+
+        while (current != null) {
+            if (current.key.equals(key)) {
+                V oldValue = current.value;
+                current.value = value;
+                return oldValue;
+            }
+            prev = current;
+            current = current.next;
+        }
+
+        prev.next = node;
+        node.prev = prev;
+        size++;
+        return null;
     }
 
     @Nullable
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        int index = indexOf(key);
+        Node<K, V> current = array[index];
+
+        while (current != null) {
+            if (current.key.equals(key)) {
+                V value = current.value;
+                if (current.prev != null) {
+                    current.prev.next = current.next;
+                } else {
+                    array[index] = current.next;
+                }
+                if (current.next != null) {
+                    current.next.prev = current.prev;
+                }
+                size--;
+                return value;
+            }
+            current = current.next;
+        }
+
+        return null;
     }
 
     @Override
     public void forEach(BiConsumer<K, V> consumer) {
-        throw new UnsupportedOperationException();
+        for (Node<K, V> bucket : array) {
+            Node<K, V> current = bucket;
+            while (current != null) {
+                consumer.accept(current.key, current.value);
+                current = current.next;
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
     private static <K, V> Node<K, V>[] allocate(int capacity) {
         return (Node<K, V>[]) new Node[capacity];
+    }
+
+    private int hash(K key) {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+    }
+
+    private int indexOf(K key) {
+        return hash(key) & (capacity - 1);
+    }
+
+    private void expandArray() {
+        capacity *= 2;
+        size = 0;
+        Node<K, V>[] oldArray = array;
+        array = allocate(capacity);
+
+        for (Node<K, V> bucket : oldArray) {
+            Node<K, V> current = bucket;
+            while (current != null) {
+                put(current.key, current.value);
+                current = current.next;
+            }
+        }
     }
 
     private static final class Node<K, V> {

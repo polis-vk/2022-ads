@@ -15,6 +15,9 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     private K[] keys;
     private V[] values;
     private boolean[] removed;
+    private int capacity;
+    private int size;
+    private final float loadFactor;
 
     /**
      * Создает новый ассоциативный массив в соответствии с expectedMaxSize и loadFactor.
@@ -27,25 +30,32 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
      * @param loadFactor      отношение количества элементов к размеру массивов
      */
     public DoubleHashingMap(int expectedMaxSize, float loadFactor) {
-        keys = allocate(0);
-        values = allocate(0);
-        removed = new boolean[0];
+        this.loadFactor = loadFactor;
+        this.capacity = (int) (expectedMaxSize / loadFactor);
+        this.keys = allocate(capacity);
+        this.values = allocate(capacity);
+        this.removed = new boolean[capacity];
     }
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     @Override
     public boolean containsKey(K key) {
-        throw new UnsupportedOperationException();
+        return get(key) != null;
     }
 
     @Nullable
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        for (int i = 0, index = indexOf(key, i++); keys[index] != null; index = indexOf(key, i++)) {
+            if (keys[index].equals(key) && !removed[index]) {
+                return values[index];
+            }
+        }
+        return null;
     }
 
     /**
@@ -55,22 +65,83 @@ public final class DoubleHashingMap<K, V> implements Map<K, V> {
     @Nullable
     @Override
     public V put(K key, V value) {
-        throw new UnsupportedOperationException();
+        if (capacity * loadFactor <= size) {
+            expandArray();
+        }
+
+        int i = 0;
+        int index;
+        for (index = indexOf(key, i++); keys[index] != null; index = indexOf(key, i++)) {
+            if (keys[index].equals(key) && !removed[index]) {
+                V oldValue = values[index];
+                values[index] = value;
+                return oldValue;
+            }
+        }
+
+        keys[index] = key;
+        values[index] = value;
+        removed[index] = false;
+        size++;
+        return null;
     }
 
     @Nullable
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        for (int i = 0, index = indexOf(key, i++); keys[index] != null; index = indexOf(key, i++)) {
+            if (keys[index].equals(key) && !removed[index]) {
+                removed[index] = true;
+                size--;
+                return values[index];
+            }
+        }
+        return null;
     }
 
     @Override
     public void forEach(BiConsumer<K, V> consumer) {
-        throw new UnsupportedOperationException();
+        for (int i = 0; i < capacity; i++) {
+            if (keys[i] != null && !removed[i]) {
+                consumer.accept(keys[i], values[i]);
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
     private static <T> T[] allocate(int capacity) {
         return (T[]) new Object[capacity];
+    }
+
+    private int hash(K key) {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+    }
+
+    private int hash2(K key) {
+        int h;
+        return (key == null) ? 0 : (h = hash(key)) ^ (h >>> 16);
+    }
+
+    private int indexOf(K key, int i) {
+        return ((hash(key) + i * hash2(key)) & 0x7fffffff) % capacity;
+    }
+
+    private void expandArray() {
+        int oldCapacity = capacity;
+        K[] oldKeys = keys;
+        V[] oldValues = values;
+        boolean[] oldRemoved = removed;
+        capacity = capacity * 2;
+        size = 0;
+        keys = allocate(capacity);
+        values = allocate(capacity);
+        removed = new boolean[capacity];
+
+        for (int i = 0; i < oldCapacity; i++) {
+            if (oldKeys[i] != null && !oldRemoved[i]) {
+                put(oldKeys[i], oldValues[i]);
+            }
+        }
     }
 }
