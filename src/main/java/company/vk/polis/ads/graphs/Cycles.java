@@ -1,10 +1,7 @@
 package company.vk.polis.ads.graphs;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +24,8 @@ public final class Cycles {
     private List<List<Integer>> vertexes;
     private int[] color;
     private int[] parent;
-    private int minVertex;
+
+    private boolean[] cycle;
 
     Graph(int size) {
       vertexes = new ArrayList<>(size + 1);
@@ -36,7 +34,7 @@ public final class Cycles {
       }
       color = new int[size + 1];
       parent = new int[size + 1];
-      minVertex = Integer.MAX_VALUE;
+      cycle = new boolean[size + 1];
     }
 
     void addEdge(int l, int r) {
@@ -51,16 +49,15 @@ public final class Cycles {
         if (color[u] == 0) {
           dfs(u, v);
         } else if (color[u] == 1 && u != p) {
-          int min = u;
+          cycle[u] = true;
           int tmp = v;
-          while (tmp != u) {
-            min = Math.min(min, tmp);
+          while (!cycle[tmp]) {
+            cycle[tmp] = true;
             tmp = parent[tmp];
           }
-          minVertex = Math.min(minVertex, min);
-
         }
       }
+
       color[v] = 2;
     }
 
@@ -70,60 +67,61 @@ public final class Cycles {
           dfs(v, -1);
         }
       }
-      if (minVertex == Integer.MAX_VALUE) {
-        out.println("No");
-      } else {
-        out.print("Yes\n" + minVertex);
-      }
-    }
-
-    private static void solve(final FastScanner in, final PrintWriter out) {
-      int n = in.nextInt();
-      int m = in.nextInt();
-
-
-      Graph graph = new Graph(n);
-      for (int i = 0; i < m; ++i) {
-        int l = in.nextInt();
-        int r = in.nextInt();
-        graph.addEdge(l, r);
-      }
-
-      graph.isCycle(out);
-
-    }
-
-
-    private static final class FastScanner {
-      private final BufferedReader reader;
-      private StringTokenizer tokenizer;
-
-      FastScanner(final InputStream in) {
-        reader = new BufferedReader(new InputStreamReader(in));
-      }
-
-      String next() {
-        while (tokenizer == null || !tokenizer.hasMoreTokens()) {
-          try {
-            tokenizer = new StringTokenizer(reader.readLine());
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
+      for (int i = 1; i < cycle.length; ++i) {
+        if (cycle[i]) {
+          out.print("Yes\n" + i);
+          return;
         }
-        return tokenizer.nextToken();
       }
+      out.println("No");
+    }
+  }
 
-      int nextInt() {
-        return Integer.parseInt(next());
-      }
+  private static void solve(final FastScanner in, final PrintWriter out) {
+    int n = in.nextInt();
+    int m = in.nextInt();
 
+
+    Graph graph = new Graph(n);
+    for (int i = 0; i < m; ++i) {
+      int l = in.nextInt();
+      int r = in.nextInt();
+      graph.addEdge(l, r);
     }
 
-    public static void main(final String[] arg) {
-      final FastScanner in = new FastScanner(System.in);
-      try (PrintWriter out = new PrintWriter(System.out)) {
-        solve(in, out);
+    graph.isCycle(out);
+  }
+
+
+  private static final class FastScanner {
+    private final BufferedReader reader;
+    private StringTokenizer tokenizer;
+
+    FastScanner(final InputStream in) {
+      reader = new BufferedReader(new InputStreamReader(in));
+    }
+
+    String next() {
+      while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+        try {
+          tokenizer = new StringTokenizer(reader.readLine());
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
+      return tokenizer.nextToken();
+    }
+
+    int nextInt() {
+      return Integer.parseInt(next());
+    }
+
+  }
+
+  public static void main(final String[] arg) {
+    final FastScanner in = new FastScanner(System.in);
+    try (PrintWriter out = new PrintWriter(System.out)) {
+      solve(in, out);
     }
   }
 }
