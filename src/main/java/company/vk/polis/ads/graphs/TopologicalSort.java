@@ -17,7 +17,7 @@ import java.io.PrintWriter;
  *
  * @author Dmitry Schitinin
  */
-public final class TopologicalSort{
+public final class TopologicalSort {
   private TopologicalSort() {
     // Should not be instantiated
   }
@@ -25,7 +25,7 @@ public final class TopologicalSort{
   private static class Graph {
 
     List<List<Integer>> vertexes;
-    private int [] color;
+    private int[] color;
     private List<Integer> sorted;
     boolean flag;
 
@@ -70,8 +70,6 @@ public final class TopologicalSort{
       Collections.reverse(sorted);
       sorted.forEach(v -> System.out.print(v + " "));
     }
-
-
   }
 
   private static void solve(final FastScanner in, final PrintWriter out) {

@@ -22,10 +22,10 @@ public final class Condensation {
   private static List<List<Integer>> graph;
   private static List<List<Integer>> invertedGraph;
 
-  private static boolean [] used;
+  private static boolean[] used;
 
-  private static List<Integer> order;
-  private static int [] component;
+  private static List<Integer> top;
+  private static int[] component;
 
   private static void dfs1(int v) {
     used[v] = true;
@@ -34,7 +34,7 @@ public final class Condensation {
         dfs1(u);
       }
     }
-    order.add(v);
+    top.add(v);
   }
 
   private static void dfs2(int v, int c) {
@@ -48,25 +48,22 @@ public final class Condensation {
 
   }
 
-
-  static class Edge implements Comparable<Edge>
-  {
+  static class Edge implements Comparable<Edge> {
     int a, b;
 
-    Edge(int a, int b)
-    {
+    Edge(int a, int b) {
       this.a = a;
       this.b = b;
     }
 
     @Override
-    public int compareTo(Edge e)
-    {
+    public int compareTo(Edge e) {
       if (a == e.a) return b - e.b;
       return a - e.a;
     }
 
   }
+
   private static void solve(final FastScanner in, final PrintWriter out) {
     int n = in.nextInt();
     int m = in.nextInt();
@@ -87,7 +84,7 @@ public final class Condensation {
     }
 
     used = new boolean[n + 1];
-    order = new ArrayList<>(n + 1);
+    top = new ArrayList<>(n + 1);
     for (int v = 1; v <= n; ++v) {
       if (!used[v]) {
         dfs1(v);
@@ -95,17 +92,18 @@ public final class Condensation {
     }
 
     Arrays.fill(used, false);
-    component = new int [n + 1];
+    component = new int[n + 1];
     int c = 1;
+    Collections.reverse(top);
     for (int i = 0; i < n; ++i) {
-      int v = order.get(n - 1 - i);
+      int v = top.get(i);
       if (!used[v]) {
         dfs2(v, c++);
       }
     }
 
     Set<Edge> s = new TreeSet<>();
-    for(int v = 1; v <= n; ++v) {
+    for (int v = 1; v <= n; ++v) {
       for (int u : graph.get(v)) {
         if (component[v] != component[u]) {
           s.add(new Edge(component[v], component[u]));

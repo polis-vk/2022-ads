@@ -75,50 +75,50 @@ public final class ShortestWay {
 
   }
 
-    private static void solve(final FastScanner in, final PrintWriter out) {
-      int n = in.nextInt();
-      int m = in.nextInt();
-      int start = in.nextInt();
-      int end = in.nextInt();
+  private static void solve(final FastScanner in, final PrintWriter out) {
+    int n = in.nextInt();
+    int m = in.nextInt();
+    int start = in.nextInt();
+    int end = in.nextInt();
 
-      Graph graph = new Graph(n);
-      for (int i = 0; i < m; ++i) {
-        int l = in.nextInt();
-        int r = in.nextInt();
-        graph.addEdge(l, r);
-      }
-
-      graph.shortestWay(start, end);
+    Graph graph = new Graph(n);
+    for (int i = 0; i < m; ++i) {
+      int l = in.nextInt();
+      int r = in.nextInt();
+      graph.addEdge(l, r);
     }
 
-    private static final class FastScanner {
-      private final BufferedReader reader;
-      private StringTokenizer tokenizer;
+    graph.shortestWay(start, end);
+  }
 
-      FastScanner(final InputStream in) {
-        reader = new BufferedReader(new InputStreamReader(in));
-      }
+  private static final class FastScanner {
+    private final BufferedReader reader;
+    private StringTokenizer tokenizer;
 
-      String next() {
-        while (tokenizer == null || !tokenizer.hasMoreTokens()) {
-          try {
-            tokenizer = new StringTokenizer(reader.readLine());
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
+    FastScanner(final InputStream in) {
+      reader = new BufferedReader(new InputStreamReader(in));
+    }
+
+    String next() {
+      while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+        try {
+          tokenizer = new StringTokenizer(reader.readLine());
+        } catch (IOException e) {
+          e.printStackTrace();
         }
-        return tokenizer.nextToken();
       }
-
-      int nextInt() {
-        return Integer.parseInt(next());
-      }
+      return tokenizer.nextToken();
     }
 
-    public static void main(final String[] arg) {
-      final FastScanner in = new FastScanner(System.in);
-      try (PrintWriter out = new PrintWriter(System.out)) {
-        solve(in, out);
-      }
+    int nextInt() {
+      return Integer.parseInt(next());
     }
   }
+
+  public static void main(final String[] arg) {
+    final FastScanner in = new FastScanner(System.in);
+    try (PrintWriter out = new PrintWriter(System.out)) {
+      solve(in, out);
+    }
+  }
+}
