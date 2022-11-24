@@ -14,8 +14,8 @@ import java.util.StringTokenizer;
 
 /**
  * Problem solution template.
- *
- * https://www.eolymp.com/ru/submissions/12270236
+ * <p>
+ * https://www.eolymp.com/ru/submissions/12273727
  *
  * @author Dmitry Schitinin
  */
@@ -23,7 +23,6 @@ public final class Main {
 
     private enum Color {
         WHITE,
-        RED,
         GRAY,
         BLACK
     }
@@ -73,7 +72,7 @@ public final class Main {
 
         while (!Q.isEmpty()) {
             Vertex v = Q.poll();
-            v.color = Color.RED;
+            v.color = Color.GRAY;
 
             if (v.num == b) {
                 Vertex cur = v;
