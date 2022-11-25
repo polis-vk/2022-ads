@@ -87,7 +87,8 @@ public class RedBlackBinarySearchTree<K extends Comparable<K>, V>
         if (node == null) {
             return null;
         }
-        if (key.compareTo(node.key) < 0 && node.left != null) {
+        int compareResult = key.compareTo(node.key);
+        if (compareResult < 0 && node.left != null) {
             if (!isRed(node.left) && !isRed(node.left.left)) {
                 node = moveRedLeft(node);
             }
@@ -96,19 +97,17 @@ public class RedBlackBinarySearchTree<K extends Comparable<K>, V>
             if (isRed(node.left)) {
                 node = rotateRight(node);
                 node.right = remove(node.right, key);
-            } else if (node.key == key && node.right == null) {
+            } else if (compareResult == 0 && node.right == null) {
                 return null;
             } else {
-                if (!isRed(node.right) && !isRed(node.right.right)) {
+                if (!isRed(node.right) && !isRed(node.right.left)) {
                     node = moveRedRight(node);
                 }
-                if (node.key == key) {
+                if (compareResult == 0) {
                     Node min = minNode(node.right);
-                    if (min != null) {
-                        node.key = min.key;
-                        node.value = min.value;
-                        node.right = deleteMin(node.right);
-                    }
+                    node.key = min.key;
+                    node.value = min.value;
+                    node.right = deleteMin(node.right);
                 } else {
                     node.right = remove(node.right, key);
                 }
@@ -267,35 +266,31 @@ public class RedBlackBinarySearchTree<K extends Comparable<K>, V>
     }
 
     private void flipColors(Node node) {
-        if (node != null) {
-            node.color = !node.color;
-            if (node.left != null) {
-                node.left.color = !node.left.color;
-            }
-            if (node.right != null) {
-                node.right.color = !node.right.color;
-            }
+        node.color = !node.color;
+        if (node.left != null) {
+            node.left.color = !node.left.color;
+        }
+        if (node.right != null) {
+            node.right.color = !node.right.color;
         }
     }
 
     private Node fixUp(Node node) {
-        if (node.left != null) {
-            if (node.left.color != RED && (node.right != null && node.right.color == RED)) {
-                node = rotateLeft(node);
-            }
-            if (node.left.color == RED && (node.left.left != null && node.left.left.color == RED)) {
-                node = rotateRight(node);
-            }
-            if (node.left.color == RED && (node.right != null && node.right.color == RED)) {
-                flipColors(node);
-            }
+        if (!isRed(node.left) && isRed(node.right)) {
+            node = rotateLeft(node);
+        }
+        if (isRed(node.left) && isRed(node.left.left)) {
+            node = rotateRight(node);
+        }
+        if (isRed(node.left) && isRed(node.right)) {
+            flipColors(node);
         }
         return node;
     }
 
     private Node moveRedLeft(Node node) {
         flipColors(node);
-        if (node != null && node.right != null && isRed(node.right.left)) {
+        if (node.right != null && isRed(node.right.left)) {
             node.right = rotateRight(node.right);
             node = rotateLeft(node);
             flipColors(node);
@@ -316,7 +311,7 @@ public class RedBlackBinarySearchTree<K extends Comparable<K>, V>
 
     private Node moveRedRight(Node node) {
         flipColors(node);
-        if (node != null && node.left != null && isRed(node.left.right)) {
+        if (node.left != null && isRed(node.left.right)) {
             node.left = rotateLeft(node.left);
             node = rotateRight(node);
             flipColors(node);
