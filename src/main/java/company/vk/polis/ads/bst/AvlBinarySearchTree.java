@@ -171,6 +171,9 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
             x = innerDelete(x);
         }
         x = balance(x);
+        if (x != null) {
+            fixHeight(x);
+        }
         return x;
     }
 
@@ -261,7 +264,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         return x;
     }
 
-    private Node rotateLeft(Node y) {
+    private Node rotateLeft(@NotNull Node y) {
         Node x = y.right;
         y.right = x.left;
         x.left = y;
@@ -280,15 +283,10 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
     }
 
     private void fixHeight(Node node) {
-        int ans = -1;
-        if (node.left != null) {
-            fixHeight(node.left);
-            ans = Math.max(ans, node.left.height);
-        }
-        if (node.right != null) {
-            fixHeight(node.right);
-            ans = Math.max(ans, node.right.height);
-        }
-        node.height = ans + 1;
+        node.height = 1 +
+                Math.max(
+                        height(node.left),
+                        height(node.right)
+                );
     }
 }
