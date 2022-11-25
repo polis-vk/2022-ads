@@ -264,7 +264,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         return x;
     }
 
-    private Node rotateLeft(@NotNull Node y) {
+    private Node rotateLeft(Node y) {
         Node x = y.right;
         y.right = x.left;
         x.left = y;
