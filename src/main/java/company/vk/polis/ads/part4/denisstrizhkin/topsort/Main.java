@@ -40,17 +40,18 @@ public class Main {
     private static boolean dfs(int[] answer, int v) {
         V[v] = 1;
         List<Integer> vertices = (VV[v] == null ? Collections.emptyList() : VV[v]);
-        boolean isCycle = false;
         for (Integer vertex : vertices) {
             if (V[vertex] == 0) {
-                isCycle = dfs(answer, vertex);
+                if(dfs(answer, vertex)) {
+                    return true;
+                }
             } else if (V[vertex] == 1) {
                 return true;
             }
         }
         answer[k++] = v;
         V[v] = -1;
-        return isCycle;
+        return false;
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
@@ -63,7 +64,7 @@ public class Main {
             int x = in.nextInt();
             int y = in.nextInt();
             if (VV[x] == null) {
-                VV[y] = new ArrayList<>();
+                VV[x] = new ArrayList<>();
             }
             VV[x].add(y);
         }
