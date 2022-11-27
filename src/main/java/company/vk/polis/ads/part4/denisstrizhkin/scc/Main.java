@@ -6,10 +6,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
+    // https://www.eolymp.com/ru/submissions/12306318 (56%)
+    private static int[] Vid;
     private static int[] Vu;
     private static int[] Vru;
     private static List<Integer>[] V;
@@ -38,6 +41,7 @@ public class Main {
     private static void dfs2(int v) {
         Vru[v] = 1;
         components.get(components.size() - 1).add(v);
+        Vid[v] = components.size() - 1;
         if (Vr[v] != null) {
             for (int vertex : Vr[v]) {
                 if (Vru[vertex] == 0) {
@@ -56,6 +60,7 @@ public class Main {
         Vru = new int[n + 1];
         V = new List[n + 1];
         Vr = new List[n + 1];
+        Vid = new int[n + 1];
         for (int i = 0; i < m; i++) {
             int x = in.nextInt();
             int y = in.nextInt();
@@ -85,16 +90,14 @@ public class Main {
             }
         }
 
+        //out.println(components);
+        //out.println(Arrays.toString(Vid));
         int count = 0;
-        for (List<Integer> component : components) {
-            for (int start : component) {
-                if (V[start] != null) {
-                    for (int end : V[start]) {
-                        for (List<Integer> compTarget : components) {
-                            if (compTarget != component && compTarget.contains(end)) {
-                                count++;
-                            }
-                        }
+        for (int start = 1; start < V.length; start++) {
+            if (V[start] != null) {
+                for (int end : V[start]) {
+                    if (Vid[start] != Vid[end]) {
+                        count++;
                     }
                 }
             }
