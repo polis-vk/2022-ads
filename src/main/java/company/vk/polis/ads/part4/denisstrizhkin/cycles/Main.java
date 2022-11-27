@@ -5,62 +5,85 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
-    private static int[] V;
-    private static List<Integer>[] VV;
+    private static int[] Vu;
+    private static List<Integer>[] V;
+    private static Deque<Integer> cycleStack = new ArrayDeque<>();
+    private static int[] cycle;
+    private static int cycle_start;
+    private static int cycle_end;
 
     private Main() {
         // Should not be instantiated
     }
 
-    private static int dfs(int v) {
-        V[v] = 1;
-        List<Integer> vertices = (VV[v] == null ? Collections.emptyList() : VV[v]);
-        for (Integer vertex : vertices) {
-            if (V[vertex] == 0) {
-                int result = dfs(vertex);
-                if (result != -1) {
-                    return result;
+    private static boolean dfs(int v) {
+        Vu[v] = 1;
+        if (V[v] != null) {
+            for (int curV : V[v]) {
+                if (Vu[curV] == 0) {
+                    cycle[curV] = v;
+                    if (dfs(curV)) {
+                        return true;
+                    }
+                } else if (Vu[curV] == 1) {
+                    cycle_end = v;
+                    cycle_start = curV;
+                    return true;
                 }
-            } else if (V[vertex] == 1) {
-                return vertex;
             }
         }
-        V[v] = -1;
-        return -1;
+        Vu[v] = -1;
+        return false;
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
         int n = in.nextInt();
         int m = in.nextInt();
 
-        V = new int[n + 1];
-        VV = new List[n + 1];
+        Vu = new int[n + 1];
+        V = new List[n + 1];
+        cycle = new int[n + 1];
         for (int i = 0; i < m; i++) {
             int x = in.nextInt();
             int y = in.nextInt();
-            if (VV[x] == null) {
-                VV[x] = new ArrayList<>();
+            if (V[x] == null) {
+                V[x] = new ArrayList<>();
             }
-            VV[x].add(y);
+            V[x].add(y);
         }
 
         for (int i = 1; i <= n; i++) {
-            if (V[i] == 0) {
-                int cycleNum = dfs(i);
-                if(cycleNum != -1) {
-                    int min = cycleNum;
-                    int cur = VV[cycleNum].get(0);
-                    return;
-                }
+            if (dfs(i)) {
+                break;
             }
         }
-        out.println("No");
+
+        if (cycle_start == 0) {
+            out.println("No");
+            return;
+        }
+        int min = cycle_start;
+        int count = 0;
+        for (int v = cycle_end; v != cycle_start; v = cycle[v]) {
+            if (v < min) {
+                min = v;
+            }
+            count++;
+        }
+        if (count == 1) {
+            out.println("No");
+            return;
+        }
+        out.println("Yes");
+        out.println(min);
     }
 
     private static final class FastScanner {
