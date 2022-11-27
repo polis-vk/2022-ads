@@ -85,10 +85,10 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         } else {
             lastRemValue = node.value;
             node = innerDelete(node);
-            fixHeight(node);
-            node = balance(node);
             size--;
         }
+        fixHeight(node);
+        node = balance(node);
         return node;
     }
 
@@ -231,6 +231,8 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
             return node.right;
         }
         node.left = deleteMin(node.left);
+        fixHeight(node);
+        node = balance(node);
         return node;
     }
 
@@ -245,6 +247,8 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         node = minNode(temp.right);
         node.right = deleteMin(temp.right);
         node.left = temp.left;
+        fixHeight(node);
+        node = balance(node);
         return node;
     }
 
