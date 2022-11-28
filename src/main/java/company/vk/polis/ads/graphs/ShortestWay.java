@@ -42,7 +42,7 @@ public final class ShortestWay {
 
     private static Way shortestWaySearch(int start, int end, Map<Integer, Set<Integer>> ways) {
         Queue<Way> queue = new LinkedList<>();
-        Set<Integer> visitedVertexes = new HashSet<>();
+        Set<Integer> visitedVertices = new HashSet<>();
         queue.add(new Way(null, start, 0));
         while (!queue.isEmpty()) {
             Way current = queue.poll();
@@ -51,8 +51,8 @@ public final class ShortestWay {
             }
             if (ways.containsKey(current.current)) {
                 for (Integer adjacentVertex : ways.get(current.current)) {
-                    if (!visitedVertexes.contains(adjacentVertex)) {
-                        visitedVertexes.add(adjacentVertex);
+                    if (!visitedVertices.contains(adjacentVertex)) {
+                        visitedVertices.add(adjacentVertex);
                         queue.add(new Way(current, adjacentVertex, current.length + 1));
                     }
                 }

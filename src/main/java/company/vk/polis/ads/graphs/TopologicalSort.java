@@ -34,9 +34,9 @@ public final class TopologicalSort {
 
     private static boolean depthFirstSearch(int current, Deque<Integer> result, Map<Integer, Set<Integer>> map) {
         vertexState.put(current, State.VISITED);
-        Set<Integer> adjacentVertexes = map.get(current);
-        if (adjacentVertexes != null) {
-            for (Integer adjacentVertex : adjacentVertexes) {
+        Set<Integer> adjacentVertices = map.get(current);
+        if (adjacentVertices != null) {
+            for (Integer adjacentVertex : adjacentVertices) {
                 if (!vertexState.containsKey(adjacentVertex)) {
                     if (!depthFirstSearch(adjacentVertex, result, map)) {
                         return false;

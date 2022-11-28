@@ -56,9 +56,9 @@ public final class MinInLoops {
     private static void solveRecursively(int current, Way way, Map<Integer, Set<Integer>> map) {
         Way currentWay = new Way(way, current);
         vertexState.put(current, State.VISITED);
-        Set<Integer> adjacentVertexes = map.get(current);
-        if (adjacentVertexes != null) {
-            for (Integer adjacentVertex : adjacentVertexes) {
+        Set<Integer> adjacentVertices = map.get(current);
+        if (adjacentVertices != null) {
+            for (Integer adjacentVertex : adjacentVertices) {
                 if (!(currentWay.prev != null && adjacentVertex.equals(currentWay.prev.current))) {
                     State currentState = vertexState.getOrDefault(adjacentVertex, null);
                     if (currentState == State.VISITED) {

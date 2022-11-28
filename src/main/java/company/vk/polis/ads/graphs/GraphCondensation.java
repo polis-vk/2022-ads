@@ -29,9 +29,9 @@ public final class GraphCondensation {
         visited[current] = true;
         Set<Integer> adjacentVertices = map.get(current);
         if (adjacentVertices != null) {
-            for (Integer to : adjacentVertices) {
-                if (!visited[to]) {
-                    depthFirstSearch(to, result, map, visited);
+            for (Integer adjacentVertex : adjacentVertices) {
+                if (!visited[adjacentVertex]) {
+                    depthFirstSearch(adjacentVertex, result, map, visited);
                 }
             }
         }
@@ -53,9 +53,9 @@ public final class GraphCondensation {
         colors[current] = color;
         Set<Integer> adjacentVertices = transposed.get(current);
         if (adjacentVertices != null) {
-            for (Integer to : adjacentVertices) {
-                if (!visited[to]) {
-                    condense(transposed, to, color, colors, visited);
+            for (Integer adjacentVertex : adjacentVertices) {
+                if (!visited[adjacentVertex]) {
+                    condense(transposed, adjacentVertex, color, colors, visited);
                 }
             }
         }
