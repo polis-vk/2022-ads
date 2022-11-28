@@ -72,20 +72,6 @@ public final class MinInLoops {
         vertexState.put(current, State.EXITED);
     }
 
-    /*
-    * 8 9
-    * 1 8
-    * 1 2
-    * 2 8
-    * 7 1
-    * 7 3
-    * 3 4
-    * 4 5
-    * 7 5
-    * 4 6
-    * Output: 1
-    * */
-
     private static void solve(final FastScanner in, final PrintWriter out) {
         Map<Integer, Set<Integer>> map = new HashMap<>();
         int n = in.nextInt();
