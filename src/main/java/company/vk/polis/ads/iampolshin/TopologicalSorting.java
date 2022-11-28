@@ -34,7 +34,7 @@ public final class TopologicalSorting {
 
         int[] states = new int[n + 1];
         for (int vertex = 1; vertex <= n; vertex++) {
-            if (!sort(graph, vertex, states, sortedVertex)) {
+            if (!trySort(graph, vertex, states, sortedVertex)) {
                 out.println(-1);
                 return;
             }
@@ -45,7 +45,7 @@ public final class TopologicalSorting {
         }
     }
 
-    private static boolean sort(List<Integer>[] graph, int startVertex, int[] flags, Deque<Integer> sortedVertex) {
+    private static boolean trySort(List<Integer>[] graph, int startVertex, int[] flags, Deque<Integer> sortedVertex) {
         if (flags[startVertex] == PARTLY_VISITED) {
             return false;
         }
@@ -60,7 +60,7 @@ public final class TopologicalSorting {
             }
 
             if (flags[neighbourVertex] == NOT_VISITED) {
-                sort(graph, neighbourVertex, flags, sortedVertex);
+                trySort(graph, neighbourVertex, flags, sortedVertex);
             }
         }
 
