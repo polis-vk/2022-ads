@@ -1,7 +1,18 @@
 package company.vk.polis.ads.iampolshin;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+import java.util.ArrayList;
+import java.util.Queue;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.LinkedList;
 
 /**
  * Problem solution template.
@@ -18,14 +29,12 @@ public final class ShortestPath {
         int n = in.nextInt();
         int m = in.nextInt();
         Set<Integer>[] graph = new Set[n + 1];
-
         for (int i = 1; i <= n; i++) {
             graph[i] = new HashSet<>();
         }
 
         int startVertex = in.nextInt();
         int endVertex = in.nextInt();
-
         int firstVertex;
         int secondVertex;
         for (int i = 1; i <= m; i++) {
@@ -112,3 +121,4 @@ public final class ShortestPath {
         }
     }
 }
+

@@ -1,7 +1,16 @@
 package company.vk.polis.ads.iampolshin;
 
-import java.io.*;
-import java.util.*;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Collections;
+import java.util.StringTokenizer;
+import java.util.Set;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.IOException;
 
 /**
  * Problem solution template.
@@ -22,8 +31,6 @@ public final class Cycles {
         int n = in.nextInt();
         int m = in.nextInt();
         List<Integer>[] graph = new List[n + 1];
-        Set<Integer> cycleVertices = new HashSet<>();
-
         for (int i = 1; i <= n; i++) {
             graph[i] = new ArrayList<>();
         }
@@ -37,6 +44,7 @@ public final class Cycles {
             graph[secondVertex].add(firstVertex);
         }
 
+        Set<Integer> cycleVertices = new HashSet<>();
         int[] states = new int[n + 1];
         int[] previous = new int[n + 1];
         for (int vertex = 1; vertex <= n; vertex++) {
@@ -109,3 +117,4 @@ public final class Cycles {
         }
     }
 }
+

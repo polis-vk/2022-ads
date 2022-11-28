@@ -1,7 +1,18 @@
 package company.vk.polis.ads.iampolshin;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.List;
 import java.util.stream.IntStream;
 
 /**
@@ -65,9 +76,7 @@ public final class Condensation {
                 }
             }
         }
-        int edgesCount = IntStream.range(0, componentId)
-                .map(i -> condensationGraph[i].size())
-                .sum();
+        int edgesCount = IntStream.range(0, componentId).map(i -> condensationGraph[i].size()).sum();
         out.println(edgesCount);
     }
 
@@ -81,8 +90,7 @@ public final class Condensation {
         sortedVertex.push(startVertex);
     }
 
-    private static void dfs(List<Integer>[] graph, int startVertex, boolean[] visited, int[] components,
-                            int componentId) {
+    private static void dfs(List<Integer>[] graph, int startVertex, boolean[] visited, int[] components, int componentId) {
         visited[startVertex] = true;
         components[startVertex] = componentId;
         for (int neighbourVertex : graph[startVertex]) {
@@ -123,3 +131,4 @@ public final class Condensation {
         }
     }
 }
+

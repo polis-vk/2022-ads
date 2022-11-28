@@ -1,7 +1,15 @@
 package company.vk.polis.ads.iampolshin;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.InputStream;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.StringTokenizer;
+import java.util.Deque;
 
 /**
  * Problem solution template.
@@ -22,8 +30,6 @@ public final class TopologicalSorting {
         int n = in.nextInt();
         int m = in.nextInt();
         List<Integer>[] graph = new List[n + 1];
-        Deque<Integer> sortedVertex = new LinkedList<>();
-
         for (int i = 1; i <= n; i++) {
             graph[i] = new ArrayList<>();
         }
@@ -32,6 +38,7 @@ public final class TopologicalSorting {
             graph[in.nextInt()].add(in.nextInt());
         }
 
+        Deque<Integer> sortedVertex = new LinkedList<>();
         int[] states = new int[n + 1];
         for (int vertex = 1; vertex <= n; vertex++) {
             if (!trySort(graph, vertex, states, sortedVertex)) {
@@ -100,3 +107,4 @@ public final class TopologicalSorting {
         }
     }
 }
+
