@@ -55,10 +55,10 @@ public class GraphCondensation {
         private final int[] connectComponents;
 
         public Graph(int countOfNodes) {
-            this.adjacencyList = new HashMap<>(countOfNodes);
-            this.adjacencyListReverse = new HashMap<>(countOfNodes);
-            this.visited = new Color[countOfNodes];
-            this.connectComponents = new int[countOfNodes];
+            adjacencyList = new HashMap<>(countOfNodes);
+            adjacencyListReverse = new HashMap<>(countOfNodes);
+            visited = new Color[countOfNodes];
+            connectComponents = new int[countOfNodes];
             Arrays.fill(visited, Color.WHITE);
             for (int i = 1; i < countOfNodes; i++) {
                 adjacencyList.put(i, new ArrayList<>());

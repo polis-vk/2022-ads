@@ -44,11 +44,11 @@ public class TopologicalSort {
         private final Map<Integer, ArrayList<Integer>> adjacencyList;
         private final List<Integer> sortedNodesList = new ArrayList<>();
         private final Color[] visited;
-        private boolean isCyclic = false;           
+        private boolean isCyclic;
 
         public Graph(int countOfNodes) {
-            this.adjacencyList = new HashMap<>(countOfNodes);
-            this.visited = new Color[countOfNodes];
+            adjacencyList = new HashMap<>(countOfNodes);
+            visited = new Color[countOfNodes];
             Arrays.fill(visited, Color.WHITE);
             for (int i = 1; i < countOfNodes; i++) {
                 adjacencyList.put(i, new ArrayList<>());

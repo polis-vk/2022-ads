@@ -53,11 +53,11 @@ public class ShortestPath {
         private final int[] roots;
 
         public Graph(int countOfNodes) {
-            this.adjacencyList = new HashMap<>(countOfNodes);
-            this.visited = new Color[countOfNodes];
+            adjacencyList = new HashMap<>(countOfNodes);
+            visited = new Color[countOfNodes];
             Arrays.fill(visited, Color.WHITE);
-            this.dist = new int[countOfNodes];
-            this.roots = new int[countOfNodes];
+            dist = new int[countOfNodes];
+            roots = new int[countOfNodes];
             for (int i = 1; i < countOfNodes; i++) {
                 adjacencyList.put(i, new ArrayList<>());
                 dist[i] = Integer.MAX_VALUE;

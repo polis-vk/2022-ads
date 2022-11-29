@@ -45,15 +45,15 @@ public class Cycles {
         private final int countOfNodes;
         private final Color[] visited;
         private final boolean[] isCycle;
-        private boolean isCyclic = false;
+        private boolean isCyclic;
         int minNode;
 
         public Graph(int countOfNodes) {
-            this.adjacencyList = new HashMap<>(countOfNodes);
-            this.visited = new Color[countOfNodes];
+            adjacencyList = new HashMap<>(countOfNodes);
+            visited = new Color[countOfNodes];
             Arrays.fill(visited, Color.WHITE);
             this.countOfNodes = countOfNodes;
-            this.isCycle = new boolean[countOfNodes];
+            isCycle = new boolean[countOfNodes];
             for (int i = 1; i < countOfNodes; i++) {
                 adjacencyList.put(i, new ArrayList<>());
             }
