@@ -14,8 +14,7 @@ public class Main {
     private static List<List<Integer>> V;
     private static List<List<Integer>> cycles = new ArrayList<>();
     private static int[] cycle;
-    private static int cycle_start;
-    private static int cycle_end;
+    private static int min = Integer.MAX_VALUE;
 
     private Main() {
         // Should not be instantiated
@@ -28,12 +27,11 @@ public class Main {
                 cycle[curV] = v;
                 dfs(curV, v);
             } else if (Vu[curV] == 1 && prevV != curV) {
-                cycle_end = v;
-                cycle_start = curV;
-                cycles.add(new ArrayList<>());
-                cycles.get(cycles.size() - 1).add(cycle_start);
+                int cycle_end = v;
+                int cycle_start = curV;
+                min = Math.min(cycle_start, min);
                 for (int cV =cycle_end; cV!=cycle_start; cV=cycle[cV])
-                    cycles.get(cycles.size() - 1).add(cV);
+                    min = Math.min(cV, min);
             }
         }
         Vu[v] = -1;
@@ -63,12 +61,12 @@ public class Main {
             }
         }
         //out.println(cycles);
-        if (cycles.size() == 0) {
+        if (min == Integer.MAX_VALUE) {
             out.println("No");
             return;
         }
         out.println("Yes");
-        out.println(cycles.stream().flatMap(List::stream).min(Integer::compare).get());
+        out.println(min);
     }
 
     private static final class FastScanner {
