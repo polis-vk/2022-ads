@@ -10,9 +10,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
-    private static int[] Vu;
+    private static int[] Vflag;
     private static List<List<Integer>> V;
-    private static List<List<Integer>> cycles = new ArrayList<>();
     private static int[] cycle;
     private static int min = Integer.MAX_VALUE;
 
@@ -20,28 +19,32 @@ public class Main {
         // Should not be instantiated
     }
 
-    private static void dfs(int v, int prevV) {
-        Vu[v] = 1;
-        for (int curV : V.get(v)) {
-            if (Vu[curV] == 0) {
-                cycle[curV] = v;
-                dfs(curV, v);
-            } else if (Vu[curV] == 1 && prevV != curV) {
-                int cycle_end = v;
-                int cycle_start = curV;
-                min = Math.min(cycle_start, min);
-                for (int cV =cycle_end; cV!=cycle_start; cV=cycle[cV])
-                    min = Math.min(cV, min);
+    private static void dfs(int curV, int prevV) {
+        Vflag[curV] = 1;
+        for (int nextV : V.get(curV)) {
+            if (Vflag[nextV] == 0) {
+                cycle[nextV] = curV;
+                dfs(nextV, curV);
+            } else if ((Vflag[nextV] == 1 || Vflag[nextV] == 3) && prevV != nextV) {
+                min = Math.min(nextV, min);
+                Vflag[nextV] = 3;
+                for (int v = curV; v != nextV; v = cycle[v]) {
+                    if (Vflag[v] == 3) {
+                        break;
+                    }
+                    min = Math.min(v, min);
+                    Vflag[v] = 3;
+                }
             }
         }
-        Vu[v] = -1;
+        Vflag[curV] = -1;
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
         int n = in.nextInt();
         int m = in.nextInt();
 
-        Vu = new int[n + 1];
+        Vflag = new int[n + 1];
         V = new ArrayList<>();
         cycle = new int[n + 1];
         for (int i = 0; i <= n; i++) {
@@ -56,11 +59,11 @@ public class Main {
         }
 
         for (int i = 1; i <= n; i++) {
-            if (Vu[i] == 0) {
+            if (Vflag[i] == 0) {
                 dfs(i, 0);
             }
         }
-        //out.println(cycles);
+
         if (min == Integer.MAX_VALUE) {
             out.println("No");
             return;
