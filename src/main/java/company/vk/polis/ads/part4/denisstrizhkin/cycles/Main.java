@@ -21,14 +21,12 @@ public class Main {
         // Should not be instantiated
     }
 
-    private static boolean dfs(int v, int prevV) {
+    private static void dfs(int v, int prevV) {
         Vu[v] = 1;
         for (int curV : V.get(v)) {
             if (Vu[curV] == 0) {
                 cycle[curV] = v;
-                if (dfs(curV, v)) {
-                    return true;
-                }
+                dfs(curV, v);
             } else if (Vu[curV] == 1 && prevV != curV) {
                 cycle_end = v;
                 cycle_start = curV;
@@ -36,11 +34,9 @@ public class Main {
                 cycles.get(cycles.size() - 1).add(cycle_start);
                 for (int cV =cycle_end; cV!=cycle_start; cV=cycle[cV])
                     cycles.get(cycles.size() - 1).add(cV);
-                return true;
             }
         }
         Vu[v] = -1;
-        return false;
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
@@ -62,8 +58,8 @@ public class Main {
         }
 
         for (int i = 1; i <= n; i++) {
-            if (dfs(i, 0)) {
-                break;
+            if (Vu[i] == 0) {
+                dfs(i, 0);
             }
         }
         //out.println(cycles);
