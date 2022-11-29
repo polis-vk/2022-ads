@@ -2,6 +2,8 @@ package company.vk.polis.ads.bst;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements BinarySearchTree<Key, Value> {
     private Node root = null;
     private int size = 0;
@@ -85,8 +87,10 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
             size--;
             node = innerDelete(node);
         }
-        fixHeight(node);
-        node = balance(node);
+        if (Objects.nonNull(node)) {
+            fixHeight(node);
+            node = balance(node);
+        }
         return node;
     }
 
