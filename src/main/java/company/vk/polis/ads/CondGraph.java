@@ -40,12 +40,12 @@ public class CondGraph {
             invertedVertexes.get(right).add(left);
         }
 
-        public void condense(int currentVertex, int currentBlock) {
+        public void defineBlock(int currentVertex, int currentBlock) {
             blocks[currentVertex] = currentBlock;
             visited[currentVertex] = Color.GRAY;
             for (int child : invertedVertexes.get(currentVertex)) {
                 if (visited[child] == Color.WHITE) {
-                    condense(child, currentBlock);
+                    defineBlock(child, currentBlock);
                 }
             }
         }
@@ -113,7 +113,7 @@ public class CondGraph {
         int blocksCount = 1;
         for (int currentEl : graph.getSortedGraph()) {
             if (graph.getColorByIndex(currentEl) == Color.WHITE) {
-                graph.condense(currentEl, blocksCount++);
+                graph.defineBlock(currentEl, blocksCount++);
             }
         }
         graph.printAmountOfEdges();

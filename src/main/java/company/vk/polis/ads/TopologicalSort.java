@@ -10,7 +10,7 @@ public class TopologicalSort {
     private static class Graph {
         private final List<List<Integer>> vertexes;
         private final Color[] visited;
-        private final List<Integer> sortedArray = new ArrayList<>();
+        private final List<Integer> topologicalSortedGraph = new ArrayList<>();
         private boolean looped;
 
         public Graph(int capacity) {
@@ -26,7 +26,7 @@ public class TopologicalSort {
             vertexes.get(left).add(right);
         }
 
-        public List<Integer> getTopologicalSortedArray() {
+        public List<Integer> getSortedGraph() {
             for (int i = 1; i < vertexes.size(); i++) {
                 if (visited[i] == Color.WHITE) {
                     dfs(i);
@@ -35,24 +35,22 @@ public class TopologicalSort {
                     return Collections.emptyList();
                 }
             }
-            Collections.reverse(sortedArray);
-            return sortedArray;
+            Collections.reverse(topologicalSortedGraph);
+            Arrays.fill(visited, Color.WHITE);
+            return topologicalSortedGraph;
         }
 
 
         private void dfs(int currentVertex) {
             visited[currentVertex] = Color.GRAY;
             for (int child : vertexes.get(currentVertex)) {
-                if (visited[child] == Color.GRAY) {
-                    looped = true;
-                    return;
-                }
-                if (visited[child] == Color.WHITE) {
-                    dfs(child);
+                switch (visited[child]) {
+                    case WHITE: dfs(child); break;
+                    case GRAY: looped = true; return;
                 }
             }
             visited[currentVertex] = Color.BLACK;
-            sortedArray.add(currentVertex);
+            topologicalSortedGraph.add(currentVertex);
         }
 
         private enum Color {
@@ -70,13 +68,13 @@ public class TopologicalSort {
         for (int i = 0; i < m; i++) {
             graph.addVertex(in.nextInt(), in.nextInt());
         }
-        List<Integer> result = graph.getTopologicalSortedArray();
+        List<Integer> result = graph.getSortedGraph();
         if (result.isEmpty()) {
             System.out.println(-1);
             return;
         }
         for (Integer el : result) {
-            System.out.println(el + " ");
+            System.out.print(el + " ");
         }
     }
 }

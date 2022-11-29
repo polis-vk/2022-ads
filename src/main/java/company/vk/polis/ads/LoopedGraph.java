@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class LoopedGraph {
+    private static final int NOT_EXISTS_VALUE = -1;
+
     private static class Graph {
         private final List<List<Integer>> vertexes;
         private final Color[] visited;
@@ -31,15 +33,17 @@ public class LoopedGraph {
         public int getLoopMinIndex() {
             for (int i = 1; i < vertexes.size(); i++) {
                 if (visited[i] == Color.WHITE) {
-                    dfs(i, -1);
+                    dfs(i, NOT_EXISTS_VALUE);
                 }
             }
             for (int i = 1; i < isLooped.length; i++) {
                 if (isLooped[i]) {
+                    Arrays.fill(visited, Color.WHITE);
                     return i;
                 }
             }
-            return -1;
+            Arrays.fill(visited, Color.WHITE);
+            return NOT_EXISTS_VALUE;
         }
 
         private void dfs(int currentVertex, int parentVertex) {
@@ -76,7 +80,7 @@ public class LoopedGraph {
             graph.addVertex(in.nextInt(), in.nextInt());
         }
         int minIndex = graph.getLoopMinIndex();
-        if (minIndex == -1) {
+        if (minIndex == NOT_EXISTS_VALUE) {
             System.out.println("No");
             return;
         }

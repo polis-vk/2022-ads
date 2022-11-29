@@ -31,15 +31,15 @@ public class ShortestWay {
         Arrays.fill(parent, DEFAULT_VALUE);
         Arrays.fill(distance, DEFAULT_VALUE);
         distance[a] = 0;
-        Queue<Integer> queue = new ArrayDeque<>();
-        queue.add(a);
-        while (!queue.isEmpty()) {
-            int currentVertex = queue.poll();
+        Queue<Integer> storage = new ArrayDeque<>();
+        storage.add(a);
+        while (!storage.isEmpty()) {
+            int currentVertex = storage.poll();
             for (int currentChild : graph.get(currentVertex)) {
                 if (distance[currentChild] == DEFAULT_VALUE) {
                     distance[currentChild] = distance[currentVertex] + 1;
-                    queue.add(currentChild);
                     parent[currentChild] = currentVertex;
+                    storage.add(currentChild);
                 }
             }
         }
