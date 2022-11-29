@@ -5,17 +5,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Deque;
 import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
     private static int[] Vu;
-    private static List<Integer>[] V;
-    private static Deque<Integer> cycleStack = new ArrayDeque<>();
+    private static List<List<Integer>> V;
+    private static List<List<Integer>> cycles = new ArrayList<>();
     private static int[] cycle;
     private static int cycle_start;
     private static int cycle_end;
@@ -24,20 +21,22 @@ public class Main {
         // Should not be instantiated
     }
 
-    private static boolean dfs(int v) {
+    private static boolean dfs(int v, int prevV) {
         Vu[v] = 1;
-        if (V[v] != null) {
-            for (int curV : V[v]) {
-                if (Vu[curV] == 0) {
-                    cycle[curV] = v;
-                    if (dfs(curV)) {
-                        return true;
-                    }
-                } else if (Vu[curV] == 1) {
-                    cycle_end = v;
-                    cycle_start = curV;
+        for (int curV : V.get(v)) {
+            if (Vu[curV] == 0) {
+                cycle[curV] = v;
+                if (dfs(curV, v)) {
                     return true;
                 }
+            } else if (Vu[curV] == 1 && prevV != curV) {
+                cycle_end = v;
+                cycle_start = curV;
+                cycles.add(new ArrayList<>());
+                cycles.get(cycles.size() - 1).add(cycle_start);
+                for (int cV =cycle_end; cV!=cycle_start; cV=cycle[cV])
+                    cycles.get(cycles.size() - 1).add(cV);
+                return true;
             }
         }
         Vu[v] = -1;
@@ -49,41 +48,31 @@ public class Main {
         int m = in.nextInt();
 
         Vu = new int[n + 1];
-        V = new List[n + 1];
+        V = new ArrayList<>();
         cycle = new int[n + 1];
+        for (int i = 0; i <= n; i++) {
+            V.add(new ArrayList<>());
+        }
+
         for (int i = 0; i < m; i++) {
             int x = in.nextInt();
             int y = in.nextInt();
-            if (V[x] == null) {
-                V[x] = new ArrayList<>();
-            }
-            V[x].add(y);
+            V.get(x).add(y);
+            V.get(y).add(x);
         }
 
         for (int i = 1; i <= n; i++) {
-            if (dfs(i)) {
+            if (dfs(i, 0)) {
                 break;
             }
         }
-
-        if (cycle_start == 0) {
-            out.println("No");
-            return;
-        }
-        int min = cycle_start;
-        int count = 0;
-        for (int v = cycle_end; v != cycle_start; v = cycle[v]) {
-            if (v < min) {
-                min = v;
-            }
-            count++;
-        }
-        if (count == 1) {
+        //out.println(cycles);
+        if (cycles.size() == 0) {
             out.println("No");
             return;
         }
         out.println("Yes");
-        out.println(min);
+        out.println(cycles.stream().flatMap(List::stream).min(Integer::compare).get());
     }
 
     private static final class FastScanner {
