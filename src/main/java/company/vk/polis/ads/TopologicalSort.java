@@ -73,8 +73,6 @@ public class TopologicalSort {
             System.out.println(-1);
             return;
         }
-        for (Integer el : result) {
-            System.out.print(el + " ");
-        }
+        result.forEach(el -> System.out.println(el + " "));
     }
 }

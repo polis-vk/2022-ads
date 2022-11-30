@@ -33,7 +33,8 @@ public class LoopedGraph {
         public int getLoopMinIndex() {
             for (int i = 1; i < vertexes.size(); i++) {
                 if (visited[i] == Color.WHITE) {
-                    dfs(i, NOT_EXISTS_VALUE);
+                    parent[i] = NOT_EXISTS_VALUE;
+                    dfs(i);
                 }
             }
             for (int i = 1; i < isLooped.length; i++) {
@@ -46,19 +47,19 @@ public class LoopedGraph {
             return NOT_EXISTS_VALUE;
         }
 
-        private void dfs(int currentVertex, int parentVertex) {
-            parent[currentVertex] = parentVertex;
+        private void dfs(int currentVertex) {
             visited[currentVertex] = Color.GRAY;
             for (int currentChild : vertexes.get(currentVertex)) {
                 if (visited[currentChild] == Color.WHITE) {
-                    dfs(currentChild, currentVertex);
-                } else if (visited[currentChild] == Color.GRAY && currentChild != parentVertex) {
-                    isLooped[currentChild] = true;
+                    parent[currentChild] = currentVertex;
+                    dfs(currentChild);
+                } else if (visited[currentChild] == Color.GRAY && currentChild != parent[currentVertex]) {
                     int copyOfCurrVert = currentVertex;
                     while (copyOfCurrVert != currentChild && !isLooped[copyOfCurrVert]) {
                         isLooped[copyOfCurrVert] = true;
                         copyOfCurrVert = parent[copyOfCurrVert];
                     }
+                    isLooped[currentChild] = true;
                 }
             }
             visited[currentVertex] = Color.BLACK;
