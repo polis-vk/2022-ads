@@ -5,7 +5,7 @@ import java.util.*;
 
 public class TopSort {
 
-    // https://www.eolymp.com/ru/submissions/12314669
+    //https://www.eolymp.com/ru/submissions/12328111
 
     private enum Color {
         WHITE, GREY, BLACK
@@ -18,15 +18,7 @@ public class TopSort {
         int v = in.nextInt(); // n
         int e = in.nextInt(); // m
         adj = new ArrayList<>(v + 1);
-        for (int i = 0; i < v + 1; i++) {
-            adj.add(new ArrayList<>());
-        }
-
-        for (int i = 0; i < e; i++) {
-            int v1 = in.nextInt();
-            int v2 = in.nextInt();
-            adj.get(v1).add(v2);
-        }
+        initGraph(in, v, e);
         topSort();
     }
 
@@ -69,6 +61,18 @@ public class TopSort {
         answer.addFirst(v);
         visited.set(v, Color.BLACK);
         return true;
+    }
+
+    private static void initGraph(final FastScanner in, int v, int e) {
+        for (int i = 0; i < v + 1; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < e; i++) {
+            int v1 = in.nextInt();
+            int v2 = in.nextInt();
+            adj.get(v1).add(v2);
+        }
     }
 
     private static final class FastScanner {
