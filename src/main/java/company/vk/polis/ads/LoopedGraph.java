@@ -13,6 +13,7 @@ public class LoopedGraph {
         private final Color[] visited;
         private final boolean[] isLooped;
         private final int[] parent;
+        private int minLoopedVertex = Integer.MAX_VALUE;
 
         public Graph(int capacity) {
             vertexes = new ArrayList<>(capacity + 1);
@@ -37,14 +38,8 @@ public class LoopedGraph {
                     dfs(i);
                 }
             }
-            for (int i = 1; i < isLooped.length; i++) {
-                if (isLooped[i]) {
-                    Arrays.fill(visited, Color.WHITE);
-                    return i;
-                }
-            }
             Arrays.fill(visited, Color.WHITE);
-            return NOT_EXISTS_VALUE;
+            return minLoopedVertex == Integer.MAX_VALUE ? -1 : minLoopedVertex;
         }
 
         private void dfs(int currentVertex) {
@@ -54,12 +49,12 @@ public class LoopedGraph {
                     parent[currentChild] = currentVertex;
                     dfs(currentChild);
                 } else if (visited[currentChild] == Color.GRAY && currentChild != parent[currentVertex]) {
-                    int copyOfCurrVert = currentVertex;
-                    while (copyOfCurrVert != currentChild && !isLooped[copyOfCurrVert]) {
-                        isLooped[copyOfCurrVert] = true;
-                        copyOfCurrVert = parent[copyOfCurrVert];
+                    for (int currentLoopElement = currentVertex; currentLoopElement != currentChild && !isLooped[currentLoopElement]; currentLoopElement = parent[currentLoopElement]) {
+                        isLooped[currentLoopElement] = true;
+                        minLoopedVertex = Math.min(minLoopedVertex, currentLoopElement);
                     }
                     isLooped[currentChild] = true;
+                    minLoopedVertex = Math.min(minLoopedVertex, currentChild);
                 }
             }
             visited[currentVertex] = Color.BLACK;
