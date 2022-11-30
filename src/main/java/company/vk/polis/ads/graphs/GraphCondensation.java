@@ -5,11 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -18,7 +19,7 @@ import java.util.StringTokenizer;
  *
  * @author Dmitry Schitinin
  */
-//https://www.eolymp.com/ru/submissions/12308892
+//https://www.eolymp.com/ru/submissions/12336236
 public final class GraphCondensation {
 
     private GraphCondensation() {
@@ -26,39 +27,48 @@ public final class GraphCondensation {
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
-        int vertex = in.nextInt();
-        int edge = in.nextInt();
-        Graph graph = new Graph(vertex);
-        Graph transposedGraph = new Graph(vertex);
+        int vertexes = in.nextInt();
+        int edges = in.nextInt();
+        Graph graph = new Graph(vertexes);
+        Graph transposedGraph = new Graph(vertexes);
 
-        for (int i = 1; i <= vertex; i++) {
+        for (int i = 1; i <= vertexes; i++) {
             graph.adjacencyList[i] = new HashSet<>();
             transposedGraph.adjacencyList[i] = new HashSet<>();
             graph.color[i] = Color.WHITE;
             transposedGraph.color[i] = Color.WHITE;
         }
 
-        for (int i = 1; i <= edge; i++) {
+        for (int i = 1; i <= edges; i++) {
             int fromVertex = in.nextInt();
             int toVertex = in.nextInt();
             graph.adjacencyList[fromVertex].add(toVertex);
             transposedGraph.adjacencyList[toVertex].add(fromVertex);
         }
 
-        //topsort
-        for (int i = 1; i <= vertex; i++) {
-            if (graph.color[i] == Color.WHITE) {
-                dfs(graph, i);
+        topSort(graph, vertexes);
+
+        int[] belongsComponent = new int[vertexes + 1];
+        int currentComponent = 1;
+        for (Integer curVertex : graph.stack) {
+            if (transposedGraph.color[curVertex] == Color.WHITE) {
+                dfsOnTransposed(transposedGraph, curVertex, belongsComponent, currentComponent++);
             }
         }
 
-        Map<Integer, Set<Integer>> componentVertexesMap = new HashMap<>();
-        int currentComponent = 1;
-        for(Integer curVertex: graph.stack) {
-            if (graph.color[curVertex] == Color.WHITE) {
-                dfsOnTransposed(graph, vertex, currentComponent++);
+        @SuppressWarnings("unchecked")
+        Set<Integer>[] condensedGraphEdges = new Set[currentComponent];
+        for (int i = 1; i <= vertexes; i++) {
+            for (Integer to : graph.adjacencyList[i]) {
+                if (belongsComponent[to] != belongsComponent[i]) {
+                    if (condensedGraphEdges[belongsComponent[to]] == null) {
+                        condensedGraphEdges[belongsComponent[to]] = new HashSet<>();
+                    }
+                    condensedGraphEdges[belongsComponent[to]].add(belongsComponent[i]);
+                }
             }
         }
+        out.println(Arrays.stream(condensedGraphEdges).filter(Objects::nonNull).mapToLong(Collection::size).sum());
     }
 
     @SuppressWarnings("unchecked")
@@ -71,7 +81,15 @@ public final class GraphCondensation {
             this.adjacencyList = new Set[vertex + 1];
             this.color = new Color[vertex + 1];
         }
-    }   
+    }
+
+    private static void topSort(Graph graph, int vertex) {
+        for (int i = 1; i <= vertex; i++) {
+            if (graph.color[i] == Color.WHITE) {
+                dfs(graph, i);
+            }
+        }
+    }
 
     private static void dfs(Graph graph, int vertex) {
         graph.color[vertex] = Color.GREY;
@@ -84,10 +102,14 @@ public final class GraphCondensation {
         graph.stack.addFirst(vertex);
     }
 
-    private static void dfsOnTransposed(Graph transposedGraph, int vertex, int currentComponent) {
-        transposedGraph.color[vertex] = Color.GREY;
-
-
+    private static void dfsOnTransposed(Graph graph, int vertex, int[] belongsComponent, int currentComponent) {
+        graph.color[vertex] = Color.GREY;
+        belongsComponent[vertex] = currentComponent;
+        for (Integer toVertex : graph.adjacencyList[vertex]) {
+            if (graph.color[toVertex] == Color.WHITE) {
+                dfsOnTransposed(graph, toVertex, belongsComponent, currentComponent);
+            }
+        }
     }
 
     private enum Color {
