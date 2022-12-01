@@ -220,3 +220,14 @@ $ git checkout -b <my-branch-for-part8> 90e687c4e6e9d32e992c5c11b58940a6bd9fcf11
 * https://www.eolymp.com/ru/problems/1948 - Топологическая сортировка
 * https://www.eolymp.com/ru/problems/2022 - Циклы в графе
 * https://www.eolymp.com/ru/problems/1947 - Конденсация графа
+
+## ДЗ 10. Графы 2. Дедлайн 06.12.2022 18:29:59
+
+Задачки с e-olymp:
+
+* https://www.eolymp.com/ru/problems/3835 - Минимальный каркас
+* https://www.eolymp.com/ru/problems/4856 - Кратчайший путь
+* https://www.eolymp.com/ru/problems/1453 - Форд-Беллман
+
+Опциональная задача (будет круто, если решите, возможно пойдет в доп баллы):
+* https://www.eolymp.com/ru/problems/325 - Опасный маршрут
