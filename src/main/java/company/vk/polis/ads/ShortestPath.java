@@ -96,7 +96,8 @@ public class ShortestPath {
         int currentNode = destinationPath;
 
         while (instancePath != currentNode) {
-            resultPath.append(currentNode).append(" ");;
+            resultPath.append(currentNode).append(" ");
+            ;
             currentNode = graph.getParent(currentNode);
         }
 
