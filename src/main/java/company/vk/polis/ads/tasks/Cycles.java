@@ -12,8 +12,8 @@ import java.util.*;
  *
  * @author Dmitry Schitinin
  */
-public final class TopologicalSort {
-    private TopologicalSort() {
+public final class Cycles {
+    private Cycles() {
         // Should not be instantiated
     }
 
@@ -27,17 +27,20 @@ public final class TopologicalSort {
         private final ArrayList<Integer>[] graph;
         private final int vertices;
 
-        private final ArrayList<Integer> result;
+        private final Deque<Integer> result;
+        private int minResult;
         private boolean flag;
         private final Colors[] visited;
+        private final boolean[] inCycle;
 
         @SuppressWarnings("unchecked")
         public Graph(int v) {
             vertices = v;
             flag = false;
-            result = new ArrayList<>();
+            result = new ArrayDeque<>();
             graph = new ArrayList[vertices];
             visited = new Colors[vertices];
+            inCycle = new boolean[vertices];
             for (int i = 1; i < vertices; i++) {
                 graph[i] = new ArrayList<>();
                 visited[i] = Colors.WHITE;
@@ -46,20 +49,31 @@ public final class TopologicalSort {
 
         private void add(int vertices, int edges) {
             graph[vertices].add(edges);
+            graph[edges].add(vertices);
         }
 
-        private void dfs(int source) {
+        private void dfs(int source, int prev) {
             visited[source] = Colors.GREY;
+            result.push(source);
             for (int neighbour : graph[source]) {
-                if (visited[neighbour] == Colors.GREY) {
-                    flag = true;
+                if (neighbour == prev) {
+                    continue;
                 }
                 if (visited[neighbour] == Colors.WHITE) {
-                    dfs(neighbour);
+                    dfs(neighbour, source);
+                }
+                if (visited[neighbour] == Colors.GREY) {
+                    inCycle[neighbour] = true;
+                    for (Integer element : result) {
+                        if (element.equals(neighbour) || inCycle[element]) {
+                            break;
+                        }
+                        inCycle[element] = true;
+                    }
                 }
             }
             visited[source] = Colors.BLACK;
-            result.add(source);
+            result.remove();
         }
     }
 
@@ -67,24 +81,24 @@ public final class TopologicalSort {
         int numVertices = in.nextInt();
         int numEdges = in.nextInt();
         Graph graph = new Graph(numVertices + 1);
-        for (int i = 0; i < numEdges; i++) {
+        for (int i = 1; i <= numEdges; i++) {
             graph.add(in.nextInt(), in.nextInt());
         }
+        for (int i = 1; i <= numVertices; i++) {
+            graph.dfs(i, 1);
+        }
         for (int i = 1; i < graph.vertices; i++) {
-            if (graph.flag) {
+            if (graph.inCycle[i]) {
+                graph.flag = true;
+                graph.minResult = i;
                 break;
-            }
-            if (graph.visited[i] == Colors.WHITE) {
-                graph.dfs(i);
             }
         }
         if (graph.flag) {
-            out.println("-1");
+            out.println("Yes");
+            out.println(graph.minResult);
         } else {
-            Collections.reverse(graph.result);
-            for (Integer element : graph.result) {
-                out.print(element + " ");
-            }
+            out.println("No");
         }
     }
 
