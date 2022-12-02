@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
  *
  * @author Dmitry Schitinin
  */
-// https://www.eolymp.com/ru/submissions/12318144
+// https://www.eolymp.com/ru/submissions/12345896
 public final class Cycles {
 
     private static class Graph {
@@ -20,7 +20,8 @@ public final class Cycles {
         private static final int CYCLE_NOT_FOUND = Integer.MAX_VALUE;
         private static final int WHITE = -1;
         private static final int GRAY = 0;
-        private static final int RED = 1;
+        private static final int DARK_GRAY = 1;
+        private static final int RED = 2;
         private int minInCycle = CYCLE_NOT_FOUND;
         private int V;
         private ArrayList<Integer>[] adjList;
@@ -55,10 +56,11 @@ public final class Cycles {
             for (Integer v : adjList[curNode]) {
                 if (colors[v] == GRAY && v != parents[curNode]) {
                     int cyclePos = curNode;
-                    while (cyclePos != v && cyclePos != -1) {
+                    while (cyclePos != v && colors[cyclePos] != DARK_GRAY) {
                         if (cyclePos < minInCycle) {
                             minInCycle = cyclePos;
                         }
+                        colors[cyclePos] = DARK_GRAY;
                         cyclePos = parents[cyclePos];
                     }
                     if (v < minInCycle) {
