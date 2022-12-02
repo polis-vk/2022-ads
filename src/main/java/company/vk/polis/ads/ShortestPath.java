@@ -12,9 +12,7 @@ public class ShortestPath {
 
         private enum Colors {
             WHITE,
-            RED,
-            GRAY,
-            BLACK
+            RED
         }
 
         public Graph(int cntVertex) {
@@ -97,7 +95,6 @@ public class ShortestPath {
 
         while (instancePath != currentNode) {
             resultPath.append(currentNode).append(" ");
-            ;
             currentNode = graph.getParent(currentNode);
         }
 
