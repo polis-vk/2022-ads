@@ -7,8 +7,9 @@ import java.util.*;
  * Problem solution template.
  *
  * @author Dmitry Schitinin
+ * <p>
  *
- * -
+ * https://www.eolymp.com/ru/submissions/12355255
  */
 public final class GraphLoop {
     private GraphLoop() {
@@ -56,27 +57,26 @@ public final class GraphLoop {
                             min = stackVertex;
                         }
                     }
+                    wasLoop = false;
                 }
-                wasLoop = false;
             }
         }
 
-        System.out.println((min < Integer.MAX_VALUE) ? "Yes\n" + (min + 1) : "No");
+        out.println((min < Integer.MAX_VALUE) ? "Yes\n" + (min + 1) : "No");
     }
 
     private static void dfs(Color[] visited, List<Integer>[] graph, Stack<Integer> stack, Integer fromVertex, Integer toVertex) {
         visited[toVertex] = Color.GRAY;
         for (Integer currVertex : graph[toVertex]) {
-            if (Objects.equals(fromVertex, toVertex)) {
+            if (Objects.equals(fromVertex, currVertex)) {
                 continue;
             }
-            stack.push(toVertex);
+            stack.push(currVertex);
             Color visitedCurrState = visited[currVertex];
-            if (visitedCurrState == Color.GRAY) {
-                wasLoop = true;
-            }
             if (visitedCurrState == Color.WHITE) {
                 dfs(visited, graph, stack, toVertex, currVertex);
+            } else if (visitedCurrState == Color.GRAY) {
+                wasLoop = true;
             }
         }
         visited[toVertex] = Color.BLACK;
