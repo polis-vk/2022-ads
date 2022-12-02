@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
  * Problem solution template.
  *
  * @author Dmitry Schitinin
+ *
+ * https://www.eolymp.com/ru/submissions/12349641
  */
 public final class TopologicalSort {
     private TopologicalSort() {
@@ -52,8 +54,8 @@ public final class TopologicalSort {
         visited[vertex] = Color.GRAY;
         for (Integer currVertex : graph[vertex]) {
             Color visitedCurrState = visited[currVertex];
-            if (visitedCurrState == Color.WHITE && dfs(visited, answer, graph, currVertex)
-                    || visitedCurrState == Color.GRAY) {
+            if (visitedCurrState == Color.GRAY
+                    || visitedCurrState == Color.WHITE && dfs(visited, answer, graph, currVertex)) {
                 return true;
             }
         }

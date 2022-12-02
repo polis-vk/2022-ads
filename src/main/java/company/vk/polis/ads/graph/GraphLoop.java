@@ -7,6 +7,8 @@ import java.util.*;
  * Problem solution template.
  *
  * @author Dmitry Schitinin
+ *
+ * -
  */
 public final class GraphLoop {
     private GraphLoop() {
@@ -17,58 +19,67 @@ public final class GraphLoop {
         WHITE, GRAY, BLACK
     }
 
+    private static boolean wasLoop;
+
     private static void solve(final FastScanner in, final PrintWriter out) throws IOException {
         if (!in.reader.ready()) {
             out.println(-1);
             return;
         }
 
-        int vertNumber = in.nextInt();
+        int vertexNumber = in.nextInt();
         int edgesNumber = in.nextInt();
-        Map<Integer, List<Integer>> map = new HashMap<>();
+        ArrayList<Integer>[] graph = new ArrayList[vertexNumber];
+        Color[] visited = new Color[vertexNumber];
+        int min = Integer.MAX_VALUE;
 
-        while (in.reader.ready()) {
+        for (int i = 0; i < vertexNumber; i++) {
+            graph[i] = new ArrayList<>();
+            visited[i] = Color.WHITE;
+        }
+
+        for (int i = 0; i < edgesNumber; i++) {
             int firstVert = in.nextInt();
             int secondVert = in.nextInt();
-            if (!map.containsKey(firstVert)) {
-                map.put(firstVert, new ArrayList<>());
-            }
-            if (!map.containsKey(secondVert)) {
-                map.put(secondVert, new ArrayList<>());
-            }
-            map.get(firstVert).add(secondVert);
-            map.get(secondVert).add(firstVert);
+            graph[firstVert - 1].add(secondVert - 1);
+            graph[secondVert - 1].add(firstVert - 1);
         }
 
-        Map<Integer, Color> info = new HashMap<>();
-        map.keySet().forEach(key -> info.put(key, Color.WHITE));
-        Stack<Integer> stack = new Stack<>();
-
-        boolean wasLoop = dfs(info, map, map.entrySet().stream().findFirst().get().getKey(), stack);
-        if (wasLoop) {
-            out.println("Yes");
-            // ....
-        } else {
-            out.println("No");
+        for (int currVertex = 0; currVertex < vertexNumber; currVertex++) {
+            if (visited[currVertex] == Color.WHITE) {
+                Stack<Integer> stack = new Stack<>();
+                dfs(visited, graph, stack, null, currVertex);
+                if (wasLoop) {
+                    while (!stack.isEmpty()) {
+                        int stackVertex = stack.pop();
+                        if (stackVertex < min) {
+                            min = stackVertex;
+                        }
+                    }
+                }
+                wasLoop = false;
+            }
         }
+
+        System.out.println((min < Integer.MAX_VALUE) ? "Yes\n" + (min + 1) : "No");
     }
 
-    private static boolean dfs(Map<Integer, Color> info, Map<Integer, List<Integer>> map, int vertex, Stack<Integer> stack) {
-        info.put(vertex, Color.GRAY);
-        for (Integer currVertex : map.get(vertex)) {
-            if (info.get(currVertex) == Color.WHITE) {
-                info.put(vertex, Color.GRAY);
-                stack.push(currVertex);
-                if (dfs(info, map, currVertex, stack)) {
-                    return true;
-                }
-            } else if (info.get(currVertex) == Color.GRAY) {
-                return true;
+    private static void dfs(Color[] visited, List<Integer>[] graph, Stack<Integer> stack, Integer fromVertex, Integer toVertex) {
+        visited[toVertex] = Color.GRAY;
+        for (Integer currVertex : graph[toVertex]) {
+            if (Objects.equals(fromVertex, toVertex)) {
+                continue;
+            }
+            stack.push(toVertex);
+            Color visitedCurrState = visited[currVertex];
+            if (visitedCurrState == Color.GRAY) {
+                wasLoop = true;
+            }
+            if (visitedCurrState == Color.WHITE) {
+                dfs(visited, graph, stack, toVertex, currVertex);
             }
         }
-        info.put(vertex, Color.BLACK);
-        stack.pop();
-        return false;
+        visited[toVertex] = Color.BLACK;
     }
 
     private static final class FastScanner {

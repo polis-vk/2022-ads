@@ -57,12 +57,8 @@ public final class ShortestPath {
         while (in.reader.ready()) {
             int firstVert = in.nextInt();
             int secondVert = in.nextInt();
-            if (!map.containsKey(firstVert)) {
-                map.put(firstVert, new ArrayList<>());
-            }
-            if (!map.containsKey(secondVert)) {
-                map.put(secondVert, new ArrayList<>());
-            }
+            map.putIfAbsent(firstVert, new ArrayList<>());
+            map.putIfAbsent(secondVert, new ArrayList<>());
             map.get(firstVert).add(secondVert);
             map.get(secondVert).add(firstVert);
         }
