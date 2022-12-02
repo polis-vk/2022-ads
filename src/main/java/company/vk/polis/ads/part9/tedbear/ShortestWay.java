@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class ShortestWay {
+    //https://www.eolymp.com/ru/problems/4853
     static int[] dist, parent;
 
     private static void solve(final FastScanner in, final PrintWriter out) {

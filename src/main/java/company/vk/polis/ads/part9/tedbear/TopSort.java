@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class TopSort {
+    //https://www.eolymp.com/ru/problems/1948
     static int numberOfVertices;
     static int numberOfEdges;
     static int flag = 0;
