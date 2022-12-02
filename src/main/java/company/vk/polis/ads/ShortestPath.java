@@ -57,8 +57,8 @@ public class ShortestPath {
 
     private static void restorePath(int[] d, int[] p, int b, PrintWriter out) {
         int[] path = new int[1 + d[b]];
-        for (int i = d[b], current = b; i >= 0; i--, current = p[current]) {
-            path[i] = current;
+        for (int i = d[b], cur = b; i >= 0; i--, cur = p[cur]) {
+            path[i] = cur;
         }
         for (int i : path) {
             out.println(i + 1);
