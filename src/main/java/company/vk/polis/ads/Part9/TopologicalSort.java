@@ -3,22 +3,22 @@ package company.vk.polis.ads;
 import java.util.*;
 
 //TOPOLOGICAL SORT -> Done
-//https://www.eolymp.com/ru/submissions/12346305
+//https://www.eolymp.com/ru/submissions/12348328
 public class Task2 {
 
+    private static final int NO_SORT = -1;
 
-    public static void sort(List<ArrayList<Integer>> graph, List<Integer> sortNodes, int a, int[] arrayOfColors) {
-        if (arrayOfColors[a] == 1) {
-            sortNodes.add(-1);
-            return;
+    public static void sort(int pos, List<ArrayList<Integer>> graph, List<Integer> sortNodes, int[] arrayOfColors) {
+        if (arrayOfColors[pos] == 1) {
+            sortNodes.add(NO_SORT);
         }
-        if (arrayOfColors[a] == 0) {
-            arrayOfColors[a] = 1;
-            for (int i : graph.get(a)) {
-                sort(graph, sortNodes, i, arrayOfColors);
+        if (arrayOfColors[pos] == 0) {
+            arrayOfColors[pos] = 1;
+            for (int i : graph.get(pos)) {
+                sort(i, graph, sortNodes, arrayOfColors);
             }
-            sortNodes.add(a);
-            arrayOfColors[a] = 2;
+            sortNodes.add(pos);
+            arrayOfColors[pos] = 2;
         }
     }
 
@@ -43,11 +43,11 @@ public class Task2 {
         }
 
         for (int i = 1; i <= vertexes; i++) {
-            sort(graph, sortNodes, i, arrayOfColors);
+            sort(i, graph, sortNodes, arrayOfColors);
         }
 
-        if (sortNodes.contains(-1)) {
-            System.out.println(-1);
+        if (sortNodes.contains(NO_SORT)) {
+            System.out.println(NO_SORT);
         } else {
             Collections.reverse(sortNodes);
             for (Integer element : sortNodes) {

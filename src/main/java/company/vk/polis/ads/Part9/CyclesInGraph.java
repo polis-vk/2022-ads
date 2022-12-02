@@ -14,13 +14,12 @@ public class Task3 {
         }
     }
 
-    private static void dfs(ArrayList<ArrayList<Integer>> nodes, int v, int[] arrayOfcolors, int[] p, boolean[] isLoopsInGraph) {
+    private static void dfs(ArrayList<ArrayList<Integer>> nodes, int pos, int[] arrayOfcolors, int[] p, boolean[] isLoopsInGraph) {
         Deque<Integer> stack = new ArrayDeque<>();
-        stack.add(v);
+        stack.add(pos);
         while (!stack.isEmpty()) {
             int first = stack.peekFirst();
             arrayOfcolors[first] = 1;
-            boolean child = false;
             int checkSwitch = 0;
 
             for (Integer finish : nodes.get(first)) {
@@ -78,13 +77,13 @@ public class Task3 {
 
         for (int i = 0; i < vertexes; i++) {
             if (isLoopsInGraph[i] && min > i) {
-                min = i;
+                min = i + 1;
             }
         }
 
         if (min != MAX_NUMBER) {
             System.out.println("Yes");
-            System.out.println(min + 1);
+            System.out.println(min);
         } else {
             System.out.println("No");
         }

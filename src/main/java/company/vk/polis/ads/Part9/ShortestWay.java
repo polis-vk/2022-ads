@@ -6,6 +6,8 @@ import java.util.*;
 //https://www.eolymp.com/ru/submissions/12321929
 public class Main {
 
+    private static final int NO_WAY = -1;
+
     private static void bfs(List<ArrayList<Integer>> graph, int start, int[] dist, int[] par) {
         dist[start] = 0;
         Deque<Integer> q = new ArrayDeque<>();
@@ -13,7 +15,7 @@ public class Main {
         while (!q.isEmpty()) {
             int v = q.poll();
             for (int to : graph.get(v)) {
-                if (dist[to] == -1) {
+                if (dist[to] == NO_WAY) {
                     q.add(to);
                     dist[to] = dist[v] + 1;
                     par[to] = v;
@@ -36,7 +38,7 @@ public class Main {
         List<Integer> path = new ArrayList<>();
         int[] par = new int[vertexes + 2];
         int[] dist = new int[vertexes + 2];
-        Arrays.fill(dist, -1);
+        Arrays.fill(dist, NO_WAY);
         initializationgNodesOfGraph(graph, vertexes);
 
         for (int i = 0; i < edges; i++) {
@@ -60,7 +62,7 @@ public class Main {
                 System.out.print(nodes + " ");
             }
         } else {
-            System.out.println("-1");
+            System.out.println(NO_WAY);
         }
     }
 }
