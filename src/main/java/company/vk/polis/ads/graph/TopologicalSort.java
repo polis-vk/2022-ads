@@ -2,6 +2,7 @@ package company.vk.polis.ads.graph;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Problem solution template.
@@ -17,80 +18,48 @@ public final class TopologicalSort {
         WHITE, GRAY, BLACK
     }
 
-    private static void solve(final FastScanner in, final PrintWriter out) throws IOException {
-        if (!in.reader.ready()) {
-            out.println(-1);
-            return;
-        }
-
+    private static void solve(final FastScanner in, final PrintWriter out) {
         int vertNumber = in.nextInt();
         int edgesNumber = in.nextInt();
-        Map<Integer, List<Integer>> map = new HashMap<>();
+        ArrayList<Integer>[] graph = new ArrayList[vertNumber];
+        Color[] visited = new Color[vertNumber];
 
-        while (in.reader.ready()) {
+        for (int i = 0; i < vertNumber; i++) {
+            graph[i] = new ArrayList<>();
+            visited[i] = Color.WHITE;
+        }
+
+        for (int i = 0; i < edgesNumber; i++) {
             int firstVert = in.nextInt();
             int secondVert = in.nextInt();
-            if (!map.containsKey(firstVert)) {
-                map.put(firstVert, new ArrayList<>());
-            }
-            if (!map.containsKey(secondVert)) {
-                map.put(secondVert, new ArrayList<>());
-            }
-            map.get(firstVert).add(secondVert);
+            graph[firstVert - 1].add(secondVert - 1);
         }
 
-        if (findLoop(map)) {
-            out.println(-1);
-            return;
-        }
-
-        Map<Integer, Boolean> visited = new HashMap<>();
-        map.keySet().forEach(key -> visited.put(key, false));
         Deque<Integer> answer = new ArrayDeque<>();
-        map.forEach((key, value) -> {
-                    if (!visited.get(key)) {
-                        dfs(visited, answer, map, key);
-                    }
+        for (int i = 0; i < vertNumber; i++) {
+            if (visited[i] == Color.WHITE) {
+                if (dfs(visited, answer, graph, i)) {
+                    out.println(-1);
+                    return;
                 }
-        );
-
-        out.print(answer.pollLast());
-        while (!answer.isEmpty()) {
-            out.print(" " + answer.pollLast());
+            }
         }
+
+        out.println(answer.stream().map(String::valueOf).collect(Collectors.joining(" ")));
     }
 
-    private static boolean findLoop(Map<Integer, List<Integer>> map) {
-        Map<Integer, Color> loopVisited = new HashMap<>();
-        map.keySet().forEach(key -> loopVisited.put(key, Color.WHITE));
-        return findLoop(loopVisited, map, map.entrySet().stream().findFirst().get().getKey());
-    }
-
-    private static boolean findLoop(Map<Integer, Color> visited, Map<Integer, List<Integer>> map, int vertex) {
-        visited.put(vertex, Color.GRAY);
-        for (Integer currVertex : map.get(vertex)) {
-            if (visited.get(currVertex) == Color.WHITE) {
-                visited.put(vertex, Color.GRAY);
-                if (findLoop(visited, map, currVertex)) {
-                    return true;
-                }
-            } else if (visited.get(currVertex) == Color.GRAY) {
+    private static boolean dfs(Color[] visited, Deque<Integer> answer, List<Integer>[] graph, int vertex) {
+        visited[vertex] = Color.GRAY;
+        for (Integer currVertex : graph[vertex]) {
+            Color visitedCurrState = visited[currVertex];
+            if (visitedCurrState == Color.WHITE && dfs(visited, answer, graph, currVertex)
+                    || visitedCurrState == Color.GRAY) {
                 return true;
             }
         }
-        visited.put(vertex, Color.BLACK);
+        visited[vertex] = Color.BLACK;
+        answer.addFirst(vertex + 1);
         return false;
-    }
-
-    private static void dfs(Map<Integer, Boolean> visited, Deque<Integer> answer, Map<Integer, List<Integer>> map, int vertex) {
-        visited.put(vertex, true);
-        map.get(vertex).forEach(currVertex -> {
-                    if (!visited.get(currVertex)) {
-                        dfs(visited, answer, map, currVertex);
-                    }
-                }
-        );
-        answer.add(vertex);
     }
 
     private static final class FastScanner {
