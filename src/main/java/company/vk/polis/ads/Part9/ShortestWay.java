@@ -4,7 +4,7 @@ import java.util.*;
 
 //Кратчайший путь - Done
 //https://www.eolymp.com/ru/submissions/12321929
-public class Main {
+public class ShortestWay {
 
     private static final int NO_WAY = -1;
 

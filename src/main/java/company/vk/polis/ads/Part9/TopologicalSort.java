@@ -4,7 +4,7 @@ import java.util.*;
 
 //TOPOLOGICAL SORT -> Done
 //https://www.eolymp.com/ru/submissions/12348328
-public class Task2 {
+public class TopologicalSort {
 
     private static final int NO_SORT = -1;
 

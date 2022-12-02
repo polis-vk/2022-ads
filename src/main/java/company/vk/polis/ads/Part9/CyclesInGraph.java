@@ -4,7 +4,7 @@ import java.util.*;
 
 //Циклы в графе - Done
 //https://www.eolymp.com/ru/submissions/12346339
-public class Task3 {
+public class CyclesInGraph {
 
     private static final int MAX_NUMBER = 100001;
 
