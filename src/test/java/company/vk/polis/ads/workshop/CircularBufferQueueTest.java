@@ -1,5 +1,6 @@
 package company.vk.polis.ads.workshop;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayDeque;
@@ -8,6 +9,7 @@ import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+@Disabled("Disabled since 6th homework released")
 public class CircularBufferQueueTest {
     @Test
     void test() {

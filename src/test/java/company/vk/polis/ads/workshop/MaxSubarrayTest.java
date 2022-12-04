@@ -1,11 +1,13 @@
 package company.vk.polis.ads.workshop;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled("Disabled since 6th homework released")
 class MaxSubarrayTest {
     private int[] generateArray(int length) {
         int[] array = new int[length];
@@ -33,7 +35,7 @@ class MaxSubarrayTest {
     private static MaxSubarray.Res bruteForceSolution(int[] array) {
         int left = 0;
         int right = 0;
-        int maximumSum = 0;
+        int maximumSum = Integer.MIN_VALUE;
         for (int i = 0; i < array.length; ++i) {
             int sum = 0;
             for (int j = i; j < array.length; ++j) {

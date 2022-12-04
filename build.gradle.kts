@@ -21,8 +21,14 @@ java {
 }
 
 dependencies {
+    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+    val jetbrainsAnno = "org.jetbrains:annotations:23.0.0"
+    compileOnly(jetbrainsAnno)
+
+    testCompileOnly(jetbrainsAnno)
     testImplementation("it.unimi.dsi:fastutil:8.5.9")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
 
     jmh("org.openjdk.jmh:jmh-core:1.35")
@@ -37,4 +43,9 @@ tasks.getByName<Test>("test") {
     testLogging {
         events(PASSED, SKIPPED, FAILED)
     }
+
+    jvmArgs(
+        "--add-opens", "java.base/java.lang=ALL-UNNAMED",
+        "--add-opens", "java.base/java.util=ALL-UNNAMED",
+    )
 }

@@ -1,5 +1,6 @@
 package company.vk.polis.ads.workshop;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -9,6 +10,7 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled("Disabled since 6th homework released")
 class ImprovedInsertionSortTest {
     @Test
     void test() {
