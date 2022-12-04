@@ -20,7 +20,7 @@ class MaxSubarrayTest {
     @Test
     public void testMaximumSubarray() {
         final int[] LENGTHS = {10, 100, 1000, 10_000};
-        for (int i = 0; i < LENGTHS.length; ++i) {
+        for (int i = 0; i < 1000; ++i) {
             for (int length : LENGTHS) {
                 int[] array = generateArray(length);
 
