@@ -32,7 +32,6 @@ public final class FordBellman {
             edgeList.add(new Edge(in.nextInt(), in.nextInt(), in.nextInt()));
         }
 
-
         Arrays.stream(fordBellman(edgeList, start, vertices)).skip(1).forEachOrdered(d ->
                 out.print(((d == Integer.MAX_VALUE) ? 30000 : d) + " "));
     }
