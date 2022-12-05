@@ -15,6 +15,9 @@ import java.util.StringTokenizer;
  *
  * @author Dmitry Schitinin
  */
+
+// https://www.eolymp.com/ru/submissions/12366927
+
 public final class TopologicalSort {
     private static ArrayList<ArrayList<Integer>> listOfList;
     private static List<Integer> list = new LinkedList<>();
