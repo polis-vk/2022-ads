@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
 /**
  * Problem solution template.
  *
- * https://www.eolymp.com/ru/submissions/12383178
+ * https://www.eolymp.com/ru/submissions/12383185
  *
  * @author Dmitry Schitinin
  */
@@ -34,12 +34,14 @@ public final class Main {
         int num;
         Vertex prev;
         int dist;
+        boolean isVisited;
 
         public Vertex(int num) {
             this.paths = new ArrayList<>();
             this.num = num;
             this.prev = null;
             this.dist = Integer.MAX_VALUE;
+            this.isVisited = false;
         }
     }
 
@@ -84,8 +86,12 @@ public final class Main {
                 }
             }
             Vertex u = Q.remove(minIndex);
+            u.isVisited = true;
 
             for (Path p : u.paths) {
+                if (p.to.isVisited) {
+                    continue;
+                }
                 long alt = u.dist + p.weight; // Long, чтобы на всякий защититься от переполнения.
                 Vertex v = p.to;
                 if (alt < v.dist) {
