@@ -178,6 +178,10 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
 
     private Node balance(Node x) {
 
+        if (x == null) {
+            return null;
+        }
+
         if (factor(x) == 2) {
             if (factor(x.left) < 0) {
                 x.left = rotateLeft(x.left);
@@ -225,6 +229,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
         if (x == null) {
             return null;
         }
+
         int cmp = key.compareTo(x.key);
         if (cmp < 0) {
             x.left = delete(x.left, key);
@@ -236,6 +241,7 @@ public class AvlBinarySearchTree<Key extends Comparable<Key>, Value> implements 
             size--;
             x = innerDelete(x);
         }
+
         fixHeight(x);
         x = balance(x);
         return x;
