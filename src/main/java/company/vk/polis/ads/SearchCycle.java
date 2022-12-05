@@ -37,7 +37,7 @@ public final class SearchCycle {
             list.get(a).add(b);
             list.get(b).add(a);
         }
-        for (int node = 1; node <= vertexNumber; node++) {
+        for (int node = vertexNumber; node >= 1; node--) {
             if (listStatus.get(node).equals(Status.WHITE)) {
                 dfs(-1, node);
             }
