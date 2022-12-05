@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
 /**
  * Problem solution template.
  *
- * https://www.eolymp.com/ru/submissions/12383170
+ * https://www.eolymp.com/ru/submissions/12383178
  *
  * @author Dmitry Schitinin
  */
@@ -69,7 +69,10 @@ public final class Main {
         }
 
         graph.get(s).dist = 0;
-        List<Vertex> Q = new ArrayList<>(graph);
+        List<Vertex> Q = new ArrayList<>();
+        for (int i = 1; i < graph.size(); i++) {
+            Q.add(graph.get(i));
+        }
 
         while (!Q.isEmpty()) {
             int minIndex = 0;
