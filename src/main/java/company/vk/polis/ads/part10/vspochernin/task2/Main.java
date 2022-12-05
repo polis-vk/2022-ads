@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
 /**
  * Problem solution template.
  *
- * https://www.eolymp.com/ru/submissions/12383101
+ * https://www.eolymp.com/ru/submissions/12383170
  *
  * @author Dmitry Schitinin
  */
@@ -99,6 +99,10 @@ public final class Main {
             cur = cur.prev;
         }
         Collections.reverse(result);
+        if (result.get(0).num != s && result.get(result.size() - 1).num != f) {
+            System.out.println(-1);
+            return;
+        }
 
         System.out.println(graph.get(f).dist);
         for (int i = 0; i < result.size() - 1; i++) {
