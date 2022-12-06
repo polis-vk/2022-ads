@@ -40,16 +40,16 @@ public class ShortestWay {
         Queue<Edge> container = new LinkedList<>();
         container.add(new Edge(s, 0));
         while (!container.isEmpty()) {
-            Edge e = container.poll();
-            if (e.weight > distance[e.vertex]) {
+            Edge currentEdge = container.poll();
+            if (currentEdge.weight > distance[currentEdge.vertex]) {
                 continue;
             }
             for (int i = 1; i < n + 1; i++) {
-                if (weights[e.vertex][i] != Integer.MAX_VALUE) {
-                    int newDist = distance[e.vertex] + weights[e.vertex][i];
+                if (weights[currentEdge.vertex][i] != Integer.MAX_VALUE) {
+                    int newDist = distance[currentEdge.vertex] + weights[currentEdge.vertex][i];
                     if (distance[i] > newDist) {
                         distance[i] = newDist;
-                        parent[i] = e.vertex;
+                        parent[i] = currentEdge.vertex;
                         container.add(new Edge(i, distance[i]));
                     }
                 }
