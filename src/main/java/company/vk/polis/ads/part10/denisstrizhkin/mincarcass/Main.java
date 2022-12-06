@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -15,17 +13,14 @@ import java.util.StringTokenizer;
 
 public class Main {
     private static final List<Vertex> graph = new ArrayList<>();
-    private static int[] used;
-    private static final List<HashMap<Integer, Integer>> weights = new ArrayList<>();
+
+    private record Neighbour(Vertex vertex, int weight) {
+    }
 
     private static class Vertex implements Comparable<Vertex> {
         int minWeight = Integer.MAX_VALUE;
-        final List<Vertex> neighbours = new ArrayList<>();
-        final int number;
-
-        public Vertex(int number) {
-            this.number = number;
-        }
+        boolean wasVisited = false;
+        final List<Neighbour> neighbours = new ArrayList<>();
 
         @Override
         public int compareTo(Vertex o) {
@@ -37,66 +32,44 @@ public class Main {
         // Should not be instantiated
     }
 
-    private static int[] getPrev(int source) {
-        int[] prev = new int[graph.size()];
-        Arrays.fill(prev, -1);
+    private static void runPrim() {
         Queue<Vertex> queue = new PriorityQueue<>();
-
-        for (Vertex v : graph) {
-            v.minWeight = Integer.MAX_VALUE;
-        }
-        graph.get(source).minWeight = 0;
-        queue.addAll(graph);
+        graph.get(1).minWeight = 0;
+        queue.addAll(graph.subList(1, graph.size()));
 
         while (!queue.isEmpty()) {
             Vertex u = queue.poll();
-            used[u.number] = 1;
+            u.wasVisited = true;
 
-            for (Vertex v : u.neighbours) {
-                if (used[v.number] == 0) {
-                    int weight = weights.get(u.number).get(v.number);
-                    if (weight < v.minWeight) {
-                        queue.remove(v);
-                        v.minWeight = weight;
-                        queue.add(v);
-                        prev[v.number] = u.number;
-                    }
+            for (Neighbour neighbour : u.neighbours) {
+                Vertex v = neighbour.vertex;
+                if (!v.wasVisited && neighbour.weight < v.minWeight) {
+                    queue.remove(v);
+                    v.minWeight = neighbour.weight;
+                    queue.add(v);
                 }
             }
         }
-
-        return prev;
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
         int n = in.nextInt();
         int m = in.nextInt();
 
-        used = new int[n + 1];
         for (int i = 0; i <= n; i++) {
-            graph.add(new Vertex(i));
-            weights.add(new HashMap<>());
+            graph.add(new Vertex());
         }
 
         for (int i = 0; i < m; i++) {
             int x = in.nextInt();
             int y = in.nextInt();
             int w = in.nextInt();
-            graph.get(x).neighbours.add(graph.get(y));
-            graph.get(y).neighbours.add(graph.get(x));
-            weights.get(x).put(y, w);
-            weights.get(y).put(x, w);
+            graph.get(x).neighbours.add(new Neighbour(graph.get(y), w));
+            graph.get(y).neighbours.add(new Neighbour(graph.get(x), w));
         }
 
-        int[] prev = getPrev(3);
-        int sum = 0;
-        for (int i = 1; i < graph.size(); i++) {
-            if (prev[i] != -1) {
-                sum += weights.get(prev[i]).get(i);
-            }
-        }
-        out.println(sum);
-        out.println(Arrays.toString(prev));
+        runPrim();
+        out.println(graph.subList(1, graph.size()).stream().mapToInt(v -> v.minWeight).sum());
     }
 
     private static final class FastScanner {
