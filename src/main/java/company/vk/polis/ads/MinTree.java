@@ -42,7 +42,7 @@ public final class MinTree {
         out.println(result);
     }
 
-    private static final class Edge implements Comparable<Edge> {
+    private static class Edge implements Comparable<Edge> {
         public int left;
         public int right;
         public int weight;
