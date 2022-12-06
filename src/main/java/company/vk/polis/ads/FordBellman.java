@@ -24,9 +24,9 @@ public class FordBellman {
         distance[1] = 0;
 
         for (int i = 0; i < n; i++) {
-            for(Edge e : edges) {
-                if (distance[e.left] != Integer.MAX_VALUE) {
-                    distance[e.right] = Math.min(distance[e.left] + e.weight, distance[e.right]);
+            for(Edge edge : edges) {
+                if (distance[edge.left] != Integer.MAX_VALUE) {
+                    distance[edge.right] = Math.min(distance[edge.left] + edge.weight, distance[edge.right]);
                 }
             }
         }
