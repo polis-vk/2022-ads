@@ -6,33 +6,97 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-    private static List<List<Integer>> V;
+    private static final List<Vertex> graph = new ArrayList<>();
+    private static int[] used;
+    private static final List<HashMap<Integer, Integer>> weights = new ArrayList<>();
+
+    private static class Vertex implements Comparable<Vertex> {
+        int minWeight = Integer.MAX_VALUE;
+        final List<Vertex> neighbours = new ArrayList<>();
+        final int number;
+
+        public Vertex(int number) {
+            this.number = number;
+        }
+
+        @Override
+        public int compareTo(Vertex o) {
+            return Integer.compare(minWeight, o.minWeight);
+        }
+    }
 
     private Main() {
         // Should not be instantiated
+    }
+
+    private static int[] getPrev(int source) {
+        int[] prev = new int[graph.size()];
+        Arrays.fill(prev, -1);
+        Queue<Vertex> queue = new PriorityQueue<>();
+
+        for (Vertex v : graph) {
+            v.minWeight = Integer.MAX_VALUE;
+        }
+        graph.get(source).minWeight = 0;
+        queue.addAll(graph);
+
+        while (!queue.isEmpty()) {
+            Vertex u = queue.poll();
+            used[u.number] = 1;
+
+            for (Vertex v : u.neighbours) {
+                if (used[v.number] == 0) {
+                    int weight = weights.get(u.number).get(v.number);
+                    if (weight < v.minWeight) {
+                        queue.remove(v);
+                        v.minWeight = weight;
+                        queue.add(v);
+                        prev[v.number] = u.number;
+                    }
+                }
+            }
+        }
+
+        return prev;
     }
 
     private static void solve(final FastScanner in, final PrintWriter out) {
         int n = in.nextInt();
         int m = in.nextInt();
 
-        V = new ArrayList<>();
+        used = new int[n + 1];
         for (int i = 0; i <= n; i++) {
-            V.add(new ArrayList<>());
+            graph.add(new Vertex(i));
+            weights.add(new HashMap<>());
         }
 
         for (int i = 0; i < m; i++) {
             int x = in.nextInt();
             int y = in.nextInt();
-            V.get(x).add(y);
-            V.get(y).add(x);
+            int w = in.nextInt();
+            graph.get(x).neighbours.add(graph.get(y));
+            graph.get(y).neighbours.add(graph.get(x));
+            weights.get(x).put(y, w);
+            weights.get(y).put(x, w);
         }
 
-        out.println(V.size());
+        int[] prev = getPrev(3);
+        int sum = 0;
+        for (int i = 1; i < graph.size(); i++) {
+            if (prev[i] != -1) {
+                sum += weights.get(prev[i]).get(i);
+            }
+        }
+        out.println(sum);
+        out.println(Arrays.toString(prev));
     }
 
     private static final class FastScanner {
