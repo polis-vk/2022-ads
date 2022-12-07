@@ -10,19 +10,40 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class MinFrame {
+    private static class Edge {
+        int to;
+        int cost;
+
+        public Edge(int to, int cost) {
+            this.to = to;
+            this.cost = cost;
+        }
+
+    }
+
+    private static ArrayList<Edge>[] graph;
+
     private static void solve(final FastScanner in, final PrintWriter out) {
         int countNodes = in.nextInt();
         int countEdges = in.nextInt();
-        int[][] graph = new int[3][countEdges];
-        for (int i = 0; i < countEdges; i++) {
-            graph[0][i] = in.nextInt() - 1;
-            graph[1][i] = in.nextInt() - 1;
-            graph[2][i] = in.nextInt();
+        graph = new ArrayList[countNodes];
+        for (int i = 0; i < countNodes; i++) {
+            graph[i] = new ArrayList<>();
         }
-        System.out.println(primMST(graph, countNodes, countEdges));
+        int from;
+        int to;
+        int cost;
+        for (int i = 0; i < countEdges; i++) {
+            from = in.nextInt() - 1;
+            to = in.nextInt() - 1;
+            cost = in.nextInt();
+            graph[from].add(new Edge(to, cost));
+            graph[to].add(new Edge(from, cost));
+        }
+        System.out.println(primMST(countNodes, countEdges));
     }
 
-    private static int primMST(int[][] graph, int countNodes, int countEdges) {
+    private static int primMST(int countNodes, int countEdges) {
         boolean[] inMST = new boolean[countNodes];
         List<Integer> used = new ArrayList<>();
 
@@ -37,17 +58,10 @@ public class MinFrame {
             min = Integer.MAX_VALUE;
 
             for (int u : used) {
-                for (int j = 0; j < countEdges; j++) {
-                    if (graph[0][j] == u) {
-                        if (graph[2][j] < min && !inMST[graph[1][j]]) {
-                            min = graph[2][j];
-                            v = graph[1][j];
-                        }
-                    } else if (graph[1][j] == u) {
-                        if (graph[2][j] < min && !inMST[graph[0][j]]) {
-                            min = graph[2][j];
-                            v = graph[0][j];
-                        }
+                for (Edge e : graph[u]) {
+                    if (e.cost < min && !inMST[e.to]) {
+                        min = e.cost;
+                        v = e.to;
                     }
                 }
             }
