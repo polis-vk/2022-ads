@@ -5,12 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Stack;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
@@ -24,16 +23,21 @@ public final class SearchCycle {
     }
 
     private static List<List<Integer>> list;
-    private static List<Status> listStatus;
+    private static List<Status> statuses;
+    private static int[] previous;
+    private static Set<Integer> results;
+
 
     private static void solve(final FastScanner in, final PrintWriter out) {
         int vertexNumber = in.nextInt();
         int edgesNumber = in.nextInt();
         list = new ArrayList<>(vertexNumber + 1);
-        listStatus = new ArrayList<>(vertexNumber + 1);
+        statuses = new ArrayList<>(vertexNumber + 1);
+        previous = new int[vertexNumber + 1];
+        results = new HashSet<>();
         for (int i = 0; i <= vertexNumber; i++) {
             list.add(new ArrayList<>());
-            listStatus.add(Status.WHITE);
+            statuses.add(Status.WHITE);
         }
         for (int i = 0; i < edgesNumber; i++) {
             int a = in.nextInt();
@@ -42,41 +46,33 @@ public final class SearchCycle {
             list.get(b).add(a);
         }
         for (int node = 1; node <= vertexNumber; node++) {
-            if (listStatus.get(node).equals(Status.WHITE)) {
-                dfs(-1, node);
+            if (statuses.get(node).equals(Status.WHITE)) {
+                dfs(node);
             }
         }
-        if (Integer.compare(globalMin, Integer.MAX_VALUE) != 0)
-            System.out.println("Yes\n" + globalMin);
+        if (!results.isEmpty())
+            System.out.println("Yes\n" + Collections.min(results));
         else
             System.out.println("No");
     }
 
-    private static int globalMin = Integer.MAX_VALUE;
-    private static Stack<Integer> stack = new Stack<>();
-    private static Deque<Integer> deque = new ArrayDeque<>();
-
-    private static void dfs(int parent, int source) {
-        stack.push(source);
-        listStatus.set(source, Status.GREY);
+    private static void dfs(int source) {
+        statuses.set(source, Status.GREY);
         for (int i : list.get(source)) {
-            if (i == parent) continue;
-            if (listStatus.get(i).equals(Status.WHITE)) {
-                dfs(source, i);
+            if (statuses.get(i).equals(Status.WHITE)) {
+                previous[i] = source;
+                dfs(i);
             }
-            if (listStatus.get(i).equals(Status.GREY)) {
-                deque = new LinkedList<>(stack);
-                int pop = deque.removeLast();
-                globalMin = Math.min(pop, globalMin);
-                while (pop != i) {
-                    pop = deque.getLast();
-                    deque.removeLast();
-                    globalMin = Math.min(pop, globalMin);
+            if (statuses.get(i).equals(Status.GREY) && i != previous[source]) {
+                int end = source;
+                while (end != i && !results.contains(i)) {
+                    results.add(end);
+                    end = previous[end];
                 }
+                results.add(end);
             }
         }
-        listStatus.set(source, Status.BLACK);
-        stack.pop();
+        statuses.set(source, Status.BLACK);
     }
 
 
