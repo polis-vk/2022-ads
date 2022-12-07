@@ -5,16 +5,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class MinWay {
-    private static int[][] graph;
+    private static class Edge {
+        int to;
+        int cost;
+
+        public Edge(int to, int cost) {
+            this.to = to;
+            this.cost = cost;
+        }
+
+    }
+
+    private static ArrayList<Edge>[] graph;
     private static int[] dist;
     private static int[] prev;
 
@@ -23,13 +32,20 @@ public class MinWay {
         int countEdges = in.nextInt();
         int start = in.nextInt() - 1;
         int end = in.nextInt() - 1;
-        graph = new int[3][countEdges];
-        for (int i = 0; i < countEdges; i++) {
-            graph[0][i] = in.nextInt() - 1;
-            graph[1][i] = in.nextInt() - 1;
-            graph[2][i] = in.nextInt();
+        graph = new ArrayList[countNodes];
+        for (int i = 0; i < countNodes; i++) {
+            graph[i] = new ArrayList<>();
         }
-
+        int from;
+        int to;
+        int cost;
+        for (int i = 0; i < countEdges; i++) {
+            from = in.nextInt() - 1;
+            to = in.nextInt() - 1;
+            cost = in.nextInt();
+            graph[from].add(new Edge(to, cost));
+            graph[to].add(new Edge(from, cost));
+        }
         Dijkstra(countNodes, countEdges, start);
         printPath(start, end);
     }
@@ -39,31 +55,30 @@ public class MinWay {
         prev = new int[countNodes];
         Arrays.fill(dist, Integer.MAX_VALUE);
         boolean[] visited = new boolean[countNodes];
-        Queue<Integer> queue = new ArrayDeque<>();
+        List<Integer> nodes = new ArrayList<>();
 
-        queue.add(start);
+        nodes.add(start);
         dist[start] = 0;
         int v;
-        int u;
 
-        while (!queue.isEmpty()) {
-            v = queue.poll();
+        while (!nodes.isEmpty()) {
+            int indexMinDistNode = 0;
+            for (int i = 1; i < nodes.size(); i++) {
+                if (dist[nodes.get(i)] < dist[nodes.get(indexMinDistNode)]) {
+                    indexMinDistNode = i;
+                }
+            }
+            v = nodes.get(indexMinDistNode);
+            nodes.remove(indexMinDistNode);
             if (visited[v]) {
                 continue;
             }
             visited[v] = true;
-            for (int j = 0; j < countEdges; j++) {
-                if (graph[0][j] == v) {
-                    u = graph[1][j];
-                } else if (graph[1][j] == v) {
-                    u = graph[0][j];
-                } else {
-                    continue;
-                }
-                if (dist[u] > dist[v] + graph[2][j]) {
-                    dist[u] = dist[v] + graph[2][j];
-                    prev[u] = v;
-                    queue.add(u);
+            for (Edge u : graph[v]) {
+                if (dist[u.to] > dist[v] + u.cost) {
+                    dist[u.to] = dist[v] + u.cost;
+                    prev[u.to] = v;
+                    nodes.add(u.to);
                 }
             }
         }
