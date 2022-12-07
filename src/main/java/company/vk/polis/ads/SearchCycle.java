@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 /**
@@ -37,7 +41,7 @@ public final class SearchCycle {
             list.get(a).add(b);
             list.get(b).add(a);
         }
-        for (int node = vertexNumber; node >= 1; node--) {
+        for (int node = 1; node <= vertexNumber; node++) {
             if (listStatus.get(node).equals(Status.WHITE)) {
                 dfs(-1, node);
             }
@@ -49,29 +53,30 @@ public final class SearchCycle {
     }
 
     private static int globalMin = Integer.MAX_VALUE;
-    private static int currentMin = Integer.MAX_VALUE;
+    private static Stack<Integer> stack = new Stack<>();
+    private static Deque<Integer> deque = new ArrayDeque<>();
 
     private static void dfs(int parent, int source) {
-        if (listStatus.get(source).equals(Status.BLACK)) {
-            return;
-        }
-        if (list.get(source).size() <= 1) {
-            listStatus.set(source, Status.BLACK);
-            return;
-        }
+        stack.push(source);
         listStatus.set(source, Status.GREY);
-        currentMin = Math.min(currentMin, source);
         for (int i : list.get(source)) {
             if (i == parent) continue;
             if (listStatus.get(i).equals(Status.WHITE)) {
                 dfs(source, i);
             }
             if (listStatus.get(i).equals(Status.GREY)) {
-                globalMin = Math.min(globalMin, currentMin);
-                currentMin = Integer.MAX_VALUE;
+                deque = new LinkedList<>(stack);
+                int pop = deque.removeLast();
+                globalMin = Math.min(pop, globalMin);
+                while (pop != i) {
+                    pop = deque.getLast();
+                    deque.removeLast();
+                    globalMin = Math.min(pop, globalMin);
+                }
             }
         }
         listStatus.set(source, Status.BLACK);
+        stack.pop();
     }
 
 
