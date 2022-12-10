@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
 public final class MergeIterator<T extends Comparable<T>> implements Iterator<T> {
 
     private final List<Iterator<T>> iterators;
-    private final MaxHeap heap;
+    private final MinHeap heap;
 
     /**
      * Constructor
@@ -24,7 +24,7 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
      */
     public MergeIterator(List<Iterator<T>> iterators) {
         this.iterators = iterators;
-        this.heap = new MaxHeap(iterators.size());
+        this.heap = new MinHeap(iterators.size());
 
         for (Iterator<T> iter : iterators) {
             if (iter.hasNext()) {
@@ -78,11 +78,11 @@ public final class MergeIterator<T extends Comparable<T>> implements Iterator<T>
         }
     }
 
-    private class MaxHeap {
+    private class MinHeap {
         private final ArrayList<Pair> a;
         private int size;
 
-        public MaxHeap(int size) {
+        public MinHeap(int size) {
             this.a = new ArrayList<Pair>();
             this.size = 0;
 
