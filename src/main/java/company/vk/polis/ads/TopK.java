@@ -1,9 +1,6 @@
 package company.vk.polis.ads;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Class that allows us to get k max elements ordered descending in source list.
@@ -21,7 +18,7 @@ public final class TopK {
      * @return list with k max elements ordered descending
      */
     public <T extends Comparable<T>> List<T> topK(List<T> list, int k) {
-        MaxHeap<T> heap = new MaxHeap<>(k);
+        MinHeap<T> heap = new MinHeap<>(k);
         Iterator<T> iterator = list.iterator();
 
         for (int i = 0; i < k && iterator.hasNext(); i++) {
@@ -33,7 +30,7 @@ public final class TopK {
         while (iterator.hasNext()) {
             currElement = iterator.next();
 
-            if (heap.getMax().compareTo(currElement) < 0) {
+            if (heap.getMin().compareTo(currElement) < 0) {
                 heap.extract();
                 heap.insert(currElement);
             }
@@ -43,15 +40,16 @@ public final class TopK {
         while (heap.getSize() > 0) {
             result.add(heap.extract());
         }
+        Collections.reverse(result);
         return result;
     }
 
-    static class MaxHeap<T extends Comparable<T>> {
+    static class MinHeap<T extends Comparable<T>> {
 
         private T[] a;
         private int size;
 
-        MaxHeap(int size) {
+        MinHeap(int size) {
             this.a = (T[]) new Comparable<?>[size];
             this.size = 0;
         }
@@ -80,7 +78,7 @@ public final class TopK {
         void swim(int index) {
             int k = index;
 
-            while (k > 1 && a[k].compareTo(a[k / 2]) > 0) {
+            while (k > 1 && a[k].compareTo(a[k / 2]) < 0) {
                 swap(k, k / 2);
                 k = k / 2;
             }
@@ -90,10 +88,10 @@ public final class TopK {
             int k = index;
             while (2 * k <= size) {
                 int j = 2 * k;
-                if (j < size && a[j].compareTo(a[j + 1]) < 0) {
+                if (j < size && a[j].compareTo(a[j + 1]) > 0) {
                     j++;
                 }
-                if (a[k].compareTo(a[j]) >= 0) {
+                if (a[k].compareTo(a[j]) <= 0) {
                     break;
                 }
 
@@ -102,7 +100,7 @@ public final class TopK {
             }
         }
 
-        T getMax() {
+        T getMin() {
             return a[1];
         }
 
