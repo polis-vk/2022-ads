@@ -1,3 +1,5 @@
+package company.vk.polis.ads;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
