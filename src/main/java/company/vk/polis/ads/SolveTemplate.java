@@ -21,7 +21,7 @@ public final class SolveTemplate {
         // Write me
     }
 
-    static final class FastScanner {
+    private gstatic final class FastScanner {
         private final BufferedReader reader;
         private StringTokenizer tokenizer;
 
